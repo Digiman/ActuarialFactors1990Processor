@@ -39,9 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="DataObjects\TableH.cs" />
     <Compile Include="DataObjects\TableHRow.cs" />
+    <Compile Include="DataObjects\TableC.cs" />
     <Compile Include="DataObjects\TableS.cs" />
+    <Compile Include="DataObjects\TableCRow.cs" />
     <Compile Include="DataObjects\TableSRow.cs" />
     <Compile Include="Helpers\SerializerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

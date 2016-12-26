@@ -14,6 +14,9 @@ namespace DataProcessingApp.ConsoleApp
 
                 // load Table S
                 TableSWorker.LoadTableData();
+
+                // load Table C
+                TableCWorker.LoadTableData();
             }
             catch (Exception ex)
             {

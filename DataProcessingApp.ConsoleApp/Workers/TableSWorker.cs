@@ -24,7 +24,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
             var file = new StreamWriter(filename, false, Encoding.UTF8);
             foreach (var row in result.Rows)
             {
-                file.WriteLine("{0} {1} {2} {3} {4}", row.InterestRate, row.Age, row.DFactor, row.NFactor, row.MFactor);
+                file.WriteLine("{0} {1} {2} {3} {4} {5}", row.MortalityTable, row.InterestRate, row.Age, row.DFactor, row.NFactor, row.MFactor);
             }
             file.Close();
         }

@@ -5,26 +5,26 @@ using DataProcessingApp.Logic.Loaders;
 
 namespace DataProcessingApp.ConsoleApp.Workers
 {
-    public static class TableSWorker
+    public static class TableCWorker
     {
         public static void LoadTableData()
         {
-            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableS-1990-processed.json";
+            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableC-1990-processed.json";
 
-            var loader = new TableSLoader();
+            var loader = new TableCLoader();
             var result = loader.LoadFromJSON(filename);
 
             SaveTableDataToFile(result);
         }
 
-        private static void SaveTableDataToFile(TableS result)
+        private static void SaveTableDataToFile(TableC result)
         {
-            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableS-1990-processed-2.txt";
+            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableC-1990-processed-2.txt";
 
             var file = new StreamWriter(filename, false, Encoding.UTF8);
             foreach (var row in result.Rows)
             {
-                file.WriteLine("{0} {1} {2} {3} {4} {5}", row.MortalityTable, row.InterestRate, row.Age, row.PvAnnuity, row.PvLifeEstate, row.PvReminderInterest);
+                file.WriteLine("{0} {1} {2} {3} {4} {5}", row.MortalityTable, row.Rate, row.Age, row.RemainderFactor, row.RFactor, row.DFactor);
             }
             file.Close();
         }

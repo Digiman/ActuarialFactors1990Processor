@@ -18,6 +18,9 @@ class TableSRow:
     pvLifeEstate = 0.0
     pvReminderInterest = 0.0
 
+    def __init__(self):
+        self.mortalityTable = 1990
+
     def jdefault(self):
         return self.__dict__
 
