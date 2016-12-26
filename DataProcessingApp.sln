@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Python", "Python", "{5758CA15-B634-4EE2-B701-27561C3539DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonDataApp", "PythonDataApp\PythonDataApp.pyproj", "{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Core", "DataProcessingApp.Core\DataProcessingApp.Core.csproj", "{060FAAD4-5290-47AA-B664-94FF318BE979}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.ConsoleApp", "DataProcessingApp.ConsoleApp\DataProcessingApp.ConsoleApp.csproj", "{D1AD65D9-091B-4D82-A6EB-2447A9F58942}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Logic", "DataProcessingApp.Logic\DataProcessingApp.Logic.csproj", "{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060FAAD4-5290-47AA-B664-94FF318BE979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060FAAD4-5290-47AA-B664-94FF318BE979}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060FAAD4-5290-47AA-B664-94FF318BE979}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060FAAD4-5290-47AA-B664-94FF318BE979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1AD65D9-091B-4D82-A6EB-2447A9F58942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AD65D9-091B-4D82-A6EB-2447A9F58942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AD65D9-091B-4D82-A6EB-2447A9F58942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AD65D9-091B-4D82-A6EB-2447A9F58942}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC} = {5758CA15-B634-4EE2-B701-27561C3539DF}
+		{060FAAD4-5290-47AA-B664-94FF318BE979} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
+		{D1AD65D9-091B-4D82-A6EB-2447A9F58942} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
+		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 7a024841-4533-4e31-974b-9aae9422666c
+	EndGlobalSection
+EndGlobal
