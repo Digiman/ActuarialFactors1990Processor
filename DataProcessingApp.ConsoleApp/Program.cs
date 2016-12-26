@@ -9,7 +9,11 @@ namespace DataProcessingApp.ConsoleApp
         {
             try
             {
-                TableHWorker.LoadTableHData();
+                // load Table H
+                TableHWorker.LoadTableData();
+
+                // load Table S
+                TableSWorker.LoadTableData();
             }
             catch (Exception ex)
             {

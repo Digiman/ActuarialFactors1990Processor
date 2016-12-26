@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Loaders\BaseLoader.cs" />
+    <Compile Include="Loaders\TableSLoader.cs" />
     <Compile Include="Loaders\TableHLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
