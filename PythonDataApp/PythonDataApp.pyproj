@@ -28,6 +28,14 @@
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DataFiles\tabula-TableC-1990-2.csv" />
+    <Content Include="DataFiles\tabula-TableH-1990.csv" />
+    <Content Include="DataFiles\tabula-TableS-1990.csv" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
