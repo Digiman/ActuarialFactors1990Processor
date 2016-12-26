@@ -46,7 +46,9 @@
     <Compile Include="DataObjects\TableS.cs" />
     <Compile Include="DataObjects\TableCRow.cs" />
     <Compile Include="DataObjects\TableSRow.cs" />
+    <Compile Include="DataObjects\TableU2.cs" />
     <Compile Include="DataObjects\TableU1.cs" />
+    <Compile Include="DataObjects\TableU2Row.cs" />
     <Compile Include="DataObjects\TableU1Row.cs" />
     <Compile Include="Helpers\SerializerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

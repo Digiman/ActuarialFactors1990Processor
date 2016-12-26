@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
+using DataProcessingApp.Core;
 using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Logic.Loaders;
 
@@ -9,7 +11,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
     {
         public static void LoadTableData()
         {
-            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableH-1990-processed.json";
+            var filename = String.Format("{0}\\tabula-TableH-1990-processed.json", Constants.BaseDatadir);
 
             var loader = new TableHLoader();
             var result = loader.LoadFromJSON(filename);
@@ -19,7 +21,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
 
         private static void SaveTableDataToFile(TableH result)
         {
-            var filename = "i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableH-1990-processed-2.txt";
+            var filename = String.Format("{0}\\tabula-TableH-1990-processed-2.txt", Constants.BaseDatadir);
 
             var file = new StreamWriter(filename, false, Encoding.UTF8);
             foreach (var row in result.Rows)

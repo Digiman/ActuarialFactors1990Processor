@@ -10,16 +10,24 @@ namespace DataProcessingApp.ConsoleApp
             try
             {
                 // load Table H
+                Console.WriteLine("Processing Table H...");
                 TableHWorker.LoadTableData();
 
                 // load Table S
+                Console.WriteLine("Processing Table S...");
                 TableSWorker.LoadTableData();
 
                 // load Table C
+                Console.WriteLine("Processing Table C...");
                 TableCWorker.LoadTableData();
 
                 // load Table U(1)
+                Console.WriteLine("Processing Table U(1)...");
                 TableU1Worker.LoadTableData();
+
+                // load Table U(2)
+                Console.WriteLine("Processing Table U(2)...");
+                TableU2Worker.LoadTableData();
             }
             catch (Exception ex)
             {
