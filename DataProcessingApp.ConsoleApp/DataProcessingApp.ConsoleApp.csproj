@@ -39,7 +39,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workers\TableCWorker.cs" />
-    <Compile Include="Workers\TableeU2Worker.cs" />
+    <Compile Include="Workers\TableR2Worker.cs" />
+    <Compile Include="Workers\TableU2Worker.cs" />
     <Compile Include="Workers\TableU1Worker.cs" />
     <Compile Include="Workers\TableSWorker.cs" />
     <Compile Include="Workers\TableHWorker.cs" />

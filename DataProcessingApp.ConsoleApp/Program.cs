@@ -28,6 +28,12 @@ namespace DataProcessingApp.ConsoleApp
                 // load Table U(2)
                 Console.WriteLine("Processing Table U(2)...");
                 TableU2Worker.LoadTableData();
+                TableU2Worker.CombineTableParts();
+
+                // load Table R(2)
+                Console.WriteLine("Processing Table R(2)...");
+                TableR2Worker.LoadTableData();
+                TableR2Worker.CombineTableParts();
             }
             catch (Exception ex)
             {

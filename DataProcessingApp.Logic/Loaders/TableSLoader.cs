@@ -5,7 +5,7 @@ using DataProcessingApp.Core.DataObjects;
 namespace DataProcessingApp.Logic.Loaders
 {
     /// <summary>
-    /// Class to load data for Table H.
+    /// Class to load data for Table S.
     /// </summary>
     public class TableSLoader : BaseLoader
     {
