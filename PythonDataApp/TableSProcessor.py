@@ -1,5 +1,5 @@
 '''
-Simple processor for Table S - read CSV file and create a new file with new correct data.
+Special processor for Table S - read CSV file and create a new file with new correct data.
 '''
 
 # import needed modules

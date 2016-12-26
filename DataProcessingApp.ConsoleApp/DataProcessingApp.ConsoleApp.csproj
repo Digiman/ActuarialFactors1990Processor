@@ -39,15 +39,14 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Workers\TableCWorker.cs" />
+    <Compile Include="Workers\TableU1Worker.cs" />
     <Compile Include="Workers\TableSWorker.cs" />
     <Compile Include="Workers\TableHWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Samples\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DataProcessingApp.Core\DataProcessingApp.Core.csproj">
       <Project>{060FAAD4-5290-47AA-B664-94FF318BE979}</Project>

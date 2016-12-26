@@ -27,6 +27,9 @@
     <Compile Include="TableSProcessor.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TableU1Processor.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DataFiles\" />
@@ -35,6 +38,7 @@
     <Content Include="DataFiles\tabula-TableC-1990-2.csv" />
     <Content Include="DataFiles\tabula-TableH-1990.csv" />
     <Content Include="DataFiles\tabula-TableS-1990.csv" />
+    <Content Include="DataFiles\tabula-TableU%281%29-1990-2.csv" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
