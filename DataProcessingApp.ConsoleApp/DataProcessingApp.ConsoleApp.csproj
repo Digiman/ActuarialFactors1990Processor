@@ -42,8 +42,8 @@
     <Compile Include="Workers\TableR2Worker.cs" />
     <Compile Include="Workers\TableU2Worker.cs" />
     <Compile Include="Workers\TableU1Worker.cs" />
-    <Compile Include="Workers\TableSWorker.cs" />
     <Compile Include="Workers\TableHWorker.cs" />
+    <Compile Include="Workers\TableSWorker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

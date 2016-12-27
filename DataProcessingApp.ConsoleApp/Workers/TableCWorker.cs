@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using DataProcessingApp.Core;
-using DataProcessingApp.Core.DataObjects;
+﻿using DataProcessingApp.Core.Helpers;
 using DataProcessingApp.Logic.Loaders;
+using DataProcessingApp.Logic.Savers;
 
 namespace DataProcessingApp.ConsoleApp.Workers
 {
@@ -11,25 +8,40 @@ namespace DataProcessingApp.ConsoleApp.Workers
     {
         public static void LoadTableData()
         {
-            var filename = String.Format("{0}\\tabula-TableC-1990-processed.json", Constants.BaseDatadir);
+            var filename = FilesHelper.GenerateFilename(TableType.TableC, DocumentType.JSON);
+
+            var loader = new TableCLoader();
+            loader.LoadFromJSON(filename);
+        }
+
+        public static void ExportToExcel()
+        {
+            // 1. Load data from JSON file.
+            var filename = FilesHelper.GenerateFilename(TableType.TableC, DocumentType.JSON);
 
             var loader = new TableCLoader();
             var result = loader.LoadFromJSON(filename);
 
-            SaveTableDataToFile(result);
+            // 2. Save data to Excel document.
+            var excelFilename = FilesHelper.GenerateFilename(TableType.TableC, DocumentType.Excel);
+
+            var saver = new TableCSaver();
+            saver.SaveToExcel(result, excelFilename);
         }
-
-        private static void SaveTableDataToFile(TableC result)
+        
+        public static void SaveToTextFileFile()
         {
-            var filename = String.Format("{0}\\tabula-TableC-1990-processed-2.txt", Constants.BaseDatadir);
+            // load data
+            var filename = FilesHelper.GenerateFilename(TableType.TableC, DocumentType.JSON);
 
-            var file = new StreamWriter(filename, false, Encoding.UTF8);
-            foreach (var row in result.Rows)
-            {
-                file.WriteLine("{0} {1} {2} {3} {4} {5}", row.MortalityTable, row.Rate, row.Age, row.RemainderFactor,
-                    row.RFactor, row.DFactor);
-            }
-            file.Close();
+            var loader = new TableCLoader();
+            var result = loader.LoadFromJSON(filename);
+
+            // save
+            var textFilename = FilesHelper.GenerateFilename(TableType.TableC, DocumentType.Text);
+
+            var saver = new TableCSaver();
+            saver.SaveToTextFile(textFilename, result);
         }
     }
 }

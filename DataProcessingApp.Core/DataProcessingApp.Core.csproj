@@ -52,6 +52,7 @@
     <Compile Include="DataObjects\TableR2Row.cs" />
     <Compile Include="DataObjects\TableU2Row.cs" />
     <Compile Include="DataObjects\TableU1Row.cs" />
+    <Compile Include="Helpers\FilesHelper.cs" />
     <Compile Include="Helpers\SerializerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,10 +8,5 @@
         public double RemainderFactor { get; set; }
         public double RFactor { get; set; }
         public double DFactor { get; set; }
-
-        /*public TableCRow()
-        {
-            MortalityTable = Constants.DefaultMortalityYear;
-        }*/
     }
 }

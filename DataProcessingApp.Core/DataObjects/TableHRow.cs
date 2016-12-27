@@ -8,10 +8,5 @@
         public double DFactor { get; set; }
         public double NFactor { get; set; }
         public double MFactor { get; set; }
-
-        /*public TableHRow()
-        {
-            MortalityTable = Constants.DefaultMortalityYear;
-        }*/
     }
 }

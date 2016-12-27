@@ -8,10 +8,5 @@
         public double PvAnnuity { get; set; }
         public double PvLifeEstate { get; set; }
         public double PvReminderInterest { get; set; }
-
-        /*public TableSRow()
-        {
-            MortalityTable = Constants.DefaultMortalityYear;
-        }*/
     }
 }
