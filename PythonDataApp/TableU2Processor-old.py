@@ -23,10 +23,13 @@ class TableU2Row:
     def jdefault(self):
         return self.__dict__
 
+# base directory with data files
+baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+
 # define filename to process
 baseFilename = "tabula-TableU(2)-p1-1990"
 
-filename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\{0}.csv'.format(baseFilename)
+filename = '{0}\\{1}.csv'.format(baseDir, baseFilename)
 print('Open file: ', filename)
 
 #-----------------------------------------------
@@ -99,6 +102,6 @@ for i in range(0,len(results)):
 '''
 
 # save results to JSON file
-resultFilename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\{0}-processed.json'.format(baseFilename)
+resultFilename = '{0}\\{1}-processed.json'.format(baseDir, baseFilename)
 with open(resultFilename, "w") as resultFile:
     json.dump(results, resultFile, default=TableU2Row.jdefault)

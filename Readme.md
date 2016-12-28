@@ -3,11 +3,12 @@
 Utilites that uses to process data from PDF files:
 
 * [Tabula](http://tabula.technology/) - Tabula is a tool for liberating data tables locked inside PDF files.
-* [Anaconda](https://www.continuum.io/downloads) - data since toolbox uses Python to work with data. Contains a lot of libraries and packages to quick start.
 * [Visual Studio 2015](https://www.visualstudio.com/vs/) - IDE to develop .NET applicaion.
 * [Python Tools for Visual Studio](https://www.visualstudio.com/vs/python/) - Completely free Python support within Visual Studio. Add functionality to VS to work with Python and create project with this language.
+* [Python](https://www.python.org/) - python language runtime and main libraries. Better to install Anaconda.
+* [Anaconda](https://www.continuum.io/downloads) - data since toolbox uses Python to work with data. Contains a lot of libraries and packages to quick start. Include Puthon and many libraries.
 
-Application crated in Visual Studio contain two types of the projects: C# application to process data and Puthon scripts to work with CSV files with data extracted from PDF with with Tabula.
+Solution created in Visual Studio and has two types of the projects: C# application to process data and Python scripts to work with CSV files with data extracted from PDF with with Tabula.
 
 ## How to use this application
 
@@ -16,7 +17,8 @@ The application contains tho parts:
 1. Python scripts to process CSV files generated with Tabula after extaction data from PDF documents. This scripts create JSON files with data for some table (6 tables).
 2. C# console application that can read generated JSON files and do additional processing (read and save as text files or export to Excel documents).
 
-The simple description of the way how gile processed: 
+The simple description of the way how gile processed:
+
 **PDF Files (source)[input] -> 1) Tabula (manual processing) -> CSV files[output->input] -> 2) Python scripts (auto) -> JSON files[output->input] -> 3) C# App (auto) -> ...**
 
 All data files already added to repository and processed and in this case no needed do processing another one. All that needed is start using JSON files.

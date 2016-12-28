@@ -24,8 +24,11 @@ class TableHRow:
     def jdefault(self):
         return self.__dict__
 
+# base directory with data files
+baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+
 # define filename to process
-filename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableH-1990.csv'
+filename = '{0}\\tabula-TableH-1990.csv'.format(baseDir)
 print('Open file: ', filename)
 
 #-----------------------------------------------
@@ -104,6 +107,6 @@ for i in range(0,104):
 '''
 
 # save results to JSON file
-resultFilename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\tabula-TableH-1990-processed.json'
+resultFilename = '{0}\\tabula-TableH-1990-processed.json'.format(baseDir)
 with open(resultFilename, "w") as resultFile:
     json.dump(results, resultFile, default=TableHRow.jdefault)

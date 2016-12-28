@@ -23,12 +23,15 @@ class TableU2Row:
     def jdefault(self):
         return self.__dict__
 
-# definition for logic to tpoecss file with data (CSV to JSON)
+# base directory with data files
+baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+
+# definition for logic to process file with data (CSV to JSON)
 def TableU2ProcessorDef(filename):
     # define filename to process
     baseFilename = filename
 
-    filename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\{0}.csv'.format(baseFilename)
+    filename = '{0}\\{1}.csv'.format(baseDir, baseFilename)
     print('Open file: ', filename)
 
     #-----------------------------------------------
@@ -92,6 +95,6 @@ def TableU2ProcessorDef(filename):
     '''
 
     # save results to JSON file
-    resultFilename = 'i:\\Exadel\\WK\\FinEstCOM Replacement\\{0}-processed.json'.format(baseFilename)
+    resultFilename = '{0}\\{1}-processed.json'.format(baseDir, baseFilename)
     with open(resultFilename, "w") as resultFile:
         json.dump(results, resultFile, default=TableU2Row.jdefault)
