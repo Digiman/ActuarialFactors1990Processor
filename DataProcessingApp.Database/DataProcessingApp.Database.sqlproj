@@ -71,5 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\Local-Work.publish.xml" />
+    <None Include="Publish Profiles\Local-Home.publish.xml" />
   </ItemGroup>
 </Project>

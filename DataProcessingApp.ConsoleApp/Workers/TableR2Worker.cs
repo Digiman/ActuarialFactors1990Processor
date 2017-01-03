@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using DataProcessingApp.ConsoleApp.Helpers;
 using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Core.Helpers;
+using DataProcessingApp.Data;
 using DataProcessingApp.Logic.Loaders;
 using DataProcessingApp.Logic.Savers;
 
@@ -71,6 +73,21 @@ namespace DataProcessingApp.ConsoleApp.Workers
             saver.SaveToTextFile(textFilename, result);
         }
 
+        public static void SaveToDatabase()
+        {
+            // load data
+            var filename = FilesHelper.GenerateFilename(TableType.TableR2, DocumentType.JSON);
+
+            var loader = new TableR2Loader();
+            var result = loader.LoadFromJSON(filename);
+
+            // save to database
+            var repository = DataFactory.Instance.GetTableR2Repository(AppHelper.DatabaseConnectionString);
+            repository.InsertTableData(result);
+        }
+
+        #region Helpers.
+
         private static TableR2 CreateOneTable(List<TableR2> tableParts)
         {
             var table = new TableR2();
@@ -90,5 +107,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
 
             return result;
         }
+
+        #endregion
     }
 }

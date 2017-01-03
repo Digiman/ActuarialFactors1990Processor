@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1AD65D9-091B-4D82-A6EB-2447A9F58942}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{6A27DB85-E97C-4A9D-B870-4FE100921A09}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataProcessingApp.ConsoleApp</RootNamespace>
-    <AssemblyName>DataProcessingApp.ConsoleApp</AssemblyName>
+    <RootNamespace>DataProcessingApp.Data</RootNamespace>
+    <AssemblyName>DataProcessingApp.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,37 +31,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\AppHelper.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="DataFactory.cs" />
+    <Compile Include="Helpers\DataTableHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests.cs" />
-    <Compile Include="Workers\TableCWorker.cs" />
-    <Compile Include="Workers\TableR2Worker.cs" />
-    <Compile Include="Workers\TableU2Worker.cs" />
-    <Compile Include="Workers\TableU1Worker.cs" />
-    <Compile Include="Workers\TableHWorker.cs" />
-    <Compile Include="Workers\TableSWorker.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\TableR2Repository.cs" />
+    <Compile Include="Repositories\TableU2Repository.cs" />
+    <Compile Include="Repositories\TableU1Repository.cs" />
+    <Compile Include="Repositories\TableSRepository.cs" />
+    <Compile Include="Repositories\TableCRepository.cs" />
+    <Compile Include="Repositories\TableHRepository.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\DataProcessingApp.Core\DataProcessingApp.Core.csproj">
       <Project>{060FAAD4-5290-47AA-B664-94FF318BE979}</Project>
       <Name>DataProcessingApp.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataProcessingApp.Data\DataProcessingApp.Data.csproj">
-      <Project>{6A27DB85-E97C-4A9D-B870-4FE100921A09}</Project>
-      <Name>DataProcessingApp.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj">
-      <Project>{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}</Project>
-      <Name>DataProcessingApp.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

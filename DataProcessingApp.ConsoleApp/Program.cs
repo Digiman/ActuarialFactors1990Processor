@@ -1,5 +1,5 @@
 ﻿using System;
-using DataProcessingApp.ConsoleApp.Workers;
+using System.Diagnostics;
 
 namespace DataProcessingApp.ConsoleApp
 {
@@ -10,13 +10,17 @@ namespace DataProcessingApp.ConsoleApp
             try
             {
                 // loaders tests
-                LoaderTests();
+                //Tests.LoaderTests();
 
                 // save to text files
-                TextFileSaverTests();
+                //Tests.TextFileSaverTests();
 
                 // save to excel
-                ExcelSaverTests();
+                //Tests.ExcelSaverTests();
+
+                // load data from files and save to database
+                var databaseTime = ExecuteWithTiming(Tests.DatabaseTests);
+                Console.WriteLine("Database copy: {0} ms", databaseTime);
             }
             catch (Exception ex)
             {
@@ -26,96 +30,19 @@ namespace DataProcessingApp.ConsoleApp
             Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
-        
-        private static void LoaderTests()
+
+        static long ExecuteWithTiming(Action action)
         {
-            Console.WriteLine("Load data from JSON files...");
+            var timer = new Stopwatch();
 
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.LoadTableData();
+            timer.Start();
 
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.LoadTableData();
+            // so some action
+            action();
 
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.LoadTableData();
+            timer.Stop();
 
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.LoadTableData();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.LoadTableData();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.LoadTableData();
-        }
-
-        private static void TextFileSaverTests()
-        {
-            Console.WriteLine("Save to text files...");
-
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.SaveToTextFileFile();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.SaveToTextFileFile();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.SaveToTextFileFile();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.SaveToTextFileFile();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.CombineTableParts();
-            TableU2Worker.SaveToTextFileFile();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.CombineTableParts();
-            TableR2Worker.SaveToTextFileFile();
-        }
-
-        private static void ExcelSaverTests()
-        {
-            Console.WriteLine("Save to Excel files...");
-
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.ExportToExcel();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.ExportToExcel();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.ExportToExcel();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.ExportToExcel();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.CombineTableParts();
-            TableU2Worker.ExportToExcel();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.CombineTableParts();
-            TableR2Worker.ExportToExcel();
+            return timer.ElapsedMilliseconds;
         }
     }
 }

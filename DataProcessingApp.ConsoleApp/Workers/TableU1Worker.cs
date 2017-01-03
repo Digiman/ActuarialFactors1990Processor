@@ -1,4 +1,6 @@
-﻿using DataProcessingApp.Core.Helpers;
+﻿using DataProcessingApp.ConsoleApp.Helpers;
+using DataProcessingApp.Core.Helpers;
+using DataProcessingApp.Data;
 using DataProcessingApp.Logic.Loaders;
 using DataProcessingApp.Logic.Savers;
 
@@ -42,6 +44,19 @@ namespace DataProcessingApp.ConsoleApp.Workers
 
             var saver = new TableU1Saver();
             saver.SaveToTextFile(textFilename, result);
+        }
+
+        public static void SaveToDatabase()
+        {
+            // load data
+            var filename = FilesHelper.GenerateFilename(TableType.TableU1, DocumentType.JSON);
+
+            var loader = new TableU1Loader();
+            var result = loader.LoadFromJSON(filename);
+
+            // save to database
+            var repository = DataFactory.Instance.GetTableU1Repository(AppHelper.DatabaseConnectionString);
+            repository.InsertTableData(result);
         }
     }
 }
