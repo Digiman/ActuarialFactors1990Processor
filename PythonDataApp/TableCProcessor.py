@@ -26,6 +26,7 @@ class TableCRow:
 
 # base directory with data files
 baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+#baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
 # define filename to process
 filename = '{0}\\tabula-TableC-1990-2.csv'.format(baseDir)
