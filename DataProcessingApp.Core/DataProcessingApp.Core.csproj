@@ -41,6 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="DataObjects\MortalityTable.cs" />
+    <Compile Include="DataObjects\MortalityTableRow.cs" />
+    <Compile Include="DataObjects\TableK.cs" />
+    <Compile Include="DataObjects\TableJ.cs" />
+    <Compile Include="DataObjects\TableF.cs" />
+    <Compile Include="DataObjects\TableD.cs" />
+    <Compile Include="DataObjects\TableB.cs" />
+    <Compile Include="DataObjects\TableKRow.cs" />
+    <Compile Include="DataObjects\TableJRow.cs" />
+    <Compile Include="DataObjects\TableFRow.cs" />
+    <Compile Include="DataObjects\TableDRow.cs" />
+    <Compile Include="DataObjects\TableBRow.cs" />
     <Compile Include="DataObjects\TableH.cs" />
     <Compile Include="DataObjects\TableHRow.cs" />
     <Compile Include="DataObjects\TableC.cs" />

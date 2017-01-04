@@ -11,6 +11,7 @@ namespace DataProcessingApp.ConsoleApp
             {
                 // loaders tests
                 //Tests.LoaderTests();
+                Tests.LoaderTests2();
 
                 // save to text files
                 //Tests.TextFileSaverTests();
@@ -19,8 +20,8 @@ namespace DataProcessingApp.ConsoleApp
                 //Tests.ExcelSaverTests();
 
                 // load data from files and save to database
-                var databaseTime = ExecuteWithTiming(Tests.DatabaseTests);
-                Console.WriteLine("Database copy: {0} ms", databaseTime);
+                //var databaseTime = ExecuteWithTiming(Tests.DatabaseTests);
+                //Console.WriteLine("Database copy: {0} ms", databaseTime);
             }
             catch (Exception ex)
             {

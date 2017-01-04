@@ -34,6 +34,15 @@ namespace DataProcessingApp.ConsoleApp
             TableR2Worker.LoadTableData();
         }
 
+        public static void LoaderTests2()
+        {
+            Console.WriteLine("Load data from JSON files...");
+
+            // load Table H
+            Console.WriteLine("Processing Table K...");
+            TableKWorker.LoadTableData();
+        }
+
         public static void TextFileSaverTests()
         {
             Console.WriteLine("Save to text files...");
