@@ -3,8 +3,15 @@ using System.Diagnostics;
 
 namespace DataProcessingApp.ConsoleApp
 {
+    /// <summary>
+    /// Main class for simple console application.
+    /// </summary>
     static class Program
     {
+        /// <summary>
+        /// Run processing.
+        /// </summary>
+        /// <param name="args">Arguments from command line.</param>
         static void Main(string[] args)
         {
             try
