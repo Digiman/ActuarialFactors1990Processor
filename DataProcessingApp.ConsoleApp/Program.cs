@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Threading;
 
 namespace DataProcessingApp.ConsoleApp
 {
@@ -14,6 +16,8 @@ namespace DataProcessingApp.ConsoleApp
         /// <param name="args">Arguments from command line.</param>
         static void Main(string[] args)
         {
+            CultureFix();
+
             try
             {
                 // loaders tests
@@ -29,7 +33,7 @@ namespace DataProcessingApp.ConsoleApp
                 SaveToJson();
 
                 // load data from files and save to database
-                //DatabaseInsert();
+                DatabaseInsert();
             }
             catch (Exception ex)
             {
@@ -38,6 +42,12 @@ namespace DataProcessingApp.ConsoleApp
 
             Console.WriteLine("Press any key...");
             Console.ReadKey();
+        }
+
+        private static void CultureFix()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
         private static void SaveToExcelFiles()

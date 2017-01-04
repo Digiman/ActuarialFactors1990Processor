@@ -16,7 +16,7 @@ namespace DataProcessingApp.Data.Repositories
 
             var destinationTableName = "[dbo].[tblR2]";
 
-            BulkInsertTableData(dataTable, destinationTableName);
+            BulkInsertTableData(dataTable, destinationTableName, 100000);
         }
     }
 }

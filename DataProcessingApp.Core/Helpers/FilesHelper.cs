@@ -37,12 +37,12 @@ namespace DataProcessingApp.Core.Helpers
             {TableType.TableU1, "tabula-TableU1-1990-processed"},
             {TableType.TableR2, "tabula-TableR(2)-full-1990"},
             {TableType.TableU2, "tabula-TableU(2)-full-1990"},
-            {TableType.TableB, "TableB"},
-            {TableType.TableD, "TableD"},
-            {TableType.TableF, "TableF"},
-            {TableType.TableJ, "TableJ"},
-            {TableType.TableK, "TableK"},
-            {TableType.MortalityTable, "MortalityTable"}
+            {TableType.TableB, "TableB-2000"},
+            {TableType.TableD, "TableD-2000"},
+            {TableType.TableF, "TableF-2000"},
+            {TableType.TableJ, "TableJ-2000"},
+            {TableType.TableK, "TableK-2000"},
+            {TableType.MortalityTable, "MortalityTable-2000"}
         };
 
         public static readonly string[] TableU2Files =

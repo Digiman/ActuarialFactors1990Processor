@@ -13,7 +13,7 @@ namespace DataProcessingApp.Data.Repositories
             ConnectionString = connectionString;
         }
 
-        protected void BulkInsertTableData(DataTable dataTable, string destinationTableName)
+        protected void BulkInsertTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -22,7 +22,7 @@ namespace DataProcessingApp.Data.Repositories
 
                 using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
                 {
-                    bulkCopy.BatchSize = 10000;
+                    bulkCopy.BatchSize = batchSize;
                     bulkCopy.DestinationTableName = destinationTableName;
                     try
                     {
