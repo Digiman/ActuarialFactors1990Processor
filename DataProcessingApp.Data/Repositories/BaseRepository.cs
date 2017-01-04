@@ -6,9 +6,9 @@ namespace DataProcessingApp.Data.Repositories
 {
     public class BaseRepository
     {
-        protected string ConnectionString { get; set; }
+        private string ConnectionString { get; set; }
 
-        public BaseRepository(string connectionString)
+        protected BaseRepository(string connectionString)
         {
             ConnectionString = connectionString;
         }

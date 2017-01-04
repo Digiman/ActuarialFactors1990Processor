@@ -68,6 +68,12 @@
     <Compile Include="Loaders\TableHLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Savers\BaseSaver.cs" />
+    <Compile Include="Savers\MortalityTableSaver.cs" />
+    <Compile Include="Savers\TableBSaver.cs" />
+    <Compile Include="Savers\TableDSaver.cs" />
+    <Compile Include="Savers\TableFSaver.cs" />
+    <Compile Include="Savers\TableJSaver.cs" />
+    <Compile Include="Savers\TableKSaver.cs" />
     <Compile Include="Savers\TableR2Saver.cs" />
     <Compile Include="Savers\TableSSaver.cs" />
     <Compile Include="Savers\TableHSaver.cs" />

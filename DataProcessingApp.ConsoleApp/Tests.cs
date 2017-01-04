@@ -93,7 +93,10 @@ namespace DataProcessingApp.ConsoleApp
             TableR2Worker.CombineTableParts();
             TableR2Worker.SaveToTextFileFile();
         }
-
+        
+        /// <summary>
+        /// Save all data table to Excel files.
+        /// </summary>
         public static void ExcelSaverTests()
         {
             Console.WriteLine("Save to Excel files...");
@@ -123,8 +126,66 @@ namespace DataProcessingApp.ConsoleApp
             Console.WriteLine("Processing Table R(2)...");
             TableR2Worker.CombineTableParts();
             TableR2Worker.ExportToExcel();
+            
+            //---------------------------------------
+
+            // load Table K
+            Console.WriteLine("Processing Table K...");
+            TableKWorker.ExportToExcel();
+
+            // load Table J
+            Console.WriteLine("Processing Table J...");
+            TableJWorker.ExportToExcel();
+
+            // load Table F
+            Console.WriteLine("Processing Table F...");
+            TableFWorker.ExportToExcel();
+
+            // load Table D
+            Console.WriteLine("Processing Table D...");
+            TableDWorker.ExportToExcel();
+
+            // load Table B
+            Console.WriteLine("Processing Table B...");
+            TableBWorker.ExportToExcel();
+
+            // load Mortality Table B
+            Console.WriteLine("Processing Mortality Table...");
+            MortalityTableWorker.ExportToExcel();
         }
 
+        public static void JSONFileSaverTests()
+        {
+            Console.WriteLine("Save to JSON files...");
+
+            // load Table K
+            Console.WriteLine("Processing Table K...");
+            TableKWorker.SaveToJsonFile();
+
+            // load Table J
+            Console.WriteLine("Processing Table J...");
+            TableJWorker.SaveToJsonFile();
+
+            // load Table F
+            Console.WriteLine("Processing Table F...");
+            TableFWorker.SaveToJsonFile();
+
+            // load Table D
+            Console.WriteLine("Processing Table D...");
+            TableDWorker.SaveToJsonFile();
+
+            // load Table B
+            Console.WriteLine("Processing Table B...");
+            TableBWorker.SaveToJsonFile();
+
+            // load Mortality Table B
+            Console.WriteLine("Processing Mortality Table...");
+            MortalityTableWorker.SaveToJsonFile();
+        }
+
+        /// <summary>
+        /// Full tests for all tables data to save in database with bulk insert.
+        /// </summary>
         public static void DatabaseTests()
         {
             Console.WriteLine("Save data to database...");
