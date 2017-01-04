@@ -62,6 +62,19 @@
     <Folder Include="Publish Profiles" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Dev" />
+    <Folder Include="dbo\Stored Procedures" />
+    <Folder Include="dbo\Stored Procedures\tblMortality" />
+    <Folder Include="dbo\Stored Procedures\tblB" />
+    <Folder Include="dbo\Stored Procedures\tblC" />
+    <Folder Include="dbo\Stored Procedures\tblD" />
+    <Folder Include="dbo\Stored Procedures\tblF" />
+    <Folder Include="dbo\Stored Procedures\tblH" />
+    <Folder Include="dbo\Stored Procedures\tblJ" />
+    <Folder Include="dbo\Stored Procedures\tblK" />
+    <Folder Include="dbo\Stored Procedures\tblR2" />
+    <Folder Include="dbo\Stored Procedures\tblS" />
+    <Folder Include="dbo\Stored Procedures\tblU1" />
+    <Folder Include="dbo\Stored Procedures\tblU2" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblC.sql" />
@@ -76,6 +89,32 @@
     <Build Include="dbo\Tables\tblF.sql" />
     <Build Include="dbo\Tables\tblJ.sql" />
     <Build Include="dbo\Tables\tblK.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1980.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1990.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom2000.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueAnnuityFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueIncomeFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueRemainderFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetAllFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetRemainderFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetRFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetDFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetAllFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblF\GetAdjustmentFactorFromTableF.sql" />
+    <Build Include="dbo\Stored Procedures\tblD\GetRemainderInterestFromTableD.sql" />
+    <Build Include="dbo\Stored Procedures\tblJ\GetAdjustmentFactorFromTableJ.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetDFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetNFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetMFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetAllFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblR2\GetFactorFromTableR2.sql" />
+    <Build Include="dbo\Stored Procedures\tblK\GetAdjustmentFactorFromTableK.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueAnnuityFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueLifeEstateFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueRemainderFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetAllFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblU1\GetRemainderFactorFromTableU1.sql" />
+    <Build Include="dbo\Stored Procedures\tblU2\GetRemainderFactorFromTableU2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\Local-Work.publish.xml" />
