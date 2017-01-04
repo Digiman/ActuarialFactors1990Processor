@@ -52,12 +52,12 @@ namespace DataProcessingApp.Core.Helpers
 
         public static string GenerateFilename(TableType tableType, DocumentType documentType)
         {
-            return String.Format("{0}\\{1}.{2}", Constants.BaseDatadir, GetFilenameByTableType(tableType), GetFileExtension(documentType));
+            return String.Format("{0}\\{1}.{2}", AppHelper.BaseDataDir, GetFilenameByTableType(tableType), GetFileExtension(documentType));
         }
 
         public static string GeneratePartFilename(string baseFilename)
         {
-            return String.Format("{0}\\{1}-processed.json", Constants.BaseDatadir, baseFilename);
+            return String.Format("{0}\\{1}-processed.json", AppHelper.BaseDataDir, baseFilename);
         }
 
         private static string GetFileExtension(DocumentType documentType)

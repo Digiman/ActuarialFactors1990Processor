@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using DataProcessingApp.ConsoleApp.Helpers;
 using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Core.Helpers;
 using DataProcessingApp.Data;

@@ -35,6 +35,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -52,6 +53,7 @@
     <Compile Include="DataObjects\TableR2Row.cs" />
     <Compile Include="DataObjects\TableU2Row.cs" />
     <Compile Include="DataObjects\TableU1Row.cs" />
+    <Compile Include="Helpers\AppHelper.cs" />
     <Compile Include="Helpers\FilesHelper.cs" />
     <Compile Include="Helpers\SerializerHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
