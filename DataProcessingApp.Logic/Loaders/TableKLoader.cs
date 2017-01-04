@@ -15,23 +15,6 @@ namespace DataProcessingApp.Logic.Loaders
 
             return table;
         }
-
-        /*private List<TableKRow> LoadDataFromXMLFile(string filename)
-        {
-            var result = new List<TableKRow>();
-
-            // load document
-            var doc = new XmlDocument();
-            doc.Load(filename);
-
-            // parse loaded nodes
-            foreach (XmlNode documentElementChildNode in doc.DocumentElement.ChildNodes)
-            {
-                result.Add(ParseRowElement(documentElementChildNode));
-            }
-
-            return result;
-        }*/
         
         protected override TableKRow ParseRowElement(XmlNode node)
         {

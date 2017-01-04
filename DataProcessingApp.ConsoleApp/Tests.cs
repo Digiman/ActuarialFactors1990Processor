@@ -38,9 +38,17 @@ namespace DataProcessingApp.ConsoleApp
         {
             Console.WriteLine("Load data from JSON files...");
 
-            // load Table H
+            // load Table K
             Console.WriteLine("Processing Table K...");
             TableKWorker.LoadTableData();
+
+            // load Table J
+            Console.WriteLine("Processing Table J...");
+            TableJWorker.LoadTableData();
+
+            // load Table F
+            Console.WriteLine("Processing Table F...");
+            TableFWorker.LoadTableData();
         }
 
         public static void TextFileSaverTests()
