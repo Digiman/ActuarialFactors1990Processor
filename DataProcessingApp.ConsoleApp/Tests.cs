@@ -154,6 +154,32 @@ namespace DataProcessingApp.ConsoleApp
             Console.WriteLine("Processing Table R(2)...");
             TableR2Worker.CombineTableParts();
             TableR2Worker.SaveToDatabase();
+
+            //---------------------------------------
+
+            // load Table K
+            Console.WriteLine("Processing Table K...");
+            TableKWorker.SaveToDatabase();
+
+            // load Table J
+            Console.WriteLine("Processing Table J...");
+            TableJWorker.SaveToDatabase();
+
+            // load Table F
+            Console.WriteLine("Processing Table F...");
+            TableFWorker.SaveToDatabase();
+
+            // load Table D
+            Console.WriteLine("Processing Table D...");
+            TableDWorker.SaveToDatabase();
+
+            // load Table B
+            Console.WriteLine("Processing Table B...");
+            TableBWorker.SaveToDatabase();
+
+            // load Mortality Table B
+            Console.WriteLine("Processing Mortality Table...");
+            MortalityTableWorker.SaveToDatabase();
         }
     }
 }

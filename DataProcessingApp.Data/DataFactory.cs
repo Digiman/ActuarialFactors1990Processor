@@ -40,5 +40,35 @@ namespace DataProcessingApp.Data
         {
             return new TableR2Repository(connectionString);
         }
+
+        public TableBRepository GetTableBRepository(string connectionString)
+        {
+            return new TableBRepository(connectionString);
+        }
+
+        public TableDRepository GetTableDRepository(string connectionString)
+        {
+            return new TableDRepository(connectionString);
+        }
+
+        public TableFRepository GetTableFRepository(string connectionString)
+        {
+            return new TableFRepository(connectionString);
+        }
+
+        public TableJRepository GetTableJRepository(string connectionString)
+        {
+            return new TableJRepository(connectionString);
+        }
+
+        public TableKRepository GetTableKRepository(string connectionString)
+        {
+            return new TableKRepository(connectionString);
+        }
+
+        public MortalityTableRepository GetMortalityTableRepository(string connectionString)
+        {
+            return new MortalityTableRepository(connectionString);
+        }
     }
 }

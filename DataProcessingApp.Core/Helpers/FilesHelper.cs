@@ -10,14 +10,21 @@ namespace DataProcessingApp.Core.Helpers
         TableH,
         TableU1,
         TableU2,
-        TableR2
+        TableR2,
+        TableB,
+        TableD,
+        TableF,
+        TableJ,
+        TableK,
+        MortalityTable
     }
 
     public enum DocumentType
     {
         Excel,
         JSON, 
-        Text
+        Text,
+        XML
     }
 
     public static class FilesHelper
@@ -29,7 +36,13 @@ namespace DataProcessingApp.Core.Helpers
             {TableType.TableH, "tabula-TableH-1990-processed"},
             {TableType.TableU1, "tabula-TableU1-1990-processed"},
             {TableType.TableR2, "tabula-TableR(2)-full-1990"},
-            {TableType.TableU2, "tabula-TableU(2)-full-1990"}
+            {TableType.TableU2, "tabula-TableU(2)-full-1990"},
+            {TableType.TableB, "TableB"},
+            {TableType.TableD, "TableD"},
+            {TableType.TableF, "TableF"},
+            {TableType.TableJ, "TableJ"},
+            {TableType.TableK, "TableK"},
+            {TableType.MortalityTable, "MortalityTable"}
         };
 
         public static readonly string[] TableU2Files =
@@ -70,6 +83,8 @@ namespace DataProcessingApp.Core.Helpers
                     return "json";
                 case DocumentType.Text:
                     return "txt";
+                case DocumentType.XML:
+                    return "xml";
                 default:
                     return String.Empty;
             }

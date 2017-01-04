@@ -40,6 +40,12 @@
     <Compile Include="Helpers\DataTableHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\TableBRepository.cs" />
+    <Compile Include="Repositories\MortalityTableRepository.cs" />
+    <Compile Include="Repositories\TableJRepository.cs" />
+    <Compile Include="Repositories\TableFRepository.cs" />
+    <Compile Include="Repositories\TableDRepository.cs" />
+    <Compile Include="Repositories\TableKRepository.cs" />
     <Compile Include="Repositories\TableR2Repository.cs" />
     <Compile Include="Repositories\TableU2Repository.cs" />
     <Compile Include="Repositories\TableU1Repository.cs" />
