@@ -36,7 +36,7 @@ namespace DataProcessingApp.ConsoleApp
 
         public static void LoaderTests2()
         {
-            Console.WriteLine("Load data from JSON files...");
+            Console.WriteLine("Load data from XML files...");
 
             // load Table K
             Console.WriteLine("Processing Table K...");
@@ -49,6 +49,18 @@ namespace DataProcessingApp.ConsoleApp
             // load Table F
             Console.WriteLine("Processing Table F...");
             TableFWorker.LoadTableData();
+
+            // load Table D
+            Console.WriteLine("Processing Table D...");
+            TableDWorker.LoadTableData();
+
+            // load Table B
+            Console.WriteLine("Processing Table B...");
+            TableBWorker.LoadTableData();
+
+            // load Mortality Table B
+            Console.WriteLine("Processing Mortality Table...");
+            MortalityTableWorker.LoadTableData();
         }
 
         public static void TextFileSaverTests()

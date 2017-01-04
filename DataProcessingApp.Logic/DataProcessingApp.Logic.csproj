@@ -54,6 +54,9 @@
     <Compile Include="DataObjects\ExcelFileData.cs" />
     <Compile Include="Exporting\ExcelDocument.cs" />
     <Compile Include="Loaders\BaseLoader.cs" />
+    <Compile Include="Loaders\MortalityTableLoader.cs" />
+    <Compile Include="Loaders\TableBLoader.cs" />
+    <Compile Include="Loaders\TableDLoader.cs" />
     <Compile Include="Loaders\TableFLoader.cs" />
     <Compile Include="Loaders\TableJLoader.cs" />
     <Compile Include="Loaders\TableKLoader.cs" />
