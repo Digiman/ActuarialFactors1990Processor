@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
-using DataProcessingApp.Core.DataObjects;
+﻿using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Data.Helpers;
 
 namespace DataProcessingApp.Data.Repositories
@@ -13,32 +11,12 @@ namespace DataProcessingApp.Data.Repositories
         
         public void InsertTableData(TableU1 table)
         {
-            using (var connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
+            // create DataTable with data
+            var dataTable = DataTableHelper.CreateDataTable(table);
 
-                using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
-                {
-                    bulkCopy.BatchSize = 10000;
-                    bulkCopy.DestinationTableName = "[dbo].[tblU1]";
-                    try
-                    {
-                        // create DataTable with data
-                        var dataTable = DataTableHelper.CreateDataTable(table);
+            var destinationTableName = "[dbo].[tblU1]";
 
-                        // send table with data to database
-                        bulkCopy.WriteToServer(dataTable);
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        connection.Close();
-                    }
-                }
-
-                transaction.Commit();
-            }
+            BulkInsertTableData(dataTable, destinationTableName);
         }
     }
 }
