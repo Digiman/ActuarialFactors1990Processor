@@ -60,6 +60,8 @@
     <Folder Include="dbo" />
     <Folder Include="dbo\Tables" />
     <Folder Include="Publish Profiles" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Dev" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblC.sql" />
@@ -68,9 +70,17 @@
     <Build Include="dbo\Tables\tblS.sql" />
     <Build Include="dbo\Tables\tblU1.sql" />
     <Build Include="dbo\Tables\tblU2.sql" />
+    <Build Include="dbo\Tables\tblMortality.sql" />
+    <Build Include="dbo\Tables\tblB.sql" />
+    <Build Include="dbo\Tables\tblD.sql" />
+    <Build Include="dbo\Tables\tblF.sql" />
+    <Build Include="dbo\Tables\tblJ.sql" />
+    <Build Include="dbo\Tables\tblK.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\Local-Work.publish.xml" />
     <None Include="Publish Profiles\Local-Home.publish.xml" />
+    <None Include="Scripts\Dev\Select all data.sql" />
+    <None Include="Scripts\Dev\Delete all data.sql" />
   </ItemGroup>
 </Project>
