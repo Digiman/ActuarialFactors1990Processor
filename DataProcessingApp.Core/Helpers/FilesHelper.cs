@@ -31,36 +31,36 @@ namespace DataProcessingApp.Core.Helpers
     {
         private static readonly Dictionary<TableType, string> FileWithTables = new Dictionary<TableType, string>
         {
-            {TableType.TableC, "tabula-TableC-1990-processed"},
-            {TableType.TableS, "tabula-TableS-1990-processed"},
-            {TableType.TableH, "tabula-TableH-1990-processed"},
-            {TableType.TableU1, "tabula-TableU1-1990-processed"},
-            {TableType.TableR2, "tabula-TableR(2)-full-1990"},
-            {TableType.TableU2, "tabula-TableU(2)-full-1990"},
-            {TableType.TableB, "TableB-2000"},
-            {TableType.TableD, "TableD-2000"},
-            {TableType.TableF, "TableF-2000"},
-            {TableType.TableJ, "TableJ-2000"},
-            {TableType.TableK, "TableK-2000"},
-            {TableType.MortalityTable, "MortalityTable-2000"}
+            {TableType.TableC, "TableC-1990-processed"},
+            {TableType.TableS, "TableS-1990-processed"},
+            {TableType.TableH, "TableH-1990-processed"},
+            {TableType.TableU1, "TableU1-1990-processed"},
+            {TableType.TableR2, "TableR(2)-full-1990"},
+            {TableType.TableU2, "TableU(2)-full-1990"},
+            {TableType.TableB, "TableB"},
+            {TableType.TableD, "TableD"},
+            {TableType.TableF, "TableF"},
+            {TableType.TableJ, "TableJ"},
+            {TableType.TableK, "TableK"},
+            {TableType.MortalityTable, "MortalityTable"}
         };
 
         public static readonly string[] TableU2Files =
         {
-            "tabula-TableU(2)-p1-1990",
-            "tabula-TableU(2)-p2-1990",
-            "tabula-TableU(2)-p3-1990",
-            "tabula-TableU(2)-p4-1990",
-            "tabula-TableU(2)-p5-1990"
+            "TableU(2)-p1-1990",
+            "TableU(2)-p2-1990",
+            "TableU(2)-p3-1990",
+            "TableU(2)-p4-1990",
+            "TableU(2)-p5-1990"
         };
 
         public static readonly string[] TableR2Files =
         {
-            "tabula-TableR(2)-p1-1990",
-            "tabula-TableR(2)-p2-1990",
-            "tabula-TableR(2)-p3-1990",
-            "tabula-TableR(2)-p4-1990",
-            "tabula-TableR(2)-p5-1990"
+            "TableR(2)-p1-1990",
+            "TableR(2)-p2-1990",
+            "TableR(2)-p3-1990",
+            "TableR(2)-p4-1990",
+            "TableR(2)-p5-1990"
         };
 
         public static string GenerateFilename(TableType tableType, DocumentType documentType)

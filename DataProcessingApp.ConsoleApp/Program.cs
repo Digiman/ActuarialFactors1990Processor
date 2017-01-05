@@ -33,7 +33,7 @@ namespace DataProcessingApp.ConsoleApp
                 SaveToJson();
 
                 // load data from files and save to database
-                DatabaseInsert();
+                //DatabaseInsert();
             }
             catch (Exception ex)
             {

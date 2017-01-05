@@ -24,7 +24,8 @@ class TableU2Row:
         return self.__dict__
 
 # base directory with data files
-baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+#baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
 # definition for logic to process file with data (CSV to JSON)
 def TableU2ProcessorDef(filename):

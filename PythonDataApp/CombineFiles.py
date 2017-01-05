@@ -2,10 +2,11 @@
 import json
 
 # base directory with data files
-baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+#baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
-tableU2files = ["tabula-TableU(2)-p1-1990", "tabula-TableU(2)-p2-1990", "tabula-TableU(2)-p3-1990", "tabula-TableU(2)-p4-1990", "tabula-TableU(2)-p5-1990"]
-tableR2files = ["tabula-TableR(2)-p1-1990", "tabula-TableR(2)-p2-1990", "tabula-TableR(2)-p3-1990", "tabula-TableR(2)-p4-1990", "tabula-TableR(2)-p5-1990"]
+tableU2files = ["TableU(2)-p1-1990", "TableU(2)-p2-1990", "TableU(2)-p3-1990", "TableU(2)-p4-1990", "TableU(2)-p5-1990"]
+tableR2files = ["TableR(2)-p1-1990", "TableR(2)-p2-1990", "TableR(2)-p3-1990", "TableR(2)-p4-1990", "TableR(2)-p5-1990"]
 
 # process each file for Table U2
 output_list_U2 = []
@@ -18,7 +19,7 @@ for file in tableU2files:
             output_list_U2.append(line)
 
 # save result file
-resultFilename = "{0}\\tabula-TableU(2)-full-1990.json".format(baseDir)
+resultFilename = "{0}\\TableU(2)-full-1990.json".format(baseDir)
 print("Saving result file:", resultFilename)
 with open(resultFilename, "w") as resultFile:
     json.dump(output_list_U2, resultFile)
@@ -34,7 +35,7 @@ for file in tableR2files:
             output_list_R2.append(line)
 
 # save result file
-resultFilename = "{0}\\tabula-TableR(2)-full-1990.json".format(baseDir)
+resultFilename = "{0}\\TableR(2)-full-1990.json".format(baseDir)
 print("Saving result file:", resultFilename)
 with open(resultFilename, "w") as resultFile:
     json.dump(output_list_R2, resultFile)

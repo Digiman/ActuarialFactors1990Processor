@@ -24,10 +24,11 @@ class TableU2Row:
         return self.__dict__
 
 # base directory with data files
-baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+#baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
+baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
 # define filename to process
-baseFilename = "tabula-TableU(2)-p1-1990"
+baseFilename = "TableU(2)-p1-1990"
 
 filename = '{0}\\{1}.csv'.format(baseDir, baseFilename)
 print('Open file: ', filename)

@@ -23,7 +23,7 @@ namespace DataProcessingApp.Logic.Loaders
             var interestReate = node.Attributes["InterestRate"].Value;
             var frequency = node.Attributes["Frequency"].Value;
             var months = node.Attributes["Months"].Value;
-            var adjustmentFactor = node.Attributes["Months"].Value;
+            var adjustmentFactor = node.Attributes["adjustmentFactor"].Value;
 
             result.InterestRate = Double.Parse(interestReate);
             result.Frequency = frequency;

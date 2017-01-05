@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Xml;
 using DataProcessingApp.Core.DataObjects;
 

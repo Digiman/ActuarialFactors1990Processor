@@ -43,20 +43,20 @@
     <Folder Include="DataFiles\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataFiles\tabula-TableC-1990-2.csv" />
-    <Content Include="DataFiles\tabula-TableH-1990.csv" />
-    <Content Include="DataFiles\tabula-TableR%282%29-p1-1990.csv" />
-    <Content Include="DataFiles\tabula-TableR%282%29-p2-1990.csv" />
-    <Content Include="DataFiles\tabula-TableR%282%29-p3-1990.csv" />
-    <Content Include="DataFiles\tabula-TableR%282%29-p4-1990.csv" />
-    <Content Include="DataFiles\tabula-TableR%282%29-p5-1990.csv" />
-    <Content Include="DataFiles\tabula-TableS-1990.csv" />
-    <Content Include="DataFiles\tabula-TableU%281%29-1990-2.csv" />
-    <Content Include="DataFiles\tabula-TableU%282%29-p1-1990.csv" />
-    <Content Include="DataFiles\tabula-TableU%282%29-p2-1990.csv" />
-    <Content Include="DataFiles\tabula-TableU%282%29-p3-1990.csv" />
-    <Content Include="DataFiles\tabula-TableU%282%29-p4-1990.csv" />
-    <Content Include="DataFiles\tabula-TableU%282%29-p5-1990.csv" />
+    <Content Include="DataFiles\TableC-1990-2.csv" />
+    <Content Include="DataFiles\TableH-1990.csv" />
+    <Content Include="DataFiles\TableR%282%29-p1-1990.csv" />
+    <Content Include="DataFiles\TableR%282%29-p2-1990.csv" />
+    <Content Include="DataFiles\TableR%282%29-p3-1990.csv" />
+    <Content Include="DataFiles\TableR%282%29-p4-1990.csv" />
+    <Content Include="DataFiles\TableR%282%29-p5-1990.csv" />
+    <Content Include="DataFiles\TableS-1990.csv" />
+    <Content Include="DataFiles\TableU%281%29-1990-2.csv" />
+    <Content Include="DataFiles\TableU%282%29-p1-1990.csv" />
+    <Content Include="DataFiles\TableU%282%29-p2-1990.csv" />
+    <Content Include="DataFiles\TableU%282%29-p3-1990.csv" />
+    <Content Include="DataFiles\TableU%282%29-p4-1990.csv" />
+    <Content Include="DataFiles\TableU%282%29-p5-1990.csv" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
