@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using DataProcessingApp.Logic.DataObjects;
-using Syncfusion.XlsIO;
-
-namespace DataProcessingApp.Logic.Exporting
+﻿namespace DataProcessingApp.Logic.Exporting
 {
+    using System.Collections.Generic;
+    using DataProcessingApp.Logic.DataObjects;
+    using Syncfusion.XlsIO;
+
     public class ExcelDocument
     {
         public void CreateDocument(ExcelFileData data, string filename)
@@ -11,15 +11,19 @@ namespace DataProcessingApp.Logic.Exporting
             // New instance of ExcelEngine is created 
             // Equivalent to launching Microsoft Excel with no workbooks open
             // Instantiate the spreadsheet creation engine
-            ExcelEngine excelEngine = new ExcelEngine();
+            var excelEngine = new ExcelEngine();
+
             // Instantiate the Excel application object
-            IApplication application = excelEngine.Excel;
+            var application = excelEngine.Excel;
+
             // Assigns default application version
             application.DefaultVersion = ExcelVersion.Excel2013;
+
             // A new workbook is created. 
             // Equivalent to creating a new workbook in Excel.
             // Create a workbook with 1 worksheet.
             IWorkbook workbook = application.Workbooks.Create(1);
+
             // Access first worksheet from the workbook.
             IWorksheet worksheet = workbook.Worksheets[0];
 
@@ -27,23 +31,24 @@ namespace DataProcessingApp.Logic.Exporting
             workbook.Worksheets[0].Name = data.WorksheetName;
 
             // 2. Create table header.
-            CreateHeader(worksheet, data.Headers);
+            this.CreateHeader(worksheet, data.Headers);
 
             // 3. Insert data.
-            InsertDataRows(worksheet, data.DataRows);
+            this.InsertDataRows(worksheet, data.DataRows);
 
             // Saving the workbook to disk in xlsx format
             workbook.SaveAs(filename);
 
-            //Closing the workbook.
+            // Closing the workbook.
             workbook.Close();
-            //Dispose the Excel engine
+
+            // Dispose the Excel engine
             excelEngine.Dispose();
         }
 
-        private void CreateHeader(IWorksheet worksheet, List<string> dataHeaders)
+        private void CreateHeader(IWorksheet worksheet, IEnumerable<string> dataHeaders)
         {
-            var row = 1;
+            const int row = 1;
             var column = 1;
             foreach (var dataHeader in dataHeaders)
             {
@@ -52,9 +57,9 @@ namespace DataProcessingApp.Logic.Exporting
             }
         }
 
-        private void InsertDataRows(IWorksheet worksheet, List<Row> dataRows)
+        private void InsertDataRows(IWorksheet worksheet, IEnumerable<Row> dataRows)
         {
-            int row = 2; // start from second row after header
+            var row = 2; // start from second row after header
             foreach (var dataRow in dataRows)
             {
                 var column = 1;
@@ -63,6 +68,7 @@ namespace DataProcessingApp.Logic.Exporting
                     worksheet.Range[row, column].Text = rowValue;
                     column++;
                 }
+
                 row++;
             }
         }
