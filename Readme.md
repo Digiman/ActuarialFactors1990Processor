@@ -22,7 +22,7 @@ The simple description of the way how gile processed:
 **PDF Files (source)[input] -> 1) Tabula (manual processing) -> CSV files[output->input] -> 2) Python scripts (auto) -> JSON files[output->input] -> 3) C# App (auto) -> ...**
 
 All data files already added to repository and processed and in this case no needed do processing another one. All that needed is start using JSON files.
-To start work with data it need to copy all JSON files to working folder on local machine, change variable value (in class Constants (\DataProcessingApp.Core\Constants.cs)) - ```public const string BaseDatadir = "i:\\Exadel\\WK\\FinEstCOM Replacement\\Working Data";``` and set local machine folder with files. After this application can build and run. As result in working folder will be created a set of new files (text files, json with combined data for U(2) and R(2) tables, Excel files).
+To start work with data it need to copy all JSON files to working folder on local machine, change variable value (in class Constants (\DataProcessingApp.Core\Constants.cs)) - ```public const string BaseDatadir = "i:\\Working Data";``` and set local machine folder with files. After this application can build and run. As result in working folder will be created a set of new files (text files, json with combined data for U(2) and R(2) tables, Excel files).
 Application (C#) can be extended if needed to add additional processing or file formats to export.
 
 *Note that there are two very big tables - U(2) and R(2) with 615 pages for each. To simplify processing sourcePDF files was splited on 5 parts. But this did because all information for each interest rate can't be placed in one big table.
