@@ -8,7 +8,7 @@ namespace DataProcessingApp.Data.Repositories
         public TableSRepository(string connectionString) : base(connectionString)
         {
         }
-        
+
         public void InsertTableData(TableS table)
         {
             // create DataTable with data

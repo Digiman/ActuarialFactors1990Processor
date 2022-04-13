@@ -93,7 +93,7 @@ namespace DataProcessingApp.ConsoleApp
             TableR2Worker.CombineTableParts();
             TableR2Worker.SaveToTextFileFile();
         }
-        
+
         /// <summary>
         /// Save all data table to Excel files.
         /// </summary>
@@ -126,7 +126,7 @@ namespace DataProcessingApp.ConsoleApp
             Console.WriteLine("Processing Table R(2)...");
             TableR2Worker.CombineTableParts();
             TableR2Worker.ExportToExcel();
-            
+
             //---------------------------------------
 
             // load Table K
@@ -154,7 +154,7 @@ namespace DataProcessingApp.ConsoleApp
             MortalityTableWorker.ExportToExcel();
         }
 
-        public static void JSONFileSaverTests()
+        public static void JsonFileSaverTests()
         {
             Console.WriteLine("Save to JSON files...");
 

@@ -79,11 +79,11 @@ namespace DataProcessingApp.ConsoleApp
 
         private static void SaveToJson()
         {
-            var time = ExecuteWithTiming(Tests.JSONFileSaverTests);
+            var time = ExecuteWithTiming(Tests.JsonFileSaverTests);
             Console.WriteLine("Saving to JSON some tables: {0} ms", time);
         }
 
-        static long ExecuteWithTiming(Action action)
+        private static long ExecuteWithTiming(Action action)
         {
             var timer = new Stopwatch();
 

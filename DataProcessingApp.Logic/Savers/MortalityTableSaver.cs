@@ -15,7 +15,7 @@ namespace DataProcessingApp.Logic.Savers
 
             // create Excel document with data
             var document = new ExcelDocument();
-            
+
             // create Excel document with data
             document.CreateDocument(data, filename);
         }

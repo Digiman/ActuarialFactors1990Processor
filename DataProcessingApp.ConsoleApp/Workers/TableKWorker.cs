@@ -28,7 +28,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
             var repository = DataFactory.Instance.GetTableKRepository(AppHelper.DatabaseConnectionString);
             repository.InsertTableData(result);
         }
-        
+
         public static void SaveToJsonFile()
         {
             // load data
