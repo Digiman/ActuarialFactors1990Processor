@@ -15,7 +15,7 @@ namespace DataProcessingApp.Data.Repositories
             var dataTable = DataTableHelper.CreateDataTable(table);
 
             var destinationTableName = "[dbo].[tblH]";
-            
+
             BulkInsertTableData(dataTable, destinationTableName);
         }
     }

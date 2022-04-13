@@ -29,7 +29,7 @@ namespace DataProcessingApp.ConsoleApp.Workers
             var saver = new TableCSaver();
             saver.SaveToExcel(result, excelFilename);
         }
-        
+
         public static void SaveToTextFileFile()
         {
             // load data

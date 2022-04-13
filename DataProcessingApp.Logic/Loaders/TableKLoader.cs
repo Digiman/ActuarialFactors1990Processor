@@ -15,16 +15,16 @@ namespace DataProcessingApp.Logic.Loaders
 
             return table;
         }
-        
+
         protected override TableKRow ParseRowElement(XmlNode node)
         {
             var result = new TableKRow();
 
-            var interestReate = node.Attributes["InterestRate"].Value;
+            var interestRate = node.Attributes["InterestRate"].Value;
             var frequency = node.Attributes["Frequency"].Value;
             var adjustmentFactor = node.Attributes["adjustmentFactor"].Value;
 
-            result.InterestRate = Double.Parse(interestReate);
+            result.InterestRate = Double.Parse(interestRate);
             result.Frequency = frequency;
             result.AdjustmentFactor = Double.Parse(adjustmentFactor);
             return result;

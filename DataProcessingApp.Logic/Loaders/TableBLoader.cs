@@ -15,7 +15,7 @@ namespace DataProcessingApp.Logic.Loaders
 
             return table;
         }
-        
+
         protected override TableBRow ParseRowElement(XmlNode node)
         {
             var result = new TableBRow();

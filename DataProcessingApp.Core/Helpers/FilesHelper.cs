@@ -22,7 +22,7 @@ namespace DataProcessingApp.Core.Helpers
     public enum DocumentType
     {
         Excel,
-        JSON, 
+        JSON,
         Text,
         XML
     }
