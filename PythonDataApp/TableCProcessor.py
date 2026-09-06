@@ -29,7 +29,7 @@ class TableCRow:
 baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
 # define filename to process
-filename = '{0}\\TableC-1990-2.csv'.format(baseDir)
+filename = '{0}\\TableC-90CM-2.csv'.format(baseDir)
 print('Open file: ', filename)
 
 #-----------------------------------------------
@@ -99,7 +99,7 @@ for i in range(0,104):
 '''
 
 # save results to JSON file
-resultFilename = '{0}\\TableC-1990-processed.json'.format(baseDir)
+resultFilename = '{0}\\TableC-90CM-processed.json'.format(baseDir)
 with open(resultFilename, "w") as resultFile:
     json.dump(results, resultFile, default=TableCRow.jdefault)
 
