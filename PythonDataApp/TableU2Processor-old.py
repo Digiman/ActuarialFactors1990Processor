@@ -28,7 +28,7 @@ class TableU2Row:
 baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
 
 # define filename to process
-baseFilename = "TableU(2)-p1-1990"
+baseFilename = "TableU(2)-p1-90CM"
 
 filename = '{0}\\{1}.csv'.format(baseDir, baseFilename)
 print('Open file: ', filename)
