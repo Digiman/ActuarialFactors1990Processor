@@ -45,7 +45,7 @@ namespace DataProcessingApp.Core.Helpers
 
         private static T DeserializeToXml<T>(string data)
         {
-            var xmlSerializer = new XmlSerializer(data.GetType());
+            var xmlSerializer = new XmlSerializer(typeof(T));
             var stream = GenerateStreamFromString(data);
             var result = xmlSerializer.Deserialize(stream);
             return (T)result;

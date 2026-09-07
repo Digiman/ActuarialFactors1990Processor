@@ -28,15 +28,14 @@ namespace DataProcessingApp.Data.Repositories
                     {
                         // send table with data to database
                         bulkCopy.WriteToServer(dataTable);
+                        transaction.Commit();
                     }
                     catch (Exception)
                     {
                         transaction.Rollback();
-                        connection.Close();
+                        throw;
                     }
                 }
-
-                transaction.Commit();
             }
         }
     }
