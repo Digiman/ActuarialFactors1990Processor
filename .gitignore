@@ -242,5 +242,14 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# Python cache
-PythonDataApp/__pycache__/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store

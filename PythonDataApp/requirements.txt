@@ -1,0 +1,6 @@
+# Python dependencies for PythonDataApp scripts.
+#
+# - Legacy 90CM CSV processors (Table*Processor*.py) use numpy.
+# - Convert2010CMToJson.py uses openpyxl to read the official IRS XLSX files.
+numpy
+openpyxl
