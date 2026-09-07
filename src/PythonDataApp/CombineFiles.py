@@ -1,42 +1,50 @@
-# combine JSON files
+'''
+Combine per-part JSON files of Tables U(2) and R(2) into single "-full" files.
+
+Usage:
+    python3 CombineFiles.py                       # combine both tables from default locations
+    python3 CombineFiles.py --json-dir DIR --out-dir DIR
+'''
+
+import argparse
 import json
+from pathlib import Path
 
-# base directory with data files
-#baseDir = "d:\\Projects\\IRS Actuarial Factors (1990) processor"
-baseDir = "d:\\Temp\\ActuarialFactors1990Processor"
+TABLE_PARTS = {
+    "TableU(2)-full-90CM.json": ["TableU(2)-p{0}-90CM-processed.json".format(p) for p in range(1, 6)],
+    "TableR(2)-full-90CM.json": ["TableR(2)-p{0}-90CM-processed.json".format(p) for p in range(1, 6)],
+}
 
-tableU2files = ["TableU(2)-p1-90CM", "TableU(2)-p2-90CM", "TableU(2)-p3-90CM", "TableU(2)-p4-90CM", "TableU(2)-p5-90CM"]
-tableR2files = ["TableR(2)-p1-90CM", "TableR(2)-p2-90CM", "TableR(2)-p3-90CM", "TableR(2)-p4-90CM", "TableR(2)-p5-90CM"]
 
-# process each file for Table U2
-output_list_U2 = []
-for file in tableU2files:
-    filename = "{0}\\{1}-processed.json".format(baseDir, file)
-    print("Processing file:", filename, "...")
-    with open(filename, "r") as datafile:
-        fileData = json.load(datafile)
-        for line in fileData:
-            output_list_U2.append(line)
+def combine(output_name, part_files, json_dir, out_dir):
+    rows = []
+    for part in part_files:
+        source = json_dir / part
+        print("Processing file: {0} ...".format(source))
+        with open(source, "r") as datafile:
+            rows.extend(json.load(datafile))
 
-# save result file
-resultFilename = "{0}\\TableU(2)-full-90CM.json".format(baseDir)
-print("Saving result file:", resultFilename)
-with open(resultFilename, "w") as resultFile:
-    json.dump(output_list_U2, resultFile)
+    target = out_dir / output_name
+    print("Saving result file: {0}".format(target))
+    with open(target, "w") as result_file:
+        json.dump(rows, result_file)
 
-# process each file for Table R2
-output_list_R2 = []
-for file in tableR2files:
-    filename = "{0}\\{1}-processed.json".format(baseDir, file)
-    print("Processing file:", filename, "...")
-    with open(filename, "r") as datafile:
-        fileData = json.load(datafile)
-        for line in fileData:
-            output_list_R2.append(line)
 
-# save result file
-resultFilename = "{0}\\TableR(2)-full-90CM.json".format(baseDir)
-print("Saving result file:", resultFilename)
-with open(resultFilename, "w") as resultFile:
-    json.dump(output_list_R2, resultFile)
+def main():
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent.parent
 
+    parser = argparse.ArgumentParser(description="Combine per-part 90CM JSON files into full table files.")
+    parser.add_argument("--json-dir", type=Path, default=repo_root / "JSONFiles" / "90CM",
+                        help="directory with per-part JSON files")
+    parser.add_argument("--out-dir", type=Path, default=repo_root / "JSONFiles" / "90CM",
+                        help="directory for combined JSON files")
+    args = parser.parse_args()
+
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    for output_name, part_files in TABLE_PARTS.items():
+        combine(output_name, part_files, args.json_dir, args.out_dir)
+
+
+if __name__ == "__main__":
+    main()
