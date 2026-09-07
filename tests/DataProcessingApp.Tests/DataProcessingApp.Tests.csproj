@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>DataProcessingApp.Tests</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DataProcessingApp.Core\DataProcessingApp.Core.csproj" />
+    <ProjectReference Include="..\..\src\DataProcessingApp.Data\DataProcessingApp.Data.csproj" />
+    <ProjectReference Include="..\..\src\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj" />
+  </ItemGroup>
+
+</Project>

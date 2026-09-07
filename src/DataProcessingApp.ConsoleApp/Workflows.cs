@@ -5,7 +5,7 @@ using DataProcessingApp.Core.Helpers;
 
 namespace DataProcessingApp.ConsoleApp
 {
-    public static class Tests
+    public static class Workflows
     {
         public static void LoaderTests()
         {

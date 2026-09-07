@@ -49,8 +49,7 @@ namespace DataProcessingApp.ConsoleApp
                     default:
                         Console.WriteLine("Unknown workflow '{0}'. Use: load | json | text | excel | database | all", workflow);
                         return;
-                }
-            }
+                }            }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
@@ -72,34 +71,34 @@ namespace DataProcessingApp.ConsoleApp
 
         private static void SaveToExcelFiles()
         {
-            var time = ExecuteWithTiming(Tests.ExcelSaverTests);
+            var time = ExecuteWithTiming(Workflows.ExcelSaverTests);
             Console.WriteLine("Saving to Excel some tables: {0} ms", time);
         }
 
         private static void SaveToTextFiles()
         {
-            var time = ExecuteWithTiming(Tests.TextFileSaverTests);
+            var time = ExecuteWithTiming(Workflows.TextFileSaverTests);
             Console.WriteLine("Saving to text some tables: {0} ms", time);
         }
 
         private static void LoadData()
         {
-            var loadersTime = ExecuteWithTiming(Tests.LoaderTests);
+            var loadersTime = ExecuteWithTiming(Workflows.LoaderTests);
             Console.WriteLine("Loading tables time: {0} ms", loadersTime);
 
-            var loadersTime2 = ExecuteWithTiming(Tests.LoaderTests2);
+            var loadersTime2 = ExecuteWithTiming(Workflows.LoaderTests2);
             Console.WriteLine("Loading tables time: {0} ms", loadersTime2);
         }
 
         private static void DatabaseInsert()
         {
-            var databaseTime = ExecuteWithTiming(Tests.DatabaseTests);
+            var databaseTime = ExecuteWithTiming(Workflows.DatabaseTests);
             Console.WriteLine("Database copy: {0} ms", databaseTime);
         }
 
         private static void SaveToJson()
         {
-            var time = ExecuteWithTiming(Tests.JsonFileSaverTests);
+            var time = ExecuteWithTiming(Workflows.JsonFileSaverTests);
             Console.WriteLine("Saving to JSON some tables: {0} ms", time);
         }
 

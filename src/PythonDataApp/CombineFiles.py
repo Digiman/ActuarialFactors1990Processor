@@ -17,6 +17,7 @@ TABLE_PARTS = {
 
 
 def combine(output_name, part_files, json_dir, out_dir):
+    out_dir.mkdir(parents=True, exist_ok=True)
     rows = []
     for part in part_files:
         source = json_dir / part

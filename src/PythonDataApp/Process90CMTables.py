@@ -139,6 +139,7 @@ TABLES = {
 
 
 def process_table(name, config, csv_dir, out_dir):
+    out_dir.mkdir(parents=True, exist_ok=True)
     layout = config["layout"]
     for part_index, filename in enumerate(config["files"], start=1):
         source = csv_dir / filename
