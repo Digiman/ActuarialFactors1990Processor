@@ -40,8 +40,11 @@ namespace DataProcessingApp.ConsoleApp
                 Console.WriteLine("Error: " + ex.Message);
             }
 
-            Console.WriteLine("Press any key...");
-            Console.ReadKey();
+            if (!Console.IsInputRedirected)
+            {
+                Console.WriteLine("Press any key...");
+                Console.ReadKey();
+            }
         }
 
         private static void CultureFix()

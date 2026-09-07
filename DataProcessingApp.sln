@@ -1,25 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Python", "Python", "{5758CA15-B634-4EE2-B701-27561C3539DF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSharp", "CSharp", "{0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonDataApp", "PythonDataApp\PythonDataApp.pyproj", "{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Core", "src\DataProcessingApp.Core\DataProcessingApp.Core.csproj", "{060FAAD4-5290-47AA-B664-94FF318BE979}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Core", "DataProcessingApp.Core\DataProcessingApp.Core.csproj", "{060FAAD4-5290-47AA-B664-94FF318BE979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.ConsoleApp", "src\DataProcessingApp.ConsoleApp\DataProcessingApp.ConsoleApp.csproj", "{D1AD65D9-091B-4D82-A6EB-2447A9F58942}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.ConsoleApp", "DataProcessingApp.ConsoleApp\DataProcessingApp.ConsoleApp.csproj", "{D1AD65D9-091B-4D82-A6EB-2447A9F58942}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Logic", "DataProcessingApp.Logic\DataProcessingApp.Logic.csproj", "{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Logic", "src\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj", "{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{BFEB09D3-C00B-4912-AF1D-E49799DC6750}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataProcessingApp.Database", "DataProcessingApp.Database\DataProcessingApp.Database.sqlproj", "{24214E72-4E91-46B9-BF33-17C570A5C1DB}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataProcessingApp.Database", "db\DataProcessingApp.Database\DataProcessingApp.Database.sqlproj", "{24214E72-4E91-46B9-BF33-17C570A5C1DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Data", "DataProcessingApp.Data\DataProcessingApp.Data.csproj", "{6A27DB85-E97C-4A9D-B870-4FE100921A09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Data", "src\DataProcessingApp.Data\DataProcessingApp.Data.csproj", "{6A27DB85-E97C-4A9D-B870-4FE100921A09}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{060FAAD4-5290-47AA-B664-94FF318BE979}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{060FAAD4-5290-47AA-B664-94FF318BE979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060FAAD4-5290-47AA-B664-94FF318BE979}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,11 +36,7 @@ Global
 		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24214E72-4E91-46B9-BF33-17C570A5C1DB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{6A27DB85-E97C-4A9D-B870-4FE100921A09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A27DB85-E97C-4A9D-B870-4FE100921A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A27DB85-E97C-4A9D-B870-4FE100921A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,14 +46,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A4C518E7-5A48-4A06-9DB1-394BCC7879DC} = {5758CA15-B634-4EE2-B701-27561C3539DF}
 		{060FAAD4-5290-47AA-B664-94FF318BE979} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
 		{D1AD65D9-091B-4D82-A6EB-2447A9F58942} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
 		{39BDF003-C1B6-42E3-BC0A-E5B94B7066B5} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
 		{24214E72-4E91-46B9-BF33-17C570A5C1DB} = {BFEB09D3-C00B-4912-AF1D-E49799DC6750}
 		{6A27DB85-E97C-4A9D-B870-4FE100921A09} = {0ABB4D23-21BD-42AD-B47A-71D3EAA71B00}
-	EndGlobalSection
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = 7a024841-4533-4e31-974b-9aae9422666c
 	EndGlobalSection
 EndGlobal

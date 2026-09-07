@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DataProcessingApp.Core.Helpers
 {
@@ -83,8 +84,8 @@ namespace DataProcessingApp.Core.Helpers
                 name = name.Replace("-90CM", String.Format("-{0}", series))
                            .Replace("-2010CM", String.Format("-{0}", series));
             }
-            var directory = String.IsNullOrEmpty(series) ? AppHelper.BaseDataDir : String.Format("{0}\\{1}", AppHelper.BaseDataDir, series);
-            return String.Format("{0}\\{1}.{2}", directory, name, GetFileExtension(documentType));
+            var directory = String.IsNullOrEmpty(series) ? AppHelper.BaseDataDir : Path.Combine(AppHelper.BaseDataDir, series);
+            return Path.Combine(directory, String.Format("{0}.{1}", name, GetFileExtension(documentType)));
         }
 
         public static string GeneratePartFilename(string baseFilename)
@@ -98,8 +99,8 @@ namespace DataProcessingApp.Core.Helpers
             {
                 baseFilename = baseFilename.Replace("-90CM", String.Format("-{0}", series));
             }
-            var directory = String.IsNullOrEmpty(series) ? AppHelper.BaseDataDir : String.Format("{0}\\{1}", AppHelper.BaseDataDir, series);
-            return String.Format("{0}\\{1}-processed.json", directory, baseFilename);
+            var directory = String.IsNullOrEmpty(series) ? AppHelper.BaseDataDir : Path.Combine(AppHelper.BaseDataDir, series);
+            return Path.Combine(directory, String.Format("{0}-processed.json", baseFilename));
         }
 
         private static string GetFileExtension(DocumentType documentType)
