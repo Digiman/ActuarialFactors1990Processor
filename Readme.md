@@ -104,14 +104,17 @@ Destination tables are mapped in `src/DataProcessingApp.Data/SqlTables.cs`.
 
 Known issues in the data files, verified during the 2026 modernization:
 
-1. **TableJ.json / TableJ.xml are a byte-copy of TableK.** The committed Table J data is
-   Table K data (annuities payable at the *end* of each interval), while IRS Table J covers
-   annuities payable at the *beginning* of each interval and must differ. Table K itself was
-   verified against `DataFiles/TableK.pdf` (450/450 rows of the 2.2%-22.0% grid match).
-   There is no Table J source anywhere in the repository, so treat `TableJ.*` as
-   **unverified placeholder data - do not use it for Table J factors**.
-2. **Rates 0.2%-2.0% in TableJ/K (50 rows) appear in no 90CM source** (the 90CM grid starts
-   at 2.2%); their provenance is unknown.
+1. **Table J was repaired (September 2026).** The committed `TableJ.json` / `TableJ.xml`
+   were a byte-copy of Table K (end-of-interval factors under Table J's name). They were
+   regenerated from the official IRS `table-j-final.xlsx` (adjustment factors for term-certain
+   annuities payable at the *beginning* of each interval; rates 0.2%-20.0% step 0.2,
+   4-decimal factors). Verified: all 500 rows satisfy the identity
+   `J = K * (1+i)^(1/m)` against Table K within publication rounding, and the file
+   round-trips through the C# pipeline unchanged. Table K itself was verified against
+   `DataFiles/TableK.pdf` (450/450 rows of the 2.2%-22.0% grid match).
+2. **Table K keeps 50 rows (rates 0.2%-2.0%) that appear in no 90CM source** (the 90CM grid
+   starts at 2.2%). They are consistent with the current-edition grid, but their original
+   provenance is unknown. Table J covers 0.2%-20.0% from the official file.
 3. **90CM JSON stores ages and factors as strings**, the 2010CM series stores numbers.
    All loaders accept both; regenerate with `Process90CMTables.py --numeric` if you want
    numeric 90CM files.
