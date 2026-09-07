@@ -103,6 +103,54 @@ namespace DataProcessingApp.Core.Helpers
             return Path.Combine(directory, String.Format("{0}-processed.json", baseFilename));
         }
 
+        // Tables stored as JSON arrays (extracted from PDF via Tabula + Python);
+        // all others are XML-based (SQL Server export format).
+        private static readonly HashSet<TableType> XmlBasedTables = new HashSet<TableType>
+        {
+            TableType.TableB,
+            TableType.TableD,
+            TableType.TableF,
+            TableType.TableJ,
+            TableType.TableK,
+            TableType.MortalityTable
+        };
+
+        public static bool IsXmlBased(TableType tableType)
+        {
+            return XmlBasedTables.Contains(tableType);
+        }
+
+        public static string TableDisplayName(TableType tableType)
+        {
+            switch (tableType)
+            {
+                case TableType.TableC: return "TableC";
+                case TableType.TableS: return "TableS";
+                case TableType.TableH: return "TableH";
+                case TableType.TableU1: return "TableU(1)";
+                case TableType.TableU2: return "TableU(2)";
+                case TableType.TableR2: return "TableR(2)";
+                case TableType.TableB: return "TableB";
+                case TableType.TableD: return "TableD";
+                case TableType.TableF: return "TableF";
+                case TableType.TableJ: return "TableJ";
+                case TableType.TableK: return "TableK";
+                case TableType.TableZ: return "TableZ";
+                case TableType.MortalityTable: return "MortalityTable";
+                default: return tableType.ToString();
+            }
+        }
+
+        public static IReadOnlyList<string> PartFiles(TableType tableType)
+        {
+            switch (tableType)
+            {
+                case TableType.TableU2: return TableU2Files;
+                case TableType.TableR2: return TableR2Files;
+                default: return null;
+            }
+        }
+
         private static string GetFileExtension(DocumentType documentType)
         {
             switch (documentType)

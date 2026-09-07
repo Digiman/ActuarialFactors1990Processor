@@ -11,33 +11,50 @@ namespace DataProcessingApp.ConsoleApp
     static class Program
     {
         /// <summary>
-        /// Run processing.
+        /// Run processing. Optional argument selects the workflow:
+        /// load | json (default) | text | excel | database | all.
         /// </summary>
         /// <param name="args">Arguments from command line.</param>
         static void Main(string[] args)
         {
             CultureFix();
 
+            var workflow = args.Length > 0 ? args[0].ToLowerInvariant() : "json";
+
             try
             {
-                // loaders tests
-                //LoadData();
-
-                // save to text files
-                //SaveToTextFiles();
-
-                // save to excel
-                //SaveToExcelFiles();
-
-                // save to json tests
-                SaveToJson();
-
-                // load data from files and save to database
-                //DatabaseInsert();
+                switch (workflow)
+                {
+                    case "load":
+                        LoadData();
+                        break;
+                    case "json":
+                        SaveToJson();
+                        break;
+                    case "text":
+                        SaveToTextFiles();
+                        break;
+                    case "excel":
+                        SaveToExcelFiles();
+                        break;
+                    case "database":
+                        DatabaseInsert();
+                        break;
+                    case "all":
+                        LoadData();
+                        SaveToJson();
+                        SaveToTextFiles();
+                        SaveToExcelFiles();
+                        break;
+                    default:
+                        Console.WriteLine("Unknown workflow '{0}'. Use: load | json | text | excel | database | all", workflow);
+                        return;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                throw;
             }
 
             if (!Console.IsInputRedirected)

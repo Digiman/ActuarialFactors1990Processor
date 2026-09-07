@@ -24,6 +24,13 @@ namespace DataProcessingApp.Data.Repositories
                 {
                     bulkCopy.BatchSize = batchSize;
                     bulkCopy.DestinationTableName = destinationTableName;
+
+                    // map columns by name so DataTable column order is irrelevant
+                    foreach (DataColumn column in dataTable.Columns)
+                    {
+                        bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                    }
+
                     try
                     {
                         // send table with data to database

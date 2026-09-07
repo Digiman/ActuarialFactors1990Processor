@@ -1,5 +1,7 @@
 ﻿using System;
 using DataProcessingApp.ConsoleApp.Workers;
+using DataProcessingApp.Core.DataObjects;
+using DataProcessingApp.Core.Helpers;
 
 namespace DataProcessingApp.ConsoleApp
 {
@@ -9,89 +11,38 @@ namespace DataProcessingApp.ConsoleApp
         {
             Console.WriteLine("Load data from JSON files...");
 
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.LoadTableData();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.LoadTableData();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.LoadTableData();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.LoadTableData();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.LoadTableData();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.LoadTableData();
+            Worker<TableHRow>(TableType.TableH).LoadTableData();
+            Worker<TableSRow>(TableType.TableS).LoadTableData();
+            Worker<TableCRow>(TableType.TableC).LoadTableData();
+            Worker<TableU1Row>(TableType.TableU1).LoadTableData();
+            Worker<TableU2Row>(TableType.TableU2).LoadTableData();
+            Worker<TableR2Row>(TableType.TableR2).LoadTableData();
         }
 
         public static void LoaderTests2()
         {
             Console.WriteLine("Load data from XML files...");
 
-            // load Table K
-            Console.WriteLine("Processing Table K...");
-            TableKWorker.LoadTableData();
-
-            // load Table J
-            Console.WriteLine("Processing Table J...");
-            TableJWorker.LoadTableData();
-
-            // load Table F
-            Console.WriteLine("Processing Table F...");
-            TableFWorker.LoadTableData();
-
-            // load Table D
-            Console.WriteLine("Processing Table D...");
-            TableDWorker.LoadTableData();
-
-            // load Table B
-            Console.WriteLine("Processing Table B...");
-            TableBWorker.LoadTableData();
-
-            // load Mortality Table B
-            Console.WriteLine("Processing Mortality Table...");
-            MortalityTableWorker.LoadTableData();
+            Worker<TableKRow>(TableType.TableK).LoadTableData();
+            Worker<TableJRow>(TableType.TableJ).LoadTableData();
+            Worker<TableFRow>(TableType.TableF).LoadTableData();
+            Worker<TableDRow>(TableType.TableD).LoadTableData();
+            Worker<TableBRow>(TableType.TableB).LoadTableData();
+            Worker<MortalityTableRow>(TableType.MortalityTable).LoadTableData();
         }
 
         public static void TextFileSaverTests()
         {
             Console.WriteLine("Save to text files...");
 
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.SaveToTextFileFile();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.SaveToTextFileFile();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.SaveToTextFileFile();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.SaveToTextFileFile();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.CombineTableParts();
-            TableU2Worker.SaveToTextFileFile();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.CombineTableParts();
-            TableR2Worker.SaveToTextFileFile();
+            Worker<TableHRow>(TableType.TableH).SaveToTextFile();
+            Worker<TableSRow>(TableType.TableS).SaveToTextFile();
+            Worker<TableCRow>(TableType.TableC).SaveToTextFile();
+            Worker<TableU1Row>(TableType.TableU1).SaveToTextFile();
+            Worker<TableU2Row>(TableType.TableU2).CombineTableParts();
+            Worker<TableU2Row>(TableType.TableU2).SaveToTextFile();
+            Worker<TableR2Row>(TableType.TableR2).CombineTableParts();
+            Worker<TableR2Row>(TableType.TableR2).SaveToTextFile();
         }
 
         /// <summary>
@@ -101,86 +52,35 @@ namespace DataProcessingApp.ConsoleApp
         {
             Console.WriteLine("Save to Excel files...");
 
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.ExportToExcel();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.ExportToExcel();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.ExportToExcel();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.ExportToExcel();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.CombineTableParts();
-            TableU2Worker.ExportToExcel();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.CombineTableParts();
-            TableR2Worker.ExportToExcel();
+            Worker<TableHRow>(TableType.TableH).ExportToExcel();
+            Worker<TableSRow>(TableType.TableS).ExportToExcel();
+            Worker<TableCRow>(TableType.TableC).ExportToExcel();
+            Worker<TableU1Row>(TableType.TableU1).ExportToExcel();
+            Worker<TableU2Row>(TableType.TableU2).CombineTableParts();
+            Worker<TableU2Row>(TableType.TableU2).ExportToExcel();
+            Worker<TableR2Row>(TableType.TableR2).CombineTableParts();
+            Worker<TableR2Row>(TableType.TableR2).ExportToExcel();
 
             //---------------------------------------
 
-            // load Table K
-            Console.WriteLine("Processing Table K...");
-            TableKWorker.ExportToExcel();
-
-            // load Table J
-            Console.WriteLine("Processing Table J...");
-            TableJWorker.ExportToExcel();
-
-            // load Table F
-            Console.WriteLine("Processing Table F...");
-            TableFWorker.ExportToExcel();
-
-            // load Table D
-            Console.WriteLine("Processing Table D...");
-            TableDWorker.ExportToExcel();
-
-            // load Table B
-            Console.WriteLine("Processing Table B...");
-            TableBWorker.ExportToExcel();
-
-            // load Mortality Table B
-            Console.WriteLine("Processing Mortality Table...");
-            MortalityTableWorker.ExportToExcel();
+            Worker<TableKRow>(TableType.TableK).ExportToExcel();
+            Worker<TableJRow>(TableType.TableJ).ExportToExcel();
+            Worker<TableFRow>(TableType.TableF).ExportToExcel();
+            Worker<TableDRow>(TableType.TableD).ExportToExcel();
+            Worker<TableBRow>(TableType.TableB).ExportToExcel();
+            Worker<MortalityTableRow>(TableType.MortalityTable).ExportToExcel();
         }
 
         public static void JsonFileSaverTests()
         {
             Console.WriteLine("Save to JSON files...");
 
-            // load Table K
-            Console.WriteLine("Processing Table K...");
-            TableKWorker.SaveToJsonFile();
-
-            // load Table J
-            Console.WriteLine("Processing Table J...");
-            TableJWorker.SaveToJsonFile();
-
-            // load Table F
-            Console.WriteLine("Processing Table F...");
-            TableFWorker.SaveToJsonFile();
-
-            // load Table D
-            Console.WriteLine("Processing Table D...");
-            TableDWorker.SaveToJsonFile();
-
-            // load Table B
-            Console.WriteLine("Processing Table B...");
-            TableBWorker.SaveToJsonFile();
-
-            // load Mortality Table B
-            Console.WriteLine("Processing Mortality Table...");
-            MortalityTableWorker.SaveToJsonFile();
+            Worker<TableKRow>(TableType.TableK).SaveToJsonFile();
+            Worker<TableJRow>(TableType.TableJ).SaveToJsonFile();
+            Worker<TableFRow>(TableType.TableF).SaveToJsonFile();
+            Worker<TableDRow>(TableType.TableD).SaveToJsonFile();
+            Worker<TableBRow>(TableType.TableB).SaveToJsonFile();
+            Worker<MortalityTableRow>(TableType.MortalityTable).SaveToJsonFile();
         }
 
         /// <summary>
@@ -190,57 +90,28 @@ namespace DataProcessingApp.ConsoleApp
         {
             Console.WriteLine("Save data to database...");
 
-            // load Table H
-            Console.WriteLine("Processing Table H...");
-            TableHWorker.SaveToDatabase();
-
-            // load Table S
-            Console.WriteLine("Processing Table S...");
-            TableSWorker.SaveToDatabase();
-
-            // load Table C
-            Console.WriteLine("Processing Table C...");
-            TableCWorker.SaveToDatabase();
-
-            // load Table U(1)
-            Console.WriteLine("Processing Table U(1)...");
-            TableU1Worker.SaveToDatabase();
-
-            // load Table U(2)
-            Console.WriteLine("Processing Table U(2)...");
-            TableU2Worker.CombineTableParts();
-            TableU2Worker.SaveToDatabase();
-
-            // load Table R(2)
-            Console.WriteLine("Processing Table R(2)...");
-            TableR2Worker.CombineTableParts();
-            TableR2Worker.SaveToDatabase();
+            Worker<TableHRow>(TableType.TableH).SaveToDatabase();
+            Worker<TableSRow>(TableType.TableS).SaveToDatabase();
+            Worker<TableCRow>(TableType.TableC).SaveToDatabase();
+            Worker<TableU1Row>(TableType.TableU1).SaveToDatabase();
+            Worker<TableU2Row>(TableType.TableU2).CombineTableParts();
+            Worker<TableU2Row>(TableType.TableU2).SaveToDatabase();
+            Worker<TableR2Row>(TableType.TableR2).CombineTableParts();
+            Worker<TableR2Row>(TableType.TableR2).SaveToDatabase();
 
             //---------------------------------------
 
-            // load Table K
-            Console.WriteLine("Processing Table K...");
-            TableKWorker.SaveToDatabase();
+            Worker<TableKRow>(TableType.TableK).SaveToDatabase();
+            Worker<TableJRow>(TableType.TableJ).SaveToDatabase();
+            Worker<TableFRow>(TableType.TableF).SaveToDatabase();
+            Worker<TableDRow>(TableType.TableD).SaveToDatabase();
+            Worker<TableBRow>(TableType.TableB).SaveToDatabase();
+            Worker<MortalityTableRow>(TableType.MortalityTable).SaveToDatabase();
+        }
 
-            // load Table J
-            Console.WriteLine("Processing Table J...");
-            TableJWorker.SaveToDatabase();
-
-            // load Table F
-            Console.WriteLine("Processing Table F...");
-            TableFWorker.SaveToDatabase();
-
-            // load Table D
-            Console.WriteLine("Processing Table D...");
-            TableDWorker.SaveToDatabase();
-
-            // load Table B
-            Console.WriteLine("Processing Table B...");
-            TableBWorker.SaveToDatabase();
-
-            // load Mortality Table B
-            Console.WriteLine("Processing Mortality Table...");
-            MortalityTableWorker.SaveToDatabase();
+        private static TableWorker<TRow> Worker<TRow>(TableType tableType) where TRow : new()
+        {
+            return new TableWorker<TRow>(tableType);
         }
     }
 }
