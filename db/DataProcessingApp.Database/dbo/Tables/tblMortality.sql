@@ -2,5 +2,5 @@
 (
 	[Year] [int] NOT NULL,
 	[Age] [int] NOT NULL,
-	[lx] [int] NOT NULL
+	[lx] [float] NOT NULL
 )

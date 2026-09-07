@@ -138,7 +138,20 @@ TABLES = {
 }
 
 
-def process_table(name, config, csv_dir, out_dir):
+def coerce(value, numeric):
+    """Convert a CSV cell to int/float when numeric output is enabled."""
+    if not numeric:
+        return value
+    try:
+        return int(value)
+    except ValueError:
+        try:
+            return float(value)
+        except ValueError:
+            return value
+
+
+def process_table(name, config, csv_dir, out_dir, numeric=False):
     out_dir.mkdir(parents=True, exist_ok=True)
     layout = config["layout"]
     for part_index, filename in enumerate(config["files"], start=1):
@@ -149,6 +162,13 @@ def process_table(name, config, csv_dir, out_dir):
             data = list(csv.reader(f, delimiter=","))
 
         results = layout.rows(data)
+
+        if numeric:
+            results = [
+                {key: (coerce(value, numeric) if isinstance(value, str) else value)
+                 for key, value in row.items()}
+                for row in results
+            ]
 
         output_name = config["output"].format(part=part_index)
         output_path = out_dir / output_name
@@ -168,13 +188,16 @@ def main():
                         help="directory with source CSV files")
     parser.add_argument("--out-dir", type=Path, default=repo_root / "JSONFiles" / "90CM",
                         help="directory for generated JSON files")
+    parser.add_argument("--numeric", action="store_true",
+                        help="store ages and factors as numbers instead of strings "
+                             "(matches the 2010CM series format; the 2016-era files used strings)")
     args = parser.parse_args()
 
     tables = [args.table] if args.table else sorted(TABLES)
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     for name in tables:
-        process_table(name, TABLES[name], args.csv_dir, args.out_dir)
+        process_table(name, TABLES[name], args.csv_dir, args.out_dir, numeric=args.numeric)
 
 
 if __name__ == "__main__":

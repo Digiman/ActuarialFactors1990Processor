@@ -9,6 +9,6 @@
         public int Age { get; set; }
 
         [DbColumn("lx")]
-        public int Lx { get; set; }
+        public double Lx { get; set; }
     }
 }

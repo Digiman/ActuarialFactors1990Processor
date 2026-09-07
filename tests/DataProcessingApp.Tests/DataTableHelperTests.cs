@@ -42,7 +42,8 @@ namespace DataProcessingApp.Tests
             var dataTable = DataTableHelper.CreateDataTable(rows);
 
             Assert.Equal(typeof(int), dataTable.Columns["Year"].DataType);
-            Assert.Equal(typeof(int), dataTable.Columns["lx"].DataType);
+            // lx is float since the 2010CM series contains fractional lx values
+            Assert.Equal(typeof(double), dataTable.Columns["lx"].DataType);
         }
     }
 }

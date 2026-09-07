@@ -80,15 +80,18 @@ namespace DataProcessingApp.Tests
         {
             var xml = "<dbo.tblMortality>" +
                       "<dbo.tblMortality Year=\"1990\" Age=\"0\" lx=\"100000\" />" +
+                      // 2010CM series contains fractional lx values
+                      "<dbo.tblMortality Year=\"2010\" Age=\"1\" lx=\"99382.28\" />" +
                       "</dbo.tblMortality>";
             var filename = WriteFile("mortality.xml", xml);
 
             var rows = new TableLoader<MortalityTableRow>().LoadFromXml(filename);
 
-            var row = Assert.Single(rows);
-            Assert.Equal(1990, row.Year);
-            Assert.Equal(0, row.Age);
-            Assert.Equal(100000, row.Lx);
+            Assert.Equal(2, rows.Count);
+            Assert.Equal(1990, rows[0].Year);
+            Assert.Equal(0, rows[0].Age);
+            Assert.Equal(100000, rows[0].Lx);
+            Assert.Equal(99382.28, rows[1].Lx);
         }
 
         [Fact]
