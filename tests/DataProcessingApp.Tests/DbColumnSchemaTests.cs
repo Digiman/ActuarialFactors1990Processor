@@ -81,7 +81,7 @@ public class DbColumnSchemaTests
         }
 
         Assert.NotNull(dir);
-        return Path.Combine(dir.FullName, "db", "DataProcessingApp.Database", "dbo", "tables");
+        return Path.Combine(dir.FullName, "db", "DataProcessingApp.Database", "dbo", "Tables");
     }
 
     private static List<string> ParseSchemaColumns(string tableName)
