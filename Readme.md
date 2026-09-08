@@ -88,7 +88,7 @@ python src/PythonDataApp/JsonToXml.py                      # root-table JSON -> 
 
 ## Table details
 
-Processed tables (90CM series - in effect 5/1/1999 to 4/30/2009; 2010CM series - effective 6/1/2023):
+Processed tables (90CM series - in effect from 5/1/1999 to 4/30/2009; 2010CM series - effective 6/1/2023):
 
 1. *Table C* - Factors for Reducing Assurances.
 2. *Table R(2)* - two-life remainder factors (split into 5 part files per series).
@@ -122,11 +122,11 @@ Known issues in the data files, verified during the 2026 modernization:
 2. **Table K keeps 50 rows (rates 0.2%-2.0%) that appear in no 90CM source** (the 90CM grid
    starts at 2.2%). They are consistent with the current-edition grid, but their original
    provenance is unknown. Table J covers 0.2%-20.0% from the official file.
-3. **90CM JSON stores ages and factors as strings**, the 2010CM series stores numbers.
+3. **90CM JSON stores ages and factors as strings**; the 2010CM series stores numbers.
    All loaders accept both; regenerate with `Process90CMTables.py --numeric` if you want
    numeric 90CM files.
 4. **2010CM mortality lx values are fractional** (e.g. 99382.28); `tblMortality.lx` is
-   `float` since this fix - redeploy the schema if you use the database features.
+   `float` since this fix; redeploy the schema if you use the database features.
 5. The 2016-era JSON files contain numpy float artifacts in interest rates
    (e.g. `2.4000000000000004`); regenerated files emit clean rates.
 
