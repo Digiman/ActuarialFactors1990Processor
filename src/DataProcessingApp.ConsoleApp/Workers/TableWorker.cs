@@ -33,14 +33,17 @@ public class TableWorker<TRow> where TRow : new()
         var parts = FilesHelper.PartFiles(_tableType);
         if (parts != null)
         {
+            var total = 0;
             foreach (var part in parts)
             {
-                loader.LoadFromJson(FilesHelper.GeneratePartFilename(part, _series));
+                total += loader.LoadFromJson(FilesHelper.GeneratePartFilename(part, _series)).Count;
             }
+            LogEnd(total);
         }
         else
         {
-            LoadTable(loader);
+            var rows = LoadTable(loader);
+            LogEnd(rows.Count);
         }
     }
 
@@ -55,6 +58,8 @@ public class TableWorker<TRow> where TRow : new()
 
         var resultFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.JSON, _series);
         new TableSaver<TRow>().SaveToJsonFile(resultFilename, rows);
+
+        LogEnd(rows.Count);
     }
 
     /// <summary>
@@ -85,6 +90,8 @@ public class TableWorker<TRow> where TRow : new()
         }
 
         new TableSaver<TRow>().SaveToJsonFile(jsonFilename, combined);
+
+        LogEnd(combined.Count);
     }
 
     /// <summary>
@@ -98,6 +105,8 @@ public class TableWorker<TRow> where TRow : new()
 
         var excelFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.Excel, _series);
         new TableSaver<TRow>().SaveToExcel(FilesHelper.TableDisplayName(_tableType), excelFilename, rows);
+
+        LogEnd(rows.Count);
     }
 
     /// <summary>
@@ -111,6 +120,8 @@ public class TableWorker<TRow> where TRow : new()
 
         var textFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.Text, _series);
         new TableSaver<TRow>().SaveToTextFile(textFilename, rows);
+
+        LogEnd(rows.Count);
     }
 
     /// <summary>
@@ -124,6 +135,8 @@ public class TableWorker<TRow> where TRow : new()
 
         var repository = new TableRepository<TRow>(AppHelper.DatabaseConnectionString, _tableType);
         repository.InsertTableData(rows);
+
+        LogEnd(rows.Count);
     }
 
     private List<TRow> LoadTable(TableLoader<TRow> loader)
@@ -133,9 +146,19 @@ public class TableWorker<TRow> where TRow : new()
             : loader.LoadFromJson(FilesHelper.GenerateFilename(_tableType, DocumentType.JSON, _series));
     }
 
-    private void LogStart()
+    private string TableLabel()
     {
         var seriesSuffix = String.IsNullOrEmpty(_series) ? "" : $" ({_series})";
-        Console.WriteLine("Processing {0}{1}...", FilesHelper.TableDisplayName(_tableType), seriesSuffix);
+        return $"{FilesHelper.TableDisplayName(_tableType)}{seriesSuffix}";
+    }
+
+    private void LogStart()
+    {
+        Console.WriteLine("Processing {0}...", TableLabel());
+    }
+
+    private void LogEnd(int records)
+    {
+        Console.WriteLine("Processing {0} - done, {1} records.", TableLabel(), records.ToString("N0", System.Globalization.CultureInfo.InvariantCulture));
     }
 }
