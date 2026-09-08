@@ -1,47 +1,46 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
-using Microsoft.Data.SqlClient;
 
-namespace DataProcessingApp.Data.Repositories
+namespace DataProcessingApp.Data.Repositories;
+
+public class BaseRepository
 {
-    public class BaseRepository
+    private string ConnectionString { get; set; }
+
+    protected BaseRepository(string connectionString)
     {
-        private string ConnectionString { get; set; }
+        ConnectionString = connectionString;
+    }
 
-        protected BaseRepository(string connectionString)
+    protected void BulkInsertTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
+    {
+        using (var connection = new SqlConnection(ConnectionString))
         {
-            ConnectionString = connectionString;
-        }
+            connection.Open();
+            SqlTransaction transaction = connection.BeginTransaction();
 
-        protected void BulkInsertTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
-        {
-            using (var connection = new SqlConnection(ConnectionString))
+            using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
             {
-                connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
+                bulkCopy.BatchSize = batchSize;
+                bulkCopy.DestinationTableName = destinationTableName;
 
-                using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
+                // map columns by name so DataTable column order is irrelevant
+                foreach (DataColumn column in dataTable.Columns)
                 {
-                    bulkCopy.BatchSize = batchSize;
-                    bulkCopy.DestinationTableName = destinationTableName;
+                    bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                }
 
-                    // map columns by name so DataTable column order is irrelevant
-                    foreach (DataColumn column in dataTable.Columns)
-                    {
-                        bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
-                    }
-
-                    try
-                    {
-                        // send table with data to database
-                        bulkCopy.WriteToServer(dataTable);
-                        transaction.Commit();
-                    }
-                    catch (Exception)
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
+                try
+                {
+                    // send table with data to database
+                    bulkCopy.WriteToServer(dataTable);
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
         }

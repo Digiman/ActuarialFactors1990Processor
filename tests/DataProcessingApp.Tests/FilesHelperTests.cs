@@ -45,9 +45,9 @@ public class FilesHelperTests
     }
 
     [Theory]
-    [InlineData(TableType.TableU2, "TableU(2)-p3-90CM")]
-    [InlineData(TableType.TableR2, "TableR(2)-p5-90CM")]
-    public void GeneratePartFilename_BuildsProcessedJsonName(TableType tableType, string baseFilename)
+    [InlineData("TableU(2)-p3-90CM")]
+    [InlineData("TableR(2)-p5-90CM")]
+    public void GeneratePartFilename_BuildsProcessedJsonName(string baseFilename)
     {
         var filename = FilesHelper.GeneratePartFilename(baseFilename);
         Assert.Equal(

@@ -106,7 +106,7 @@ public static class FilesHelper
         var directory = string.IsNullOrEmpty(series) ? AppHelper.BaseDataDir : Path.Combine(AppHelper.BaseDataDir, series);
         return Path.Combine(directory, $"{baseFilename}-processed.json");
     }
-    
+
     // Tables stored as JSON arrays (converted from official IRS spreadsheets / PDFs via Python);
     // all others are XML-based (SQL Server export format).
     private static readonly HashSet<TableType> XmlBasedTables =

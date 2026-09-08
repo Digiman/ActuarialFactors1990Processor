@@ -1,14 +1,13 @@
-﻿namespace DataProcessingApp.Core.DataObjects
+﻿namespace DataProcessingApp.Core.DataObjects;
+
+public class MortalityTableRow
 {
-    public class MortalityTableRow
-    {
-        [DbColumn("Year")]
-        public int Year { get; set; }
+    [DbColumn("Year")]
+    public int Year { get; set; }
 
-        [DbColumn("Age")]
-        public int Age { get; set; }
+    [DbColumn("Age")]
+    public int Age { get; set; }
 
-        [DbColumn("lx")]
-        public double Lx { get; set; }
-    }
+    [DbColumn("lx")]
+    public double Lx { get; set; }
 }
