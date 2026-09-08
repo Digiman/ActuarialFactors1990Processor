@@ -103,7 +103,7 @@ namespace DataProcessingApp.Core.Helpers
             return Path.Combine(directory, String.Format("{0}-processed.json", baseFilename));
         }
 
-        // Tables stored as JSON arrays (extracted from PDF via Tabula + Python);
+        // Tables stored as JSON arrays (converted from official IRS spreadsheets / PDFs via Python);
         // all others are XML-based (SQL Server export format).
         private static readonly HashSet<TableType> XmlBasedTables = new HashSet<TableType>
         {

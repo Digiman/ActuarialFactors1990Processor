@@ -2,13 +2,14 @@
 
 Utilities that process actuarial factor data published by the IRS (Publications 1457/1458/1459):
 
-* source tables are extracted from PDF files with [Tabula](http://tabula.technology/) (manual step),
-  or taken from the official 2010CM XLSX files;
+* the 90CM-series source tables were extracted from PDF files with [Tabula](http://tabula.technology/)
+  (one-time manual step); the 2010CM series and the root (non-mortality) tables are
+  converted directly from the official IRS XLSX/XLS spreadsheets;
 * Python scripts convert the extracted CSV/XLSX data to JSON;
 * the C# console application reads the JSON/XML files and can save data as
   JSON, text, Excel files, or bulk-insert it into SQL Server.
 
-**PDF -> Tabula (manual) -> CSV -> Python (auto) -> JSON -> C# app (auto) -> Excel / text / SQL Server**
+**90CM: PDF -> Tabula (manual, one-time) -> CSV -> Python -> JSON; 2010CM and root tables: official XLSX/XLS -> Python -> JSON; then C# app -> Excel / text / SQL Server**
 
 ## Repository layout
 
@@ -23,7 +24,7 @@ tests/
   DataProcessingApp.Tests     xUnit tests for the C# pipeline
   python                      pytest tests for the Python scripts
 db/                           SSDT database project (tables, stored procedures)
-DataFiles/                    source data (90CM PDFs, 2010CM XLSX)
+DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
 JSONFiles/, XMLFiles/         processed data files (per-series subfolders)
 Docs/                         research notes
 ```
@@ -83,6 +84,7 @@ python src/PythonDataApp/Process90CMTables.py --table S    # one table
 python src/PythonDataApp/Process90CMTables.py --numeric    # emit numbers instead of strings
 python src/PythonDataApp/CombineFiles.py                   # combine R(2)/U(2) parts into "-full" files
 python src/PythonDataApp/Convert2010CMToJson.py            # 2010CM XLSX -> JSON (requires openpyxl)
+python src/PythonDataApp/ConvertRootTablesToJson.py        # root tables B/D/F/J/K: XLSX/XLS -> JSON
 python src/PythonDataApp/JsonToXml.py                      # root-table JSON -> SQL export XML
 ```
 
@@ -127,8 +129,17 @@ Known issues in the data files, verified during the 2026 modernization:
    numeric 90CM files.
 4. **2010CM mortality lx values are fractional** (e.g. 99382.28); `tblMortality.lx` is
    `float` since this fix; redeploy the schema if you use the database features.
-5. The 2016-era JSON files contain numpy float artifacts in interest rates
-   (e.g. `2.4000000000000004`); regenerated files emit clean rates.
+5. The 2016-era JSON files contained numpy float artifacts in interest rates
+   (e.g. `2.4000000000000004`); the root tables were regenerated in September 2026
+   (see note 6) and emit clean rates.
+6. **Root tables B/D/F/J/K are now sourced from official IRS spreadsheets** (September 2026):
+   `DataFiles/TableB.xlsx`, `TableD.xls`, `TableF.xls`, `TableK.xlsx`, `TableJ.xlsx`
+   (all from https://www.irs.gov/retirement-plans/actuarial-tables; these tables are not
+   mortality based, so one edition serves every series). `ConvertRootTablesToJson.py`
+   regenerates the JSON; the regenerated files differ from the 2016-era PDF-extracted
+   ones only in clean float rates. The old PDFs were removed. The 90CM series has no
+   official spreadsheet (IRS began publishing spreadsheets with the 2000CM era), so its
+   PDFs and the Tabula step remain for it.
 
 ## Adding a new table or series
 

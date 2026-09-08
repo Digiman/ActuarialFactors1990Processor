@@ -397,7 +397,7 @@
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="4" AdjustmentFactor="0.989555" />
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="5" AdjustmentFactor="0.986961" />
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="6" AdjustmentFactor="0.984374" />
-<dbo.tblF InterestRate="3.2" Frequency="Annual" Months="7" AdjustmentFactor="0.9817940000000001" />
+<dbo.tblF InterestRate="3.2" Frequency="Annual" Months="7" AdjustmentFactor="0.981794" />
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="8" AdjustmentFactor="0.97922" />
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="9" AdjustmentFactor="0.976653" />
 <dbo.tblF InterestRate="3.2" Frequency="Annual" Months="10" AdjustmentFactor="0.974093" />
@@ -2363,7 +2363,7 @@
 <dbo.tblF InterestRate="18.2" Frequency="Quarterly" Months="0" AdjustmentFactor="0.940248" />
 <dbo.tblF InterestRate="18.2" Frequency="Quarterly" Months="1" AdjustmentFactor="0.927238" />
 <dbo.tblF InterestRate="18.2" Frequency="Quarterly" Months="2" AdjustmentFactor="0.914407" />
-<dbo.tblF InterestRate="18.2" Frequency="Quarterly" Months="3" AdjustmentFactor="0.9017540000000001" />
+<dbo.tblF InterestRate="18.2" Frequency="Quarterly" Months="3" AdjustmentFactor="0.901754" />
 <dbo.tblF InterestRate="18.2" Frequency="Monthly" Months="0" AdjustmentFactor="0.927298" />
 <dbo.tblF InterestRate="18.2" Frequency="Monthly" Months="1" AdjustmentFactor="0.914467" />
 <dbo.tblF InterestRate="18.4" Frequency="Annual" Months="0" AdjustmentFactor="1.0" />
