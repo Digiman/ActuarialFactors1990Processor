@@ -76,6 +76,7 @@
     <Folder Include="dbo\Stored Procedures\tblS" />
     <Folder Include="dbo\Stored Procedures\tblU1" />
     <Folder Include="dbo\Stored Procedures\tblU2" />
+    <Folder Include="dbo\Stored Procedures\tblZ" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblC.sql" />
@@ -90,6 +91,7 @@
     <Build Include="dbo\Tables\tblF.sql" />
     <Build Include="dbo\Tables\tblJ.sql" />
     <Build Include="dbo\Tables\tblK.sql" />
+    <Build Include="dbo\Tables\tblZ.sql" />
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1980.sql" />
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1990.sql" />
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom2000.sql" />
@@ -116,6 +118,10 @@
     <Build Include="dbo\Stored Procedures\tblS\GetAllFromTableS.sql" />
     <Build Include="dbo\Stored Procedures\tblU1\GetRemainderFactorFromTableU1.sql" />
     <Build Include="dbo\Stored Procedures\tblU2\GetRemainderFactorFromTableU2.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetDFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetNFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetMFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetAllFromTableZ.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish Profiles\Local-Home.publish.xml" />

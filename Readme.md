@@ -49,8 +49,7 @@ python -m pytest tests/python
 ## Running the C# application
 
 Configuration lives in `src/DataProcessingApp.ConsoleApp/appsettings.json`
-(`BaseDataDir`, connection strings); every setting can be overridden with a
-`DPA_`-prefixed environment variable, e.g. `DPA_BaseDataDir=/path/to/json/files`.
+(`BaseDataDir`, `XmlDataDir`, connection strings).
 
 The workflow is selected by a command line argument:
 
@@ -60,19 +59,24 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 
 | Workflow    | What it does                                                        |
 |-------------|---------------------------------------------------------------------|
-| `load`      | loads every table from its source files (smoke check)               |
-| `json`      | loads every table and saves it as JSON                              |
-| `text`      | loads every table and saves it as a plain text file                 |
-| `excel`     | loads every table and saves it as an Excel document (numbers as numeric cells) |
-| `database`  | loads every table and bulk-inserts it into SQL Server               |
+| `load`      | loads every table from its source files, all series (smoke check)   |
+| `json`      | loads every root table and saves it as JSON                         |
+| `text`      | loads every table, all series, and saves it as a plain text file    |
+| `excel`     | loads every table, all series, and saves it as an Excel document (numbers as numeric cells) |
+| `database`  | loads every table, all series, and bulk-inserts it into SQL Server  |
 | `all`       | load + json + text + excel                                          |
 
-`BaseDataDir` should be a single folder containing the JSON files you want to
-process. The workflows read all tables from that folder without series
-subfolders, so copy the root-table files (`JSONFiles/*.json`) and the series
-files (`JSONFiles/90CM/*.json`, `JSONFiles/2010CM/*.json`) into it flat.
-Alternatively, point `BaseDataDir` at `JSONFiles/` to process just the root
-tables with the `json` workflow.
+`BaseDataDir` should point at the folder with the processed JSON data in the repository
+layout: root-table files directly in it and the series files in `90CM/` / `2010CM/`
+subfolders. The XML-based root tables are read from `XmlDataDir` (falls back to
+`BaseDataDir` when unset), so against the repository no copying is needed:
+
+```bash
+DPA_BaseDataDir=JSONFiles DPA_XmlDataDir=XMLFiles dotnet run --project src/DataProcessingApp.ConsoleApp -- load
+```
+
+Every setting can be overridden with a `DPA_`-prefixed environment variable, e.g.
+`DPA_BaseDataDir=/path/to/json/files`.
 
 ## Python scripts
 
@@ -140,6 +144,13 @@ Known issues in the data files, verified during the 2026 modernization:
    ones only in clean float rates. The old PDFs were removed. The 90CM series has no
    official spreadsheet (IRS began publishing spreadsheets with the 2000CM era), so its
    PDFs and the Tabula step remain for it.
+7. **2010CM Table H / Table Z JSON had every dFactor/mFactor blank** - repaired September
+   2026. `Convert2010CMToJson.py` read the wrong worksheet columns for H and Z (the
+   spacers instead of the Dx/Mx columns), so all 11000 rows carried `" "` placeholders
+   while nFactor parsed correctly. Column indices fixed, files regenerated and verified
+   against the official XLSX; the C# app now loads the 2010CM series end to end.
+   Table Z is also wired through the whole C# pipeline now (row type, `dbo.tblZ`
+   schema, workflows); previously it existed only as a JSON file.
 
 ## Adding a new table or series
 

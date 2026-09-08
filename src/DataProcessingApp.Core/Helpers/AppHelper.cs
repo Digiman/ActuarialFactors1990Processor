@@ -1,29 +1,24 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 
-namespace DataProcessingApp.Core.Helpers
+namespace DataProcessingApp.Core.Helpers;
+
+public static class AppHelper
 {
-    public static class AppHelper
-    {
-        private static readonly IConfiguration Config = new ConfigurationBuilder()
-            .SetBasePath(AppContext.BaseDirectory)
-            .AddJsonFile("appsettings.json", optional: true)
-            .AddEnvironmentVariables(prefix: "DPA_")
-            .Build();
+    private static readonly IConfiguration Config = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddEnvironmentVariables(prefix: "DPA_")
+        .Build();
 
-        public static string EnvironmentName
-        {
-            get { return Config["EnvironmentName"] ?? "Local"; }
-        }
+    public static string EnvironmentName => Config["EnvironmentName"] ?? "Local";
 
-        public static string BaseDataDir
-        {
-            get { return Config["BaseDataDir"]; }
-        }
+    public static string BaseDataDir => Config["BaseDataDir"];
 
-        public static string DatabaseConnectionString
-        {
-            get { return Config.GetConnectionString(EnvironmentName); }
-        }
-    }
+    /// <summary>
+    /// Folder with the SQL-export XML files; falls back to BaseDataDir when not set.
+    /// </summary>
+    public static string XmlDataDir => Config["XmlDataDir"] is { Length: > 0 } dir ? dir : BaseDataDir;
+
+    public static string DatabaseConnectionString => Config.GetConnectionString(EnvironmentName);
 }

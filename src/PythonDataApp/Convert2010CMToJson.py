@@ -156,12 +156,14 @@ def convert_commutation_tables():
     convert_section_table(SRC_DIR + '/table-s-2010cm-final.xlsx', 'Table S',
                           OUT_DIR + '/TableS-2010CM-processed.json', build_s_row, 'Table S (2010CM)')
     convert_section_table(SRC_DIR + '/table-h-2010cm-final.xlsx', 'Table H',
-                          OUT_DIR + '/TableH-2010CM-processed.json', build_h_row, 'Table H (2010CM)', stride=8)
+                          OUT_DIR + '/TableH-2010CM-processed.json', build_h_row, 'Table H (2010CM)',
+                          stride=8, value_indices=(2, 4, 6))
     convert_section_table(SRC_DIR + '/table-c-2010cm-final.xlsx', 'Table C',
                           OUT_DIR + '/TableC-2010CM-processed.json', build_c_row, 'Table C (2010CM)',
                           stride=8, value_indices=(2, 4, 6))
     convert_section_table(SRC_DIR + '/table-z-2010cm-final.xlsx', 'Table Z',
-                          OUT_DIR + '/TableZ-2010CM-processed.json', build_h_row, 'Table Z (2010CM)', stride=8)
+                          OUT_DIR + '/TableZ-2010CM-processed.json', build_h_row, 'Table Z (2010CM)',
+                          stride=8, value_indices=(2, 4, 6))
 
 
 #--------------------------------------------------------------
