@@ -66,8 +66,12 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 | `database`  | loads every table and bulk-inserts it into SQL Server               |
 | `all`       | load + json + text + excel                                          |
 
-`BaseDataDir` should contain the JSON files you want to process (copy the
-contents of `JSONFiles/` there, or point it at the repository folder).
+`BaseDataDir` should be a single folder containing the JSON files you want to
+process. The workflows read all tables from that folder without series
+subfolders, so copy the root-table files (`JSONFiles/*.json`) and the series
+files (`JSONFiles/90CM/*.json`, `JSONFiles/2010CM/*.json`) into it flat.
+Alternatively, point `BaseDataDir` at `JSONFiles/` to process just the root
+tables with the `json` workflow.
 
 ## Python scripts
 

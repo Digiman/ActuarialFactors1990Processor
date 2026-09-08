@@ -49,7 +49,8 @@ namespace DataProcessingApp.ConsoleApp
                     default:
                         Console.WriteLine("Unknown workflow '{0}'. Use: load | json | text | excel | database | all", workflow);
                         return;
-                }            }
+                }
+            }
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
