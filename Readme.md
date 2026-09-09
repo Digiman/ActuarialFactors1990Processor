@@ -276,9 +276,11 @@ Three kinds of files live in the repository: **source** (from the IRS - never ed
 
 Every source file is checksummed in `DataFiles/manifest.json` (SHA256, IRS URL
 and download date). `python src/PythonDataApp/VerifyManifest.py` re-verifies
-all checksums and fails on mismatch or unlisted files; CI runs it in the
-data-drift job. The exact IRS URLs in the manifest were verified byte-identical
-in September 2026 for all 13 official spreadsheets (root tables + 2010CM).
+all checksums and the manifest schema and fails on mismatch or unlisted files;
+`--download` restores missing or corrupted files from their recorded URLs. CI
+runs it in the data-drift job. The exact IRS URLs in the manifest were
+verified byte-identical in September 2026 for all 21 official spreadsheets
+(root tables + 2000CM + 2010CM).
 
 | Group | Files | Format | Origin |
 |---|---|---|---|

@@ -41,7 +41,7 @@ one branch / PR / session. Nothing here is committed to any release.
 - [x] **Spectre.Console.Cli.** The hand-rolled `Program` switch replaced with
       a `CommandApp`: one command per workflow, shared `--series` / `--table` /
       `--dry-run` options, `--help` and `--version` for free.
-- [ ] **Source manifest.** `DataFiles/manifest.json` with SHA256, URL and
+- [x] **Source manifest.** `DataFiles/manifest.json` with SHA256, URL and
       download date for every source file + a small download/verify script;
       makes provenance machine-checkable instead of prose-only.
 - [x] **2000CM series.** The only era with neither data nor support
