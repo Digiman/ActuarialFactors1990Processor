@@ -32,9 +32,15 @@ one branch / PR / session. Nothing here is committed to any release.
 
 ## Phase 2 - usability
 
-- [ ] **CLI options:** `--help`, `--series 90CM|2010CM`, `--table S,K`
+- [x] **CLI options:** `--help`, `--series 90CM|2010CM`, `--table S,K`
       filters, `--dry-run`. The series plumbing already exists in
-      `TableWorker`; only the CLI needs exposing.
+      `TableWorker`; only the CLI needs exposing. Done with the
+      Spectre.Console.Cli migration below.
+- [x] **Central Package Management.** All `PackageReference` versions moved to
+      a root `Directory.Packages.props`.
+- [x] **Spectre.Console.Cli.** The hand-rolled `Program` switch replaced with
+      a `CommandApp`: one command per workflow, shared `--series` / `--table` /
+      `--dry-run` options, `--help` and `--version` for free.
 - [ ] **Source manifest.** `DataFiles/manifest.json` with SHA256, URL and
       download date for every source file + a small download/verify script;
       makes provenance machine-checkable instead of prose-only.
