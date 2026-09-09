@@ -57,6 +57,26 @@ python -m pytest tests/python
 python src/PythonDataApp/JsonToXml.py              # generate XMLFiles/ (needed by the C# workflows)
 ```
 
+### One-command tasks (Makefile)
+
+`make` (or `make help`) lists every target; the most useful:
+
+| Command | What it does |
+|---|---|
+| `make test` | fast tests: C# unit/data-invariant + Python |
+| `make test-integration` | SQL Server integration tests (starts the container first) |
+| `make db-fill` | start SQL Server, deploy the schema from `db/` and fill it with all data |
+| `make run ARGS="excel --series 90CM"` | run any console app workflow (see the table above) |
+| `make data-extract` | re-extract the 90CM CSVs from the PDFs (verifies first) |
+| `make data-json` / `make data-xml` | regenerate `JSONFiles/` / `XMLFiles/` |
+| `make db-up` / `make db-down` | start / stop the SQL Server container |
+| `make format-check` / `make data-verify` | the CI checks: dotnet format, source manifest |
+
+Credentials default to the compose values and can be overridden per invocation:
+`make db-fill SA_PASSWORD='My!Password1'` or with a completely custom
+`CONN='Server=...'`. The targets assume macOS/Linux (on Windows use the
+underlying commands directly or WSL).
+
 ### SQL Server integration tests
 
 The database path (schema deployment, `SqlBulkCopy`, stored procedures) is
