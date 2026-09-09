@@ -11,11 +11,19 @@ public static class Workflows
 {
     /// <summary>
     /// Series with committed data files (JSONFiles/&lt;series&gt;/ subfolders).
-    /// Table Z exists only for the 2010CM series.
+    /// Table Z exists for the 2000CM and 2010CM series (not 90CM).
     /// </summary>
     private static readonly string[] Series =
     {
         FilesHelper.Series90CM,
+        FilesHelper.Series2000CM,
+        FilesHelper.Series2010CM
+    };
+
+    /// <summary>Series that publish Table Z (unitrust commutation factors).</summary>
+    private static readonly string[] SeriesWithTableZ =
+    {
+        FilesHelper.Series2000CM,
         FilesHelper.Series2010CM
     };
 
@@ -61,7 +69,7 @@ public static class Workflows
             Run(options, TableType.TableU2, series, () => Worker<TableU2Row>(TableType.TableU2, series).LoadTableData());
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).LoadTableData());
 
-            if (series == FilesHelper.Series2010CM)
+            if (SeriesWithTableZ.Contains(series))
             {
                 Run(options, TableType.TableZ, series, () => Worker<TableZRow>(TableType.TableZ, series).LoadTableData());
             }
@@ -125,7 +133,7 @@ public static class Workflows
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).CombineTableParts());
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).SaveToTextFile());
 
-            if (series == FilesHelper.Series2010CM)
+            if (SeriesWithTableZ.Contains(series))
             {
                 Run(options, TableType.TableZ, series, () => Worker<TableZRow>(TableType.TableZ, series).SaveToTextFile());
             }
@@ -156,7 +164,7 @@ public static class Workflows
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).CombineTableParts());
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).ExportToExcel());
 
-            if (series == FilesHelper.Series2010CM)
+            if (SeriesWithTableZ.Contains(series))
             {
                 Run(options, TableType.TableZ, series, () => Worker<TableZRow>(TableType.TableZ, series).ExportToExcel());
             }
@@ -197,7 +205,7 @@ public static class Workflows
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).CombineTableParts());
             Run(options, TableType.TableR2, series, () => Worker<TableR2Row>(TableType.TableR2, series).SaveToDatabase());
 
-            if (series == FilesHelper.Series2010CM)
+            if (SeriesWithTableZ.Contains(series))
             {
                 Run(options, TableType.TableZ, series, () => Worker<TableZRow>(TableType.TableZ, series).SaveToDatabase());
             }

@@ -44,9 +44,13 @@ one branch / PR / session. Nothing here is committed to any release.
 - [ ] **Source manifest.** `DataFiles/manifest.json` with SHA256, URL and
       download date for every source file + a small download/verify script;
       makes provenance machine-checkable instead of prose-only.
-- [ ] **2000CM series.** The only era with neither data nor support
+- [x] **2000CM series.** The only era with neither data nor support
       (5/1/2009 - 5/31/2023). IRS publishes its spreadsheets; converters are
-      now generic enough that this is mostly config + a data download.
+      now generic enough that this is mostly config + a data download. Done:
+      official IRS spreadsheets downloaded into `DataFiles/2000CM/` (manifest
+      entries added), `Convert2000CMToJson.py` written, series wired into the
+      C# workflows and data-invariant tests; MortalityTable row order
+      normalized to chronological.
 - [x] **Per-table timing.** Phase-level timing exists; add a stopwatch around
       each worker call next to the start/done log lines.
 

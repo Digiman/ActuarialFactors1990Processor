@@ -1,6 +1,62 @@
 {
   "files": [
     {
+      "path": "2000CM/table-2000cm.xls",
+      "sha256": "0b64e635ba0e47ef722300052e9356c8b326acdfa71898692fc038803c563bd2",
+      "url": "https://www.irs.gov/pub/irs-tege/table-2000cm.xls",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-c-2000cm.xls",
+      "sha256": "df4af4d9fb68af2e88aa2f05297a5f711125a70a5c10300d840e5d174202ae38",
+      "url": "https://www.irs.gov/pub/irs-tege/table-c-2000cm.xls",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-h-2000cm.xls",
+      "sha256": "5a6cf6033101b1ae3e1a6bbe78932ab7ead109953b8fff2c9ac8e73a418b4e39",
+      "url": "https://www.irs.gov/pub/irs-tege/table-h-2000cm.xls",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-r2-2009.xlsx",
+      "sha256": "93ad920f80539bf674be0aaec6a5a166afdf08529f184ed6ef1ce383fe119767",
+      "url": "https://www.irs.gov/pub/irs-tege/table-r2-2009.xlsx",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-s-2000cm.xlsx",
+      "sha256": "e0237fc8d15e9317d757b1c10f345b94f7f38ac347ee21eff316e101d9cb932a",
+      "url": "https://www.irs.gov/pub/irs-tege/table-s-2000cm.xlsx",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-u1-2000cm.xls",
+      "sha256": "8838fc7910c50204e1b6788abfe231d4993e76ccc116e9923b9f1c49f10a9844",
+      "url": "https://www.irs.gov/pub/irs-tege/table-u1-2000cm.xls",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-u2-2009cm.xlsx",
+      "sha256": "d29a3252efa208b43ea4387b32e707a7abbfbb4ee50a6e21662fb61e81558ff9",
+      "url": "https://www.irs.gov/pub/irs-tege/table-u2-2009cm.xlsx",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
+      "path": "2000CM/table-z-2000cm.xls",
+      "sha256": "35af85894e93f77ee4b9408b7041d8b5e924739a3d61e87cc74ea34a89eed6c3",
+      "url": "https://www.irs.gov/pub/irs-tege/table-z-2000cm.xls",
+      "downloaded": "2026-09-09",
+      "note": "Official IRS spreadsheet (2000CM era, effective 2009-05 - 2023-05); downloaded from the IRS URL."
+    },
+    {
       "path": "2010CM/table-2010cm-final.xlsx",
       "sha256": "51de7bde99fd2693994ac3ac3e894311048ed6009572679e9303d1a4d931e931",
       "url": "https://www.irs.gov/pub/irs-tege/table-2010cm-final.xlsx",

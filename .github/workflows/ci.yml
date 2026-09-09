@@ -52,6 +52,7 @@ jobs:
         run: |
           python src/PythonDataApp/Process90CMTables.py
           python src/PythonDataApp/ConvertRootTablesToJson.py
+          python src/PythonDataApp/Convert2000CMToJson.py
           python src/PythonDataApp/Convert2010CMToJson.py
           python src/PythonDataApp/JsonToXml.py
       - name: Verify source manifest

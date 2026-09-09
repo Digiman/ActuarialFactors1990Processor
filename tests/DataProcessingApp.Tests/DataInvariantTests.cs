@@ -32,21 +32,27 @@ public class DataInvariantTests
         { "Weekly", 52 }
     };
 
-    private static readonly string[] Series = { "90CM", "2010CM" };
+    private static readonly string[] Series = { "90CM", "2000CM", "2010CM" };
 
     // each IRS era publishes its own section 7520 rate grid: the 90CM era
-    // tables start at 2.2%, the 2010CM era (incl. Table Z) at 0.2%; two-life
-    // adjusted payout rates follow the same split (2.2..6.0 vs 0.2..4.0)
+    // tables start at 2.2%, the 2000CM/2010CM era (incl. Table Z) at 0.2%;
+    // two-life adjusted payout rates follow the same split (2.2..6.0 vs 0.2..4.0)
+    private static readonly List<double> ModernRateGrid = RateGrid(0.2, 20.0);
+
+    private static readonly List<double> ModernPayoutGrid = RateGrid(0.2, 4.0);
+
     private static readonly Dictionary<string, List<double>> SeriesRateGrids = new()
     {
         { "90CM", RateGrid(2.2, 22.0) },
-        { "2010CM", RateGrid(0.2, 20.0) }
+        { "2000CM", ModernRateGrid },
+        { "2010CM", ModernRateGrid }
     };
 
     private static readonly Dictionary<string, List<double>> SeriesPayoutGrids = new()
     {
         { "90CM", RateGrid(2.2, 6.0) },
-        { "2010CM", RateGrid(0.2, 4.0) }
+        { "2000CM", ModernPayoutGrid },
+        { "2010CM", ModernPayoutGrid }
     };
 
     // ------------------------------------------------------------------
@@ -83,8 +89,10 @@ public class DataInvariantTests
     private static readonly Lazy<Dictionary<string, List<TableU1Row>>> tableU1Rows =
         new(() => Series.ToDictionary(s => s, s => LoadSeriesJson<TableU1Row>(s, $"TableU1-{s}-processed.json")));
 
-    private static readonly Lazy<List<TableZRow>> tableZRows =
-        new(() => LoadSeriesJson<TableZRow>("2010CM", "TableZ-2010CM-processed.json"));
+    // Table Z exists for the 2000CM and 2010CM series (not 90CM)
+    private static readonly Lazy<Dictionary<string, List<TableZRow>>> tableZRows =
+        new(() => new[] { "2000CM", "2010CM" }.ToDictionary(
+            s => s, s => LoadSeriesJson<TableZRow>(s, $"TableZ-{s}-processed.json")));
 
     // two-life tables are committed as 5 parts each; only the first part is
     // fully parsed for shape/monotonicity, the rest are counted streaming
@@ -193,9 +201,6 @@ public class DataInvariantTests
         // 100 rates x 110 ages (0..109) = 11000 rows; the rate grid differs by era
         var ages = Enumerable.Range(0, 110).ToList();
 
-        Assert.Equal(11000, tableZRows.Value.Count);
-        AssertCrossProduct(tableZRows.Value, SeriesRateGrids["2010CM"], ages, z => z.InterestRate, z => z.Age, "TableZ");
-
         foreach (var series in Series)
         {
             var rates = SeriesRateGrids[series];
@@ -211,6 +216,12 @@ public class DataInvariantTests
 
             Assert.Equal(11000, tableU1Rows.Value[series].Count);
             AssertCrossProduct(tableU1Rows.Value[series], rates, ages, r => r.AdjustedPayoutRate, r => r.Age, $"TableU(1) {series}");
+
+            if (series != "90CM")
+            {
+                Assert.Equal(11000, tableZRows.Value[series].Count);
+                AssertCrossProduct(tableZRows.Value[series], rates, ages, r => r.InterestRate, r => r.Age, $"TableZ {series}");
+            }
         }
     }
 
@@ -330,11 +341,14 @@ public class DataInvariantTests
 
             AssertMonotonic(tableU1Rows.Value[series], r => $"{r.AdjustedPayoutRate}", r => r.Age, r => r.RemainderFactor, increasing: true, monotonicFromAge, $"TableU(1) {series} remainderFactor");
             AssertInRange(tableU1Rows.Value[series], r => r.RemainderFactor, 0.0, 1.0, $"TableU(1) {series} remainderFactor");
-        }
 
-        AssertMonotonic(tableZRows.Value, r => $"{r.InterestRate}", r => r.Age, r => r.DFactor, increasing: false, 0, "TableZ dFactor");
-        AssertMonotonic(tableZRows.Value, r => $"{r.InterestRate}", r => r.Age, r => r.NFactor, increasing: false, 0, "TableZ nFactor");
-        AssertAllPositive(tableZRows.Value, r => r.DFactor, "TableZ dFactor");
+            if (series != "90CM")
+            {
+                AssertMonotonic(tableZRows.Value[series], r => $"{r.InterestRate}", r => r.Age, r => r.DFactor, increasing: false, 0, $"TableZ {series} dFactor");
+                AssertMonotonic(tableZRows.Value[series], r => $"{r.InterestRate}", r => r.Age, r => r.NFactor, increasing: false, 0, $"TableZ {series} nFactor");
+                AssertAllPositive(tableZRows.Value[series], r => r.DFactor, $"TableZ {series} dFactor");
+            }
+        }
     }
 
     [Fact]
