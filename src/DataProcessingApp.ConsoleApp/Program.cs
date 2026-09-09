@@ -13,9 +13,12 @@ static class Program
     /// <summary>
     /// Run processing. Optional argument selects the workflow:
     /// load | json (default) | text | excel | database | all.
+    /// Returns 0 on success, 1 when any table failed (per-table failures are
+    /// isolated: the workflow continues with the remaining tables and a
+    /// failure summary is printed at the end).
     /// </summary>
     /// <param name="args">Arguments from command line.</param>
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
         CultureFix();
 
@@ -48,13 +51,23 @@ static class Program
                     break;
                 default:
                     Console.WriteLine("Unknown workflow '{0}'. Use: load | json | text | excel | database | all", workflow);
-                    return;
+                    return 1;
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine("Error: " + ex.Message);
-            throw;
+            return 1;
+        }
+
+        if (Workflows.Failures.Count > 0)
+        {
+            Console.WriteLine("{0} step(s) failed:", Workflows.Failures.Count);
+            foreach (var failure in Workflows.Failures)
+            {
+                Console.WriteLine("  - " + failure);
+            }
+            return 1;
         }
 
         if (!Console.IsInputRedirected)
@@ -62,6 +75,8 @@ static class Program
             Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
+
+        return 0;
     }
 
     private static void CultureFix()

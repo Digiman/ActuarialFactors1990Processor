@@ -5,8 +5,9 @@ using System.Collections.Generic;
 namespace DataProcessingApp.Data.Repositories;
 
 /// <summary>
-/// Generic repository that bulk-inserts table rows into the SQL Server
-/// destination table mapped from <see cref="TableType"/>.
+/// Generic repository that reloads table rows into the SQL Server
+/// destination table mapped from <see cref="TableType"/>: existing rows are
+/// cleared first, so reruns never duplicate data.
 /// </summary>
 public class TableRepository<TRow> : BaseRepository
 {
@@ -17,11 +18,17 @@ public class TableRepository<TRow> : BaseRepository
 
     public string DestinationTableName { get; }
 
-    public void InsertTableData(IEnumerable<TRow> rows)
+    /// <summary>
+    /// Clears the destination table and bulk-inserts the rows.
+    /// Returns the number of inserted rows.
+    /// </summary>
+    public int InsertTableData(IEnumerable<TRow> rows)
     {
         // create DataTable with data
         var dataTable = DataTableHelper.CreateDataTable(rows);
 
-        BulkInsertTableData(dataTable, DestinationTableName);
+        ReloadTableData(dataTable, DestinationTableName);
+
+        return dataTable.Rows.Count;
     }
 }

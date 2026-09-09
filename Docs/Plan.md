@@ -8,7 +8,7 @@ one branch / PR / session. Nothing here is committed to any release.
 
 ## Phase 1 - pipeline hardening (high value, low effort)
 
-- [ ] **Idempotent `database` workflow.** `TableRepository.InsertTableData`
+- [x] **Idempotent `database` workflow.** `TableRepository.InsertTableData`
       bulk-copies without clearing first, so reruns duplicate rows. Add
       truncate-per-table (or delete by MortalityTable year), wrap in a
       transaction, and report inserted-vs-loaded counts (record counts are
@@ -18,15 +18,15 @@ one branch / PR / session. Nothing here is committed to any release.
       but was not referenced by the SSDT project, so it never deployed; the
       `.sqlproj` Build entry was added in September 2026 - redeploy the
       database project to create it in existing databases.
-- [ ] **Data-invariant tests.** Encode the checks that caught the 2026 data
+- [x] **Data-invariant tests.** Encode the checks that caught the 2026 data
       bugs as automated tests: `J = K * (1+i)^(1/m)` identity, per-table
       row-count grids (100 rates x 110 ages etc.), no `" "` placeholder
       strings anywhere, factor sanity/monotonicity.
-- [ ] **CI drift detection.** Job that reruns the Python converters and diffs
+- [x] **CI drift detection.** Job that reruns the Python converters and diffs
       the output against committed `JSONFiles/`; add
       `dotnet format --verify-no-changes`; add the C# `load` smoke workflow
       as a CI step.
-- [ ] **Exit codes and error isolation.** One missing file currently aborts a
+- [x] **Exit codes and error isolation.** One missing file currently aborts a
       whole workflow with a stack trace; catch per table, print a failure
       summary, exit non-zero for automation.
 
