@@ -79,8 +79,8 @@ always available):
 | `--table`     | restrict processing to the given tables, e.g. `--table S,K`, `--table U1` or `--table MortalityTable` |
 | `--dry-run`   | load and validate the source files but write nothing                   |
 
-The process reports `Processing <table> - done, <N> records.` per table while
-it runs. A failed table is reported as `Processing <table> - FAILED: <reason>`
+The process reports `Processing <table> - done, <N> records in <M> ms.` per
+table while it runs. A failed table is reported as `Processing <table> - FAILED: <reason>`
 and does not abort the workflow; after the run a failure summary is printed and
 the process exits with code 1 (0 on full success), so automation can detect
 partial failures.

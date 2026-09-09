@@ -47,7 +47,7 @@ one branch / PR / session. Nothing here is committed to any release.
 - [ ] **2000CM series.** The only era with neither data nor support
       (5/1/2009 - 5/31/2023). IRS publishes its spreadsheets; converters are
       now generic enough that this is mostly config + a data download.
-- [ ] **Per-table timing.** Phase-level timing exists; add a stopwatch around
+- [x] **Per-table timing.** Phase-level timing exists; add a stopwatch around
       each worker call next to the start/done log lines.
 
 ## Phase 3 - bigger items
