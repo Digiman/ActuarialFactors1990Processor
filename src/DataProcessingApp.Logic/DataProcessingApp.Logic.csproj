@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" />
-    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>

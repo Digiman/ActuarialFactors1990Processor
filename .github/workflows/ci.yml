@@ -14,12 +14,17 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
       - name: Build
         run: dotnet build DataProcessingApp.sln
       - name: Test
         run: dotnet test tests/DataProcessingApp.Tests --no-build --verbosity normal
       - name: Format check
         run: dotnet format DataProcessingApp.sln --verify-no-changes
+      - name: Generate XML files from JSON
+        run: python src/PythonDataApp/JsonToXml.py
       - name: Load smoke test
         run: dotnet run --project src/DataProcessingApp.ConsoleApp -- load
         env:
@@ -38,6 +43,22 @@ jobs:
           pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.txt
       - name: Test
         run: python -m pytest tests/python -q
+
+  database:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Build
+        run: dotnet build DataProcessingApp.sln
+      - name: Start SQL Server (docker compose)
+        run: docker compose up --detach --wait sqlserver
+      - name: Run database integration tests
+        run: dotnet test tests/DataProcessingApp.Tests --no-build --filter Category=Integration
+        env:
+          DPA_TEST_CONNECTION_STRING: "Server=localhost,1433;Database=DataProcessingAppDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=True"
 
   data-drift:
     runs-on: ubuntu-latest
@@ -59,11 +80,11 @@ jobs:
           python src/PythonDataApp/JsonToXml.py
       - name: Verify source manifest
         run: python src/PythonDataApp/VerifyManifest.py
-      - name: Fail on drift from committed JSONFiles/XMLFiles
+      - name: Fail on drift from committed JSONFiles and extracted CSVs
         run: |
-          git diff --exit-code -- JSONFiles XMLFiles src/PythonDataApp/DataFiles
-          test -z "$(git status --porcelain JSONFiles XMLFiles src/PythonDataApp/DataFiles)" || {
-            echo "::error::Untracked generated files in JSONFiles/XMLFiles or extracted CSVs:"
-            git status --porcelain JSONFiles XMLFiles src/PythonDataApp/DataFiles
+          git diff --exit-code -- JSONFiles src/PythonDataApp/DataFiles
+          test -z "$(git status --porcelain JSONFiles src/PythonDataApp/DataFiles)" || {
+            echo "::error::Untracked generated files in JSONFiles or extracted CSVs:"
+            git status --porcelain JSONFiles src/PythonDataApp/DataFiles
             exit 1
           }

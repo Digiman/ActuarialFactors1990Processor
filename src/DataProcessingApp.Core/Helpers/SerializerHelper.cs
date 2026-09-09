@@ -1,12 +1,21 @@
-using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
 namespace DataProcessingApp.Core.Helpers;
 
 public static class SerializerHelper
 {
+    // the 90CM series JSON stores ages and factors as strings and uses
+    // camelCase keys, the root JSON files use PascalCase property names
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString
+    };
+
     public static string Serialize<T>(T data, SerializeFormat format)
     {
         return format switch
@@ -57,12 +66,12 @@ public static class SerializerHelper
 
     private static string SerializeToJson<T>(T data)
     {
-        return JsonConvert.SerializeObject(data);
+        return JsonSerializer.Serialize(data, JsonOptions);
     }
 
     private static T DeserializeFromJson<T>(string data)
     {
-        return JsonConvert.DeserializeObject<T>(data);
+        return JsonSerializer.Deserialize<T>(data, JsonOptions);
     }
 }
 

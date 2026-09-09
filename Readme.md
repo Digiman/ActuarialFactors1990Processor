@@ -27,7 +27,8 @@ tests/
   python                      pytest tests for the Python scripts
 db/                           SSDT database project (tables, stored procedures)
 DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
-JSONFiles/, XMLFiles/         processed data files (per-series subfolders)
+JSONFiles/                    processed data files (per-series subfolders)
+XMLFiles/                     generated XML (root tables; not committed, run JsonToXml.py)
 Docs/                         research notes, improvement plan
 ```
 
@@ -37,7 +38,11 @@ Docs/                         research notes, improvement plan
 * Python 3 with the packages from `src/PythonDataApp/requirements.txt`
   (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS, `pdfplumber` for the
   90CM PDF extraction)
-* SQL Server + SSDT only if you want the database features (the `db/` project builds in Visual Studio on Windows)
+* Docker (e.g. OrbStack/Docker Desktop), only if you want to run the SQL Server
+  integration tests locally (CI runs them always)
+* SQL Server + SSDT only if you want the database features with your own
+  instance (the `db/` project builds in Visual Studio on Windows; the
+  integration tests deploy the same schema scripts automatically)
 
 ## Building and testing
 
@@ -48,7 +53,49 @@ dotnet test tests/DataProcessingApp.Tests
 python3 -m venv .venv && . .venv/bin/activate      # or use Anaconda
 pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.txt
 python -m pytest tests/python
+
+python src/PythonDataApp/JsonToXml.py              # generate XMLFiles/ (needed by the C# workflows)
 ```
+
+### One-command tasks (Makefile)
+
+`make` (or `make help`) lists every target; the most useful:
+
+| Command | What it does |
+|---|---|
+| `make test` | fast tests: C# unit/data-invariant + Python |
+| `make test-integration` | SQL Server integration tests (starts the container first) |
+| `make db-fill` | start SQL Server, deploy the schema from `db/` and fill it with all data |
+| `make run ARGS="excel --series 90CM"` | run any console app workflow (see the table above) |
+| `make data-extract` | re-extract the 90CM CSVs from the PDFs (verifies first) |
+| `make data-json` / `make data-xml` | regenerate `JSONFiles/` / `XMLFiles/` |
+| `make db-up` / `make db-down` | start / stop the SQL Server container |
+| `make format-check` / `make data-verify` | the CI checks: dotnet format, source manifest |
+
+Credentials default to the compose values and can be overridden per invocation:
+`make db-fill SA_PASSWORD='My!Password1'` or with a completely custom
+`CONN='Server=...'`. The targets assume macOS/Linux (on Windows use the
+underlying commands directly or WSL).
+
+### SQL Server integration tests
+
+The database path (schema deployment, `SqlBulkCopy`, stored procedures) is
+covered by tests tagged `Category=Integration`
+(`tests/DataProcessingApp.Tests/Database/`). They deploy the schema from the
+`db/` SSDT project files into a real SQL Server and are skipped automatically
+when no server is reachable.
+
+```bash
+docker compose up -d --wait sqlserver                          # SQL Server 2022 container
+dotnet test tests/DataProcessingApp.Tests --filter Category=Integration
+docker compose down                                            # when done
+```
+
+The connection string defaults to the compose credentials
+(`sa` / `YourStrong!Passw0rd`, override the password with the
+`MSSQL_SA_PASSWORD` environment variable before `docker compose up`) and can be
+overridden with `DPA_TEST_CONNECTION_STRING`. CI runs these tests in a
+dedicated `database` job.
 
 ## How to use the console app
 
@@ -86,6 +133,12 @@ table while it runs. A failed table is reported as `Processing <table> - FAILED:
 and does not abort the workflow; after the run a failure summary is printed and
 the process exits with code 1 (0 on full success), so automation can detect
 partial failures.
+
+The root tables (B, D, F, J, K, MortalityTable) are loaded from the XML export
+format in `XMLFiles/`, which is a **generated artifact and not committed**:
+run `python src/PythonDataApp/JsonToXml.py` once (after `pip install`, before
+the C# workflows) to create it from the committed `JSONFiles/`. CI does the
+same before its smoke test.
 
 **Where the data comes from and goes:**
 
@@ -279,8 +332,11 @@ in camelCase, with one legacy exception noted under Table S.
 ## Data files
 
 Three kinds of files live in the repository: **source** (from the IRS - never edit),
-**extracted** (intermediate Tabula CSV output for the 90CM series) and **processed**
-(JSON/XML - always regenerable by the scripts above).
+**extracted** (intermediate PDF-extracted CSVs for the 90CM series) and **processed**
+(JSON - always regenerable by the scripts above). Two kinds of JSON are **generated**
+and not committed: the SQL export XML in `XMLFiles/` (`JsonToXml.py`) and the
+combined two-life `-full` files in `JSONFiles/<series>/` (`CombineFiles.py` or
+automatically by the C# workflows before they are needed).
 
 ### Source files (`DataFiles/`)
 
@@ -312,16 +368,16 @@ kept as the verification reference):
 | `TableR(2)-p1..p5-90CM.csv`, `TableU(2)-p1..p5-90CM.csv` | `Process90CMTables.py` (per-part JSONs) |
 | `MortalityTable-90CM.csv` | provenance record for the Table 90CM lx values (verified against `JSONFiles/MortalityTable.json`) |
 
-### Processed files (`JSONFiles/`, `XMLFiles/`)
+### Processed and generated files (`JSONFiles/`, `XMLFiles/`)
 
 | Location | Contents | Produced by |
 |---|---|---|
-| `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
+| `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable (committed) | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
 | `JSONFiles/90CM/*.json` | 90CM series (S, C, H, U(1), U(2)/R(2) p1..p5) | `Process90CMTables.py` |
 | `JSONFiles/2000CM/*.json` | 2000CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2000CMToJson.py` |
 | `JSONFiles/2010CM/*.json` | 2010CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2010CMToJson.py` |
-| `JSONFiles/<series>/TableR(2)-full.json`, `TableU(2)-full.json` | combined parts, created on demand | `CombineFiles.py` or the C# `CombineTableParts` step |
-| `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables | `JsonToXml.py` |
+| `JSONFiles/<series>/TableR(2)-full-<series>.json`, `TableU(2)-full-<series>.json` | combined parts (generated, not committed - recreated on demand) | `CombineFiles.py` or the C# `CombineTableParts` step |
+| `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables (generated, not committed) | `JsonToXml.py` from `JSONFiles/*.json` |
 
 (JSON files in the 90CM series store ages/factors as strings; 2010CM and root files
 store numbers - see the data quality notes.)

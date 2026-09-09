@@ -69,14 +69,31 @@ one branch / PR / session. Nothing here is committed to any release.
       committed files. The one PDF defect found (age 58 printed as "68" in the
       mortality table) is a documented, enforced correction — see the data
       quality notes in the Readme. CI reruns the extraction in the data-drift job.
-- [ ] **Docker SQL Server in CI.** Real integration test for `SqlBulkCopy` +
+- [x] **Docker SQL Server in CI.** Real integration test for `SqlBulkCopy` +
       stored procedures; the database path is currently untested.
-- [ ] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
+      Done (September 2026): `docker-compose.yml` runs SQL Server 2022 locally
+      and in CI (dedicated `database` job); the integration tests
+      (`tests/DataProcessingApp.Tests/Database/`, `Category=Integration`)
+      deploy the schema from the `db/` project SQL files into the container and
+      verify bulk-insert idempotency, transactional rollback on failure, and
+      the stored procedures including `GetLxFrom2010`. Tests skip automatically
+      when no SQL Server is reachable.
+- [x] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
       generate XML in CI from JSON (and stop committing it) or drop XML if
-      nothing downstream requires it.
-- [ ] **Serializer migration (optional).** Replace Newtonsoft.Json with
+      nothing downstream requires it. Done (September 2026): `XMLFiles/` is
+      untracked (gitignored) and generated on demand with `JsonToXml.py` from
+      the committed JSON; CI generates it before the C# `load` smoke test, and
+      the data-drift job no longer checks it. The C# workflows keep reading the
+      XML export format for root tables.
+- [x] **Serializer migration (optional).** Replace Newtonsoft.Json with
       System.Text.Json across `SerializerHelper`/loaders; low value, do only
-      with other Core work.
+      with other Core work. Done (September 2026): JSON moved to
+      System.Text.Json (case-insensitive keys, numbers readable from strings
+      for the 90CM series); the XML paths are unchanged. All 555 tests pass and
+      the C# `json` workflow round-trips the committed root JSON files
+      value-identically; the only output difference is cosmetic (whole-number
+      doubles serialize as `1` instead of `1.0`), so the committed JSONs were
+      left untouched.
 
 ## Decisions / caveats to revisit
 
