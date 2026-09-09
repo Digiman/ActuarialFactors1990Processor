@@ -408,3 +408,6 @@ FodyWeavers.xsd
 venv/
 *.py[cod]
 .DS_Store
+
+# Generated data artifacts (regenerate with: python src/PythonDataApp/JsonToXml.py)
+XMLFiles/

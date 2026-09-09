@@ -27,7 +27,8 @@ tests/
   python                      pytest tests for the Python scripts
 db/                           SSDT database project (tables, stored procedures)
 DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
-JSONFiles/, XMLFiles/         processed data files (per-series subfolders)
+JSONFiles/                    processed data files (per-series subfolders)
+XMLFiles/                     generated XML (root tables; not committed, run JsonToXml.py)
 Docs/                         research notes, improvement plan
 ```
 
@@ -52,6 +53,8 @@ dotnet test tests/DataProcessingApp.Tests
 python3 -m venv .venv && . .venv/bin/activate      # or use Anaconda
 pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.txt
 python -m pytest tests/python
+
+python src/PythonDataApp/JsonToXml.py              # generate XMLFiles/ (needed by the C# workflows)
 ```
 
 ### SQL Server integration tests
@@ -110,6 +113,12 @@ table while it runs. A failed table is reported as `Processing <table> - FAILED:
 and does not abort the workflow; after the run a failure summary is printed and
 the process exits with code 1 (0 on full success), so automation can detect
 partial failures.
+
+The root tables (B, D, F, J, K, MortalityTable) are loaded from the XML export
+format in `XMLFiles/`, which is a **generated artifact and not committed**:
+run `python src/PythonDataApp/JsonToXml.py` once (after `pip install`, before
+the C# workflows) to create it from the committed `JSONFiles/`. CI does the
+same before its smoke test.
 
 **Where the data comes from and goes:**
 
@@ -303,8 +312,10 @@ in camelCase, with one legacy exception noted under Table S.
 ## Data files
 
 Three kinds of files live in the repository: **source** (from the IRS - never edit),
-**extracted** (intermediate Tabula CSV output for the 90CM series) and **processed**
-(JSON/XML - always regenerable by the scripts above).
+**extracted** (intermediate PDF-extracted CSVs for the 90CM series) and **processed**
+(JSON - always regenerable by the scripts above). The SQL export XML in
+`XMLFiles/` is additionally **generated** from the processed JSON on demand
+(`JsonToXml.py`) and is not committed.
 
 ### Source files (`DataFiles/`)
 
@@ -336,16 +347,16 @@ kept as the verification reference):
 | `TableR(2)-p1..p5-90CM.csv`, `TableU(2)-p1..p5-90CM.csv` | `Process90CMTables.py` (per-part JSONs) |
 | `MortalityTable-90CM.csv` | provenance record for the Table 90CM lx values (verified against `JSONFiles/MortalityTable.json`) |
 
-### Processed files (`JSONFiles/`, `XMLFiles/`)
+### Processed and generated files (`JSONFiles/`, `XMLFiles/`)
 
 | Location | Contents | Produced by |
 |---|---|---|
-| `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
+| `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable (committed) | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
 | `JSONFiles/90CM/*.json` | 90CM series (S, C, H, U(1), U(2)/R(2) p1..p5) | `Process90CMTables.py` |
 | `JSONFiles/2000CM/*.json` | 2000CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2000CMToJson.py` |
 | `JSONFiles/2010CM/*.json` | 2010CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2010CMToJson.py` |
 | `JSONFiles/<series>/TableR(2)-full.json`, `TableU(2)-full.json` | combined parts, created on demand | `CombineFiles.py` or the C# `CombineTableParts` step |
-| `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables | `JsonToXml.py` |
+| `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables (generated, not committed) | `JsonToXml.py` from `JSONFiles/*.json` |
 
 (JSON files in the 90CM series store ages/factors as strings; 2010CM and root files
 store numbers - see the data quality notes.)

@@ -78,9 +78,13 @@ one branch / PR / session. Nothing here is committed to any release.
       verify bulk-insert idempotency, transactional rollback on failure, and
       the stored procedures including `GetLxFrom2010`. Tests skip automatically
       when no SQL Server is reachable.
-- [ ] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
+- [x] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
       generate XML in CI from JSON (and stop committing it) or drop XML if
-      nothing downstream requires it.
+      nothing downstream requires it. Done (September 2026): `XMLFiles/` is
+      untracked (gitignored) and generated on demand with `JsonToXml.py` from
+      the committed JSON; CI generates it before the C# `load` smoke test, and
+      the data-drift job no longer checks it. The C# workflows keep reading the
+      XML export format for root tables.
 - [ ] **Serializer migration (optional).** Replace Newtonsoft.Json with
       System.Text.Json across `SerializerHelper`/loaders; low value, do only
       with other Core work.
