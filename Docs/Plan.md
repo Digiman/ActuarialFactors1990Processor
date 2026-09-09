@@ -18,7 +18,7 @@ one branch / PR / session. Nothing here is committed to any release.
       but was not referenced by the SSDT project, so it never deployed; the
       `.sqlproj` Build entry was added in September 2026 - redeploy the
       database project to create it in existing databases.
-- [ ] **Data-invariant tests.** Encode the checks that caught the 2026 data
+- [x] **Data-invariant tests.** Encode the checks that caught the 2026 data
       bugs as automated tests: `J = K * (1+i)^(1/m)` identity, per-table
       row-count grids (100 rates x 110 ages etc.), no `" "` placeholder
       strings anywhere, factor sanity/monotonicity.
