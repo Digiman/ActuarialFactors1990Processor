@@ -333,9 +333,10 @@ in camelCase, with one legacy exception noted under Table S.
 
 Three kinds of files live in the repository: **source** (from the IRS - never edit),
 **extracted** (intermediate PDF-extracted CSVs for the 90CM series) and **processed**
-(JSON - always regenerable by the scripts above). The SQL export XML in
-`XMLFiles/` is additionally **generated** from the processed JSON on demand
-(`JsonToXml.py`) and is not committed.
+(JSON - always regenerable by the scripts above). Two kinds of JSON are **generated**
+and not committed: the SQL export XML in `XMLFiles/` (`JsonToXml.py`) and the
+combined two-life `-full` files in `JSONFiles/<series>/` (`CombineFiles.py` or
+automatically by the C# workflows before they are needed).
 
 ### Source files (`DataFiles/`)
 
@@ -375,7 +376,7 @@ kept as the verification reference):
 | `JSONFiles/90CM/*.json` | 90CM series (S, C, H, U(1), U(2)/R(2) p1..p5) | `Process90CMTables.py` |
 | `JSONFiles/2000CM/*.json` | 2000CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2000CMToJson.py` |
 | `JSONFiles/2010CM/*.json` | 2010CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2010CMToJson.py` |
-| `JSONFiles/<series>/TableR(2)-full.json`, `TableU(2)-full.json` | combined parts, created on demand | `CombineFiles.py` or the C# `CombineTableParts` step |
+| `JSONFiles/<series>/TableR(2)-full-<series>.json`, `TableU(2)-full-<series>.json` | combined parts (generated, not committed - recreated on demand) | `CombineFiles.py` or the C# `CombineTableParts` step |
 | `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables (generated, not committed) | `JsonToXml.py` from `JSONFiles/*.json` |
 
 (JSON files in the 90CM series store ages/factors as strings; 2010CM and root files

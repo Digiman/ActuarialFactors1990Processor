@@ -411,3 +411,7 @@ venv/
 
 # Generated data artifacts (regenerate with: python src/PythonDataApp/JsonToXml.py)
 XMLFiles/
+# Combined "-full" JSON files: auto-generated from the committed part files by
+# CombineFiles.py or the C# CombineTableParts step
+JSONFiles/*/TableU(2)-full-*.json
+JSONFiles/*/TableR(2)-full-*.json
