@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>IRS Actuarial Factors</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      var mode = localStorage.getItem('dpa-theme') || 'system';
+      var dark = mode === 'dark' || (mode === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <h1>IRS Actuarial Factors</h1>
+        <p class="tagline">Estate &amp; gift valuation scenarios from IRS Publications 1457 / 1458 / 1459 &mdash; exact published lookups across the 90CM, 2000CM and 2010CM census series.</p>
+      </div>
+      <div class="theme-switch" role="group" aria-label="Color theme">
+        <button type="button" data-mode="light" aria-pressed="false">Light</button>
+        <button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+        <button type="button" data-mode="system" aria-pressed="false">System</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="scenarios" aria-label="Scenarios"></aside>
+
+    <main>
+      <section class="head">
+        <h2 id="scenario-title"></h2>
+        <p id="scenario-purpose"></p>
+        <p class="dim" id="scenario-citation"></p>
+      </section>
+
+      <section class="card">
+        <div id="inputs" class="inputs"></div>
+        <div class="controls-row">
+          <label id="series-wrap">Series
+            <select id="series"></select>
+          </label>
+          <label id="compare-wrap" class="check">
+            <input type="checkbox" id="compare">
+            Compare all series
+          </label>
+          <button id="run">Compute</button>
+        </div>
+        <p class="error" id="error" role="alert"></p>
+      </section>
+
+      <section class="card" id="result" hidden></section>
+
+      <section class="card" id="chart-card" hidden>
+        <div class="chart-head">
+          <h3>Factor vs age</h3>
+          <select id="chart-label" aria-label="Charted value"></select>
+        </div>
+        <div id="chart"></div>
+        <p class="dim" id="chart-note"></p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <p>Factors are exact IRS-published grid values &mdash; no interpolation. Data files are checksummed against their IRS sources; see the repository readme for provenance.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

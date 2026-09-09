@@ -1,10 +1,12 @@
 # Improvement plan
 
 Candidate work items captured in September 2026 after the modernization PR
-(#3, branch `feature/modernization`). The project's purpose stays the same:
+(#3, branch `feature/modernization`). The project's purpose is now twofold:
 **data transformation from IRS PDF/spreadsheet documents to JSON/XML files and
-SQL Server tables**. Items are grouped into suggested phases; each phase fits
-one branch / PR / session. Nothing here is committed to any release.
+SQL Server tables**, and **answering valuation questions with that data**
+(factor scenarios via the `factor` command and the web UI, Phase 4). Items are
+grouped into suggested phases; each phase fits one branch / PR / session.
+Nothing here is committed to any release.
 
 ## Phase 1 - pipeline hardening (high value, low effort)
 
@@ -94,6 +96,42 @@ one branch / PR / session. Nothing here is committed to any release.
       value-identically; the only output difference is cosmetic (whole-number
       doubles serialize as `1` instead of `1.0`), so the committed JSONs were
       left untouched.
+
+## Phase 4 - using the data (scenarios: CLI + web)
+
+Done (September 2026). The pipeline only moved data around; this phase makes it
+answer valuation questions with the IRS-published factors.
+
+- [x] **Calculator library** (`DataProcessingApp.Calculator`): cached,
+      thread-safe table access over the committed JSON (two-life tables from
+      their five part files) plus scenario computation. Eight scenarios:
+      life-estate (S), annuity (S + J/K), unitrust (F + U(1)), unitrust
+      two-life (F + U(2)), annuity trust two-life (R(2)), term-certain (B),
+      term-unitrust (D), mortality (lx). All results are exact published-grid
+      lookups - no interpolation; off-grid inputs fail with the actual grid in
+      the message. The CRUT scenarios apply the Rev. Proc. 89-21 payout
+      adjustment (payout / Table F factor, nearest 0.2 step); Table F's
+      (frequency, months) combos are validated against the published ranges.
+      A scenario catalog (metadata + input descriptors) is the single source
+      of truth for the CLI, the web UI forms and the API contract.
+- [x] **`factor` CLI command**: one scenario per invocation
+      (`make run ARGS="factor --scenario life-estate --age 65 --rate 5.2"`),
+      Spectre table output with the table citations; `factor` without
+      `--scenario` lists every scenario with its inputs.
+- [x] **Web UI + JSON API** (`DataProcessingApp.WebApi`, `make web` at
+      http://localhost:5000): static single-page UI (vanilla JS, no CDN) with
+      scenario picker, input forms generated from the catalog, result cards,
+      and a factor-vs-age SVG chart with optional 90CM/2000CM/2010CM overlay.
+      API: `GET /api/scenarios`, `GET /api/series`, `POST /api/calc`,
+      `POST /api/sweep/age` (age sweep, per-published-grid gaps allowed,
+      compare-all-series option), `GET /api/mortality?year=`. Everything
+      reads the committed JSON directly (no XMLFiles dependency).
+- [x] **Calculator tests**: 22 xUnit tests against the real committed data -
+      published identities (income + remainder = 1), manual-lookup
+      equivalences, adjustment direction (beginning > end, more frequent
+      payments => higher adjusted payout rate => smaller remainder), age
+      swap for two-life scenarios, validation errors, term-certain
+      identities, committed-value regressions.
 
 ## Decisions / caveats to revisit
 

@@ -17,7 +17,7 @@ DPA_ENV := DPA_BaseDataDir=JSONFiles DPA_XmlDataDir=XMLFiles DPA_ConnectionStrin
 .PHONY: help install build test test-integration format-check \
         db-up db-down db-schema db-fill \
         data-extract data-json data-xml data-verify \
-        run clean
+        run web clean
 
 help: ## Show this help
 	@grep -E '^[a-z0-9_-]+:.*##' $(MAKEFILE_LIST) \
@@ -87,8 +87,11 @@ data-xml: ## Generate XMLFiles/ (SQL export XML) from JSONFiles/ - required by t
 data-verify: ## Verify the source data files against DataFiles/manifest.json
 	$(PYTHON) $(SCRIPTS)/VerifyManifest.py
 
-run: data-xml ## Run a console app workflow. ARGS: "load", "database", "excel --dry-run", "load --series 90CM" ...
+run: data-xml ## Run a console app workflow. ARGS: "load", "database", "excel --dry-run", "factor --scenario life-estate --age 65 --rate 5.2" ...
 	$(DPA_ENV) $(DOTNET) run --project src/DataProcessingApp.ConsoleApp -- $(ARGS)
+
+web: ## Start the factor web UI (http://localhost:5000)
+	DPA_BaseDataDir=$(CURDIR)/JSONFiles $(DOTNET) run --project src/DataProcessingApp.WebApi
 
 clean: ## Remove build outputs and Python caches
 	$(DOTNET) clean DataProcessingApp.sln
