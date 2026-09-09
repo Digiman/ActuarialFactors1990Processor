@@ -26,7 +26,7 @@ one branch / PR / session. Nothing here is committed to any release.
       the output against committed `JSONFiles/`; add
       `dotnet format --verify-no-changes`; add the C# `load` smoke workflow
       as a CI step.
-- [ ] **Exit codes and error isolation.** One missing file currently aborts a
+- [x] **Exit codes and error isolation.** One missing file currently aborts a
       whole workflow with a stack trace; catch per table, print a failure
       summary, exit non-zero for automation.
 

@@ -70,8 +70,11 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 | `database`  | loads every table, all series, and reloads it into SQL Server (destination tables are cleared first, so reruns are idempotent) |
 | `all`       | load + json + text + excel                                          |
 
-An unknown argument prints the usage line and exits; the process reports
-`Processing <table> - done, <N> records.` per table while it runs.
+An unknown argument prints the usage line and exits with code 1; the process
+reports `Processing <table> - done, <N> records.` per table while it runs. A
+failed table is reported as `Processing <table> - FAILED: <reason>` and does not
+abort the workflow; after the run a failure summary is printed and the process
+exits with code 1 (0 on full success), so automation can detect partial failures.
 
 **Where the data comes from and goes:**
 
