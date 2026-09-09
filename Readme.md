@@ -67,7 +67,7 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 | `json`      | loads every root table and saves it as JSON                         |
 | `text`      | loads every table, all series, and saves it as a plain text file    |
 | `excel`     | loads every table, all series, and saves it as an Excel document (numbers as numeric cells) |
-| `database`  | loads every table, all series, and bulk-inserts it into SQL Server  |
+| `database`  | loads every table, all series, and reloads it into SQL Server (destination tables are cleared first, so reruns are idempotent) |
 | `all`       | load + json + text + excel                                          |
 
 An unknown argument prints the usage line and exits; the process reports

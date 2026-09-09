@@ -8,7 +8,7 @@ one branch / PR / session. Nothing here is committed to any release.
 
 ## Phase 1 - pipeline hardening (high value, low effort)
 
-- [ ] **Idempotent `database` workflow.** `TableRepository.InsertTableData`
+- [x] **Idempotent `database` workflow.** `TableRepository.InsertTableData`
       bulk-copies without clearing first, so reruns duplicate rows. Add
       truncate-per-table (or delete by MortalityTable year), wrap in a
       transaction, and report inserted-vs-loaded counts (record counts are

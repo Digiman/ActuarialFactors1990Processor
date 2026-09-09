@@ -125,7 +125,8 @@ public class TableWorker<TRow> where TRow : new()
     }
 
     /// <summary>
-    /// Loads table data and bulk-inserts it into the SQL Server destination table.
+    /// Loads table data and reloads it into the SQL Server destination table
+    /// (existing rows are cleared first, so reruns are idempotent).
     /// </summary>
     public void SaveToDatabase()
     {
@@ -134,9 +135,9 @@ public class TableWorker<TRow> where TRow : new()
         var rows = LoadTable(new TableLoader<TRow>());
 
         var repository = new TableRepository<TRow>(AppHelper.DatabaseConnectionString, _tableType);
-        repository.InsertTableData(rows);
+        var inserted = repository.InsertTableData(rows);
 
-        LogEnd(rows.Count);
+        LogEnd(rows.Count, inserted);
     }
 
     private List<TRow> LoadTable(TableLoader<TRow> loader)
@@ -160,5 +161,10 @@ public class TableWorker<TRow> where TRow : new()
     private void LogEnd(int records)
     {
         Console.WriteLine("Processing {0} - done, {1} records.", TableLabel(), records.ToString("N0", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    private void LogEnd(int loaded, int inserted)
+    {
+        Console.WriteLine("Processing {0} - done, {1} records loaded, {2} inserted.", TableLabel(), loaded.ToString("N0", System.Globalization.CultureInfo.InvariantCulture), inserted.ToString("N0", System.Globalization.CultureInfo.InvariantCulture));
     }
 }

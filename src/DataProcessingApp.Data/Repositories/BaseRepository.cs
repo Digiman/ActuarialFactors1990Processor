@@ -13,7 +13,12 @@ public class BaseRepository
         ConnectionString = connectionString;
     }
 
-    protected void BulkInsertTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
+    /// <summary>
+    /// Clears the destination table and bulk-inserts the new rows in one
+    /// transaction, so reruns are idempotent and a failure leaves the table
+    /// untouched.
+    /// </summary>
+    protected void ReloadTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
     {
         using (var connection = new SqlConnection(ConnectionString))
         {
@@ -33,6 +38,10 @@ public class BaseRepository
 
                 try
                 {
+                    // clear existing rows first; rolled back together with the
+                    // insert if the bulk copy fails
+                    ClearTableData(transaction, destinationTableName);
+
                     // send table with data to database
                     bulkCopy.WriteToServer(dataTable);
                     transaction.Commit();
@@ -43,6 +52,14 @@ public class BaseRepository
                     throw;
                 }
             }
+        }
+    }
+
+    private static void ClearTableData(SqlTransaction transaction, string destinationTableName)
+    {
+        using (var command = new SqlCommand($"TRUNCATE TABLE {destinationTableName}", transaction.Connection, transaction))
+        {
+            command.ExecuteNonQuery();
         }
     }
 }
