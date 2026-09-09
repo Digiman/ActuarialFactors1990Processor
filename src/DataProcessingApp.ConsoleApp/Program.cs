@@ -1,134 +1,31 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Threading;
+﻿using DataProcessingApp.ConsoleApp.Commands;
+using Spectre.Console.Cli;
 
 namespace DataProcessingApp.ConsoleApp;
 
 /// <summary>
-/// Main class for simple console application.
+/// Main class for the console application. Workflow is selected by the first
+/// argument (load | json | text | excel | database | all); run with --help
+/// for the full option reference.
 /// </summary>
 static class Program
 {
-    /// <summary>
-    /// Run processing. Optional argument selects the workflow:
-    /// load | json (default) | text | excel | database | all.
-    /// Returns 0 on success, 1 when any table failed (per-table failures are
-    /// isolated: the workflow continues with the remaining tables and a
-    /// failure summary is printed at the end).
-    /// </summary>
-    /// <param name="args">Arguments from command line.</param>
     static int Main(string[] args)
     {
-        CultureFix();
-
-        var workflow = args.Length > 0 ? args[0].ToLowerInvariant() : "load";
-
-        try
+        var app = new CommandApp<LoadCommand>();
+        app.Configure(config =>
         {
-            switch (workflow)
-            {
-                case "load":
-                    LoadData();
-                    break;
-                case "json":
-                    SaveToJson();
-                    break;
-                case "text":
-                    SaveToTextFiles();
-                    break;
-                case "excel":
-                    SaveToExcelFiles();
-                    break;
-                case "database":
-                    DatabaseInsert();
-                    break;
-                case "all":
-                    LoadData();
-                    SaveToJson();
-                    SaveToTextFiles();
-                    SaveToExcelFiles();
-                    break;
-                default:
-                    Console.WriteLine("Unknown workflow '{0}'. Use: load | json | text | excel | database | all", workflow);
-                    return 1;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-            return 1;
-        }
+            config.SetApplicationName("DataProcessingApp");
+            config.SetApplicationVersion(typeof(Program).Assembly.GetName().Version?.ToString(3) ?? "1.0");
 
-        if (Workflows.Failures.Count > 0)
-        {
-            Console.WriteLine("{0} step(s) failed:", Workflows.Failures.Count);
-            foreach (var failure in Workflows.Failures)
-            {
-                Console.WriteLine("  - " + failure);
-            }
-            return 1;
-        }
+            config.AddCommand<LoadCommand>("load").WithDescription("Load every table from its source files, all series (smoke check).");
+            config.AddCommand<JsonCommand>("json").WithDescription("Load every root table and save it as JSON.");
+            config.AddCommand<TextCommand>("text").WithDescription("Load every table, all series, and save it as a plain text file.");
+            config.AddCommand<ExcelCommand>("excel").WithDescription("Load every table, all series, and save it as an Excel document.");
+            config.AddCommand<DatabaseCommand>("database").WithDescription("Load every table, all series, and reload it into SQL Server.");
+            config.AddCommand<AllCommand>("all").WithDescription("Run load, json, text and excel in sequence.");
+        });
 
-        if (!Console.IsInputRedirected)
-        {
-            Console.WriteLine("Press any key...");
-            Console.ReadKey();
-        }
-
-        return 0;
-    }
-
-    private static void CultureFix()
-    {
-        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-    }
-
-    private static void SaveToExcelFiles()
-    {
-        var time = ExecuteWithTiming(Workflows.ExcelSaverTests);
-        Console.WriteLine("Saving to Excel some tables: {0} ms", time);
-    }
-
-    private static void SaveToTextFiles()
-    {
-        var time = ExecuteWithTiming(Workflows.TextFileSaverTests);
-        Console.WriteLine("Saving to text some tables: {0} ms", time);
-    }
-
-    private static void LoadData()
-    {
-        var loadersTime = ExecuteWithTiming(Workflows.LoaderTestsReadFromJson);
-        Console.WriteLine("Loading tables time: {0} ms", loadersTime);
-
-        var loadersTime2 = ExecuteWithTiming(Workflows.LoaderTestsReadFromXml);
-        Console.WriteLine("Loading tables time: {0} ms", loadersTime2);
-    }
-
-    private static void DatabaseInsert()
-    {
-        var databaseTime = ExecuteWithTiming(Workflows.DatabaseTests);
-        Console.WriteLine("Database copy: {0} ms", databaseTime);
-    }
-
-    private static void SaveToJson()
-    {
-        var time = ExecuteWithTiming(Workflows.JsonFileSaverTests);
-        Console.WriteLine("Saving to JSON some tables: {0} ms", time);
-    }
-
-    private static long ExecuteWithTiming(Action action)
-    {
-        var timer = new Stopwatch();
-
-        timer.Start();
-
-        // so some action
-        action();
-
-        timer.Stop();
-
-        return timer.ElapsedMilliseconds;
+        return app.Run(args);
     }
 }

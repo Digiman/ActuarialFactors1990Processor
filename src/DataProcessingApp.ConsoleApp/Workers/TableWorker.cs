@@ -4,6 +4,7 @@ using DataProcessingApp.Logic.Loaders;
 using DataProcessingApp.Logic.Savers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace DataProcessingApp.ConsoleApp.Workers;
@@ -29,6 +30,8 @@ public class TableWorker<TRow> where TRow : new()
     {
         LogStart();
 
+        var timer = StartTiming();
+
         var loader = new TableLoader<TRow>();
         var parts = FilesHelper.PartFiles(_tableType);
         if (parts != null)
@@ -38,12 +41,12 @@ public class TableWorker<TRow> where TRow : new()
             {
                 total += loader.LoadFromJson(FilesHelper.GeneratePartFilename(part, _series)).Count;
             }
-            LogEnd(total);
+            LogEnd(total, timer);
         }
         else
         {
             var rows = LoadTable(loader);
-            LogEnd(rows.Count);
+            LogEnd(rows.Count, timer);
         }
     }
 
@@ -54,12 +57,13 @@ public class TableWorker<TRow> where TRow : new()
     {
         LogStart();
 
+        var timer = StartTiming();
         var rows = LoadTable(new TableLoader<TRow>());
 
         var resultFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.JSON, _series);
         new TableSaver<TRow>().SaveToJsonFile(resultFilename, rows);
 
-        LogEnd(rows.Count);
+        LogEnd(rows.Count, timer);
     }
 
     /// <summary>
@@ -82,6 +86,8 @@ public class TableWorker<TRow> where TRow : new()
 
         LogStart();
 
+        var timer = StartTiming();
+
         var loader = new TableLoader<TRow>();
         var combined = new List<TRow>();
         foreach (var part in parts)
@@ -91,7 +97,7 @@ public class TableWorker<TRow> where TRow : new()
 
         new TableSaver<TRow>().SaveToJsonFile(jsonFilename, combined);
 
-        LogEnd(combined.Count);
+        LogEnd(combined.Count, timer);
     }
 
     /// <summary>
@@ -101,12 +107,13 @@ public class TableWorker<TRow> where TRow : new()
     {
         LogStart();
 
+        var timer = StartTiming();
         var rows = LoadTable(new TableLoader<TRow>());
 
         var excelFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.Excel, _series);
         new TableSaver<TRow>().SaveToExcel(FilesHelper.TableDisplayName(_tableType), excelFilename, rows);
 
-        LogEnd(rows.Count);
+        LogEnd(rows.Count, timer);
     }
 
     /// <summary>
@@ -116,12 +123,13 @@ public class TableWorker<TRow> where TRow : new()
     {
         LogStart();
 
+        var timer = StartTiming();
         var rows = LoadTable(new TableLoader<TRow>());
 
         var textFilename = FilesHelper.GenerateFilename(_tableType, DocumentType.Text, _series);
         new TableSaver<TRow>().SaveToTextFile(textFilename, rows);
 
-        LogEnd(rows.Count);
+        LogEnd(rows.Count, timer);
     }
 
     /// <summary>
@@ -132,12 +140,13 @@ public class TableWorker<TRow> where TRow : new()
     {
         LogStart();
 
+        var timer = StartTiming();
         var rows = LoadTable(new TableLoader<TRow>());
 
         var repository = new TableRepository<TRow>(AppHelper.DatabaseConnectionString, _tableType);
         var inserted = repository.InsertTableData(rows);
 
-        LogEnd(rows.Count, inserted);
+        LogEnd(rows.Count, timer, inserted);
     }
 
     private List<TRow> LoadTable(TableLoader<TRow> loader)
@@ -158,13 +167,25 @@ public class TableWorker<TRow> where TRow : new()
         Console.WriteLine("Processing {0}...", TableLabel());
     }
 
-    private void LogEnd(int records)
+    private static Stopwatch StartTiming()
     {
-        Console.WriteLine("Processing {0} - done, {1} records.", TableLabel(), records.ToString("N0", System.Globalization.CultureInfo.InvariantCulture));
+        var timer = new Stopwatch();
+        timer.Start();
+        return timer;
     }
 
-    private void LogEnd(int loaded, int inserted)
+    private static string FormatCount(int records)
     {
-        Console.WriteLine("Processing {0} - done, {1} records loaded, {2} inserted.", TableLabel(), loaded.ToString("N0", System.Globalization.CultureInfo.InvariantCulture), inserted.ToString("N0", System.Globalization.CultureInfo.InvariantCulture));
+        return records.ToString("N0", System.Globalization.CultureInfo.InvariantCulture);
+    }
+
+    private void LogEnd(int records, Stopwatch timer)
+    {
+        Console.WriteLine("Processing {0} - done, {1} records in {2} ms.", TableLabel(), FormatCount(records), timer.ElapsedMilliseconds);
+    }
+
+    private void LogEnd(int loaded, Stopwatch timer, int inserted)
+    {
+        Console.WriteLine("Processing {0} - done, {1} records loaded, {2} inserted in {3} ms.", TableLabel(), FormatCount(loaded), FormatCount(inserted), timer.ElapsedMilliseconds);
     }
 }

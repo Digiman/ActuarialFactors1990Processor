@@ -58,7 +58,7 @@ not to the repository root; when in doubt use the `DPA_` overrides below.
 The workflow is selected by a command line argument:
 
 ```bash
-dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
+dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow> [options]
 ```
 
 | Workflow    | What it does                                                        |
@@ -70,11 +70,20 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 | `database`  | loads every table, all series, and reloads it into SQL Server (destination tables are cleared first, so reruns are idempotent) |
 | `all`       | load + json + text + excel                                          |
 
-An unknown argument prints the usage line and exits with code 1; the process
-reports `Processing <table> - done, <N> records.` per table while it runs. A
-failed table is reported as `Processing <table> - FAILED: <reason>` and does not
-abort the workflow; after the run a failure summary is printed and the process
-exits with code 1 (0 on full success), so automation can detect partial failures.
+Every workflow accepts the same options (also shown by `--help`, which is
+always available):
+
+| Option        | Effect                                                                 |
+|---------------|-------------------------------------------------------------------------|
+| `--series`    | restrict series tables to the given series, e.g. `--series 2010CM` or `--series 90CM,2010CM` |
+| `--table`     | restrict processing to the given tables, e.g. `--table S,K`, `--table U1` or `--table MortalityTable` |
+| `--dry-run`   | load and validate the source files but write nothing                   |
+
+The process reports `Processing <table> - done, <N> records in <M> ms.` per
+table while it runs. A failed table is reported as `Processing <table> - FAILED: <reason>`
+and does not abort the workflow; after the run a failure summary is printed and
+the process exits with code 1 (0 on full success), so automation can detect
+partial failures.
 
 **Where the data comes from and goes:**
 
@@ -108,6 +117,7 @@ python src/PythonDataApp/Process90CMTables.py              # 90CM CSV -> JSON (a
 python src/PythonDataApp/Process90CMTables.py --table S    # one table
 python src/PythonDataApp/Process90CMTables.py --numeric    # emit numbers instead of strings
 python src/PythonDataApp/CombineFiles.py                   # combine R(2)/U(2) parts into "-full" files
+python src/PythonDataApp/Convert2000CMToJson.py            # 2000CM XLS/XLSX -> JSON (requires openpyxl + xlrd)
 python src/PythonDataApp/Convert2010CMToJson.py            # 2010CM XLSX -> JSON (requires openpyxl)
 python src/PythonDataApp/ConvertRootTablesToJson.py        # root tables B/D/F/J/K: XLSX/XLS -> JSON
 python src/PythonDataApp/JsonToXml.py                      # root-table JSON -> SQL export XML
@@ -121,24 +131,23 @@ study they are based on. This repository processes:
 | Series | Mortality basis | Valuation dates | Source format |
 |---|---|---|---|
 | 90CM | 1990 census | 5/1/1999 - 4/30/2009 | Pub 1457/1458/1459 (7-1999) PDFs |
+| 2000CM | 2000 census | 5/1/2009 - 5/31/2023 | official IRS spreadsheets (mixed .xls/.xlsx) |
 | 2010CM | 2010 census | 6/1/2023 onwards | official IRS XLSX spreadsheets |
-
-(The 2000CM era, 5/1/2009 - 5/31/2023, is not processed yet; see `Docs/Plan.md`.)
 
 ### Table reference
 
-Interest/payout grids: 2010CM and root tables use 0.2%-20.0% in 0.2 steps (100 rates);
-the 90CM grid is 2.2%-22.0% in 0.2 steps.
+Interest/payout grids: 2000CM/2010CM and root tables use 0.2%-20.0% in 0.2 steps
+(100 rates); the 90CM grid is 2.2%-22.0% in 0.2 steps.
 
 | Table | Purpose (IRS wording) | Series | Rows | Destination |
 |---|---|---|---|---|
-| S | single-life annuity, life estate and remainder factors | 90CM, 2010CM | 11,000 | `dbo.tblS` |
-| H | commutation factors (Dx/Nx/Mx) | 90CM, 2010CM | 11,000 | `dbo.tblH` |
-| C | factors for reducing assurances (remainders in depreciable property) | 90CM, 2010CM | 11,000 | `dbo.tblC` |
-| U(1) | one-life unitrust remainder factors | 90CM, 2010CM | 11,000 | `dbo.tblU1` |
-| U(2) | two-life unitrust remainder factors | 90CM, 2010CM | 610,500 | `dbo.tblU2` |
-| R(2) | two-life remainder factors | 90CM, 2010CM | 610,500 | `dbo.tblR2` |
-| Z | unitrust commutation factors | 2010CM only | 11,000 | `dbo.tblZ` |
+| S | single-life annuity, life estate and remainder factors | 90CM, 2000CM, 2010CM | 11,000 | `dbo.tblS` |
+| H | commutation factors (Dx/Nx/Mx) | 90CM, 2000CM, 2010CM | 11,000 | `dbo.tblH` |
+| C | factors for reducing assurances (remainders in depreciable property) | 90CM, 2000CM, 2010CM | 11,000 | `dbo.tblC` |
+| U(1) | one-life unitrust remainder factors | 90CM, 2000CM, 2010CM | 11,000 | `dbo.tblU1` |
+| U(2) | two-life unitrust remainder factors | 90CM, 2000CM, 2010CM | 610,500 | `dbo.tblU2` |
+| R(2) | two-life remainder factors | 90CM, 2000CM, 2010CM | 610,500 | `dbo.tblR2` |
+| Z | unitrust commutation factors | 2000CM, 2010CM | 11,000 | `dbo.tblZ` |
 | B | annuity, income and remainder interests for a term certain | all (not mortality based) | 6,000 | `dbo.tblB` |
 | D | unitrust remainder factors postponed for a term of years | all (not mortality based) | 2,000 | `dbo.tblD` |
 | F | unitrust adjusted payout rate factors | all (not mortality based) | 2,600 | `dbo.tblF` |
@@ -265,10 +274,19 @@ Three kinds of files live in the repository: **source** (from the IRS - never ed
 
 ### Source files (`DataFiles/`)
 
+Every source file is checksummed in `DataFiles/manifest.json` (SHA256, IRS URL
+and download date). `python src/PythonDataApp/VerifyManifest.py` re-verifies
+all checksums and the manifest schema and fails on mismatch or unlisted files;
+`--download` restores missing or corrupted files from their recorded URLs. CI
+runs it in the data-drift job. The exact IRS URLs in the manifest were
+verified byte-identical in September 2026 for all 21 official spreadsheets
+(root tables + 2000CM + 2010CM).
+
 | Group | Files | Format | Origin |
 |---|---|---|---|
-| 90CM series | `DataFiles/90CM/*.pdf` (16 files: TableS, TableC, TableH, TableR(2) full + p1..p5, TableU(1), TableU(2) full + p1..p5, MortalityTable-90CM) | PDF | Publications 1457/1458/1459 (7-1999), archived at `https://www.irs.gov/pub/irs-prior/p1457--1999.pdf` (+ `-1458-`, `-1459-`) |
+| 90CM series | `DataFiles/90CM/*.pdf` (17 files: TableS, TableC, TableH, TableR(2) full + p1..p5, TableU(1), TableU(2) full + p1..p5, MortalityTable-90CM) | PDF | Publications 1457/1458/1459 (7-1999), archived at `https://www.irs.gov/pub/irs-prior/p1457--1999.pdf` (`-1458-`, `-1459-`); per-table page extracts, publication per file recorded in the manifest (1457: S/H/R(2), 1458: Mortality/U(1)/U(2), 1459: C, per the PDF embedded titles) |
 | Root tables | `DataFiles/TableB.xlsx`, `TableD.xls`, `TableF.xls`, `TableJ.xlsx`, `TableK.xlsx` | XLSX / XLS | `https://www.irs.gov/retirement-plans/actuarial-tables` (not mortality based, one edition serves all series) |
+| 2000CM series | `DataFiles/2000CM/table-*.xls(x)` (8 files: s, h, c, z, r2-2009, u1, u2-2009cm, 2000cm mortality) | XLS / XLSX | `https://www.irs.gov/retirement-plans/actuarial-tables` (e.g. `https://www.irs.gov/pub/irs-tege/table-s-2000cm.xlsx`) |
 | 2010CM series | `DataFiles/2010CM/table-<name>-2010cm-final.xlsx` (8 files: s, h, c, z, r2, u1, u2, 2010cm mortality) | XLSX | `https://www.irs.gov/retirement-plans/actuarial-tables` |
 
 ### Extracted files (`src/PythonDataApp/DataFiles/90CM/`)
@@ -287,6 +305,7 @@ extraction of the 90CM PDFs (the only non-automated step in the pipeline):
 |---|---|---|
 | `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
 | `JSONFiles/90CM/*.json` | 90CM series (S, C, H, U(1), U(2)/R(2) p1..p5) | `Process90CMTables.py` |
+| `JSONFiles/2000CM/*.json` | 2000CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2000CMToJson.py` |
 | `JSONFiles/2010CM/*.json` | 2010CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2010CMToJson.py` |
 | `JSONFiles/<series>/TableR(2)-full.json`, `TableU(2)-full.json` | combined parts, created on demand | `CombineFiles.py` or the C# `CombineTableParts` step |
 | `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables | `JsonToXml.py` |
