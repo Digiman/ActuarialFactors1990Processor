@@ -22,7 +22,7 @@ one branch / PR / session. Nothing here is committed to any release.
       bugs as automated tests: `J = K * (1+i)^(1/m)` identity, per-table
       row-count grids (100 rates x 110 ages etc.), no `" "` placeholder
       strings anywhere, factor sanity/monotonicity.
-- [ ] **CI drift detection.** Job that reruns the Python converters and diffs
+- [x] **CI drift detection.** Job that reruns the Python converters and diffs
       the output against committed `JSONFiles/`; add
       `dotnet format --verify-no-changes`; add the C# `load` smoke workflow
       as a CI step.

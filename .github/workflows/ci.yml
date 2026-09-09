@@ -18,6 +18,13 @@ jobs:
         run: dotnet build DataProcessingApp.sln
       - name: Test
         run: dotnet test tests/DataProcessingApp.Tests --no-build --verbosity normal
+      - name: Format check
+        run: dotnet format DataProcessingApp.sln --verify-no-changes
+      - name: Load smoke test
+        run: dotnet run --project src/DataProcessingApp.ConsoleApp -- load
+        env:
+          DPA_BaseDataDir: JSONFiles
+          DPA_XmlDataDir: XMLFiles
 
   python:
     runs-on: ubuntu-latest
@@ -31,3 +38,27 @@ jobs:
           pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.txt
       - name: Test
         run: python -m pytest tests/python -q
+
+  data-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r src/PythonDataApp/requirements.txt
+      - name: Rerun converters
+        run: |
+          python src/PythonDataApp/Process90CMTables.py
+          python src/PythonDataApp/ConvertRootTablesToJson.py
+          python src/PythonDataApp/Convert2010CMToJson.py
+          python src/PythonDataApp/JsonToXml.py
+      - name: Fail on drift from committed JSONFiles/XMLFiles
+        run: |
+          git diff --exit-code -- JSONFiles XMLFiles
+          test -z "$(git status --porcelain JSONFiles XMLFiles)" || {
+            echo "::error::Untracked generated files in JSONFiles/XMLFiles:"
+            git status --porcelain JSONFiles XMLFiles
+            exit 1
+          }
