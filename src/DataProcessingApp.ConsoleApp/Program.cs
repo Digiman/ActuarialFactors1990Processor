@@ -24,6 +24,7 @@ static class Program
             config.AddCommand<ExcelCommand>("excel").WithDescription("Load every table, all series, and save it as an Excel document.");
             config.AddCommand<DatabaseCommand>("database").WithDescription("Load every table, all series, and reload it into SQL Server.");
             config.AddCommand<AllCommand>("all").WithDescription("Run load, json, text and excel in sequence.");
+            config.AddCommand<FactorCommand>("factor").WithDescription("Compute an actuarial scenario from the committed JSON data (run with no --scenario to list them).");
         });
 
         return app.Run(args);

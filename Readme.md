@@ -8,9 +8,12 @@ Utilities that process actuarial factor data published by the IRS (Publications 
   converted directly from the official IRS XLSX/XLS spreadsheets;
 * Python scripts convert the extracted CSV/XLSX data to JSON;
 * the C# console application reads the JSON/XML files and can save data as
-  JSON, text, Excel files, or bulk-insert it into SQL Server.
+  JSON, text, Excel files, or bulk-insert it into SQL Server;
+* the `factor` command and the web UI compute valuation scenarios from the
+  committed data: life estates, remainders, annuities and CRUT/CRAT factors
+  (IRS Publications 1457/1458/1459 semantics, exact published-grid lookups).
 
-**90CM: PDF -> Extract90CMFromPdf.py -> CSV -> Python -> JSON; 2010CM and root tables: official XLSX/XLS -> Python -> JSON; then C# app -> Excel / text / SQL Server**
+**90CM: PDF -> Extract90CMFromPdf.py -> CSV -> Python -> JSON; 2010CM and root tables: official XLSX/XLS -> Python -> JSON; then C# app -> Excel / text / SQL Server, or factor scenarios / web UI -> answers**
 
 ## Repository layout
 
@@ -19,7 +22,9 @@ src/                          source code
   DataProcessingApp.Core      row types, helpers, configuration
   DataProcessingApp.Logic     generic table loaders/savers (JSON, XML, Excel, text)
   DataProcessingApp.Data      SQL Server bulk-insert repositories
-  DataProcessingApp.ConsoleApp  console application (workflows)
+  DataProcessingApp.Calculator  scenario calculators (exact published-grid lookups)
+  DataProcessingApp.ConsoleApp  console application (workflows + factor command)
+  DataProcessingApp.WebApi    factor web UI + JSON API (serves the calculator)
   PythonDataApp               Python scripts (PDF extraction, CSV/XLSX -> JSON)
     DataFiles/90CM/           extracted CSV files (90CM series, regenerable from the PDFs)
 tests/
@@ -70,6 +75,7 @@ python src/PythonDataApp/JsonToXml.py              # generate XMLFiles/ (needed 
 | `make data-extract` | re-extract the 90CM CSVs from the PDFs (verifies first) |
 | `make data-json` / `make data-xml` | regenerate `JSONFiles/` / `XMLFiles/` |
 | `make db-up` / `make db-down` | start / stop the SQL Server container |
+| `make web` | start the factor web UI (http://localhost:5000) |
 | `make format-check` / `make data-verify` | the CI checks: dotnet format, source manifest |
 
 Credentials default to the compose values and can be overridden per invocation:
@@ -133,6 +139,63 @@ table while it runs. A failed table is reported as `Processing <table> - FAILED:
 and does not abort the workflow; after the run a failure summary is printed and
 the process exits with code 1 (0 on full success), so automation can detect
 partial failures.
+
+### Computing factors (the `factor` command)
+
+Beyond moving data, the app answers valuation questions. `factor` computes one
+scenario from the committed JSON data (defaults in brackets; `--series` defaults
+to 2010CM; run `factor` without `--scenario` to list them all):
+
+```bash
+make run ARGS="factor --scenario life-estate --age 65 --rate 5.2"
+make run ARGS="factor --scenario unitrust --age 70 --payout 8.0 --frequency Quarterly"
+make run ARGS="factor --scenario unitrust-two-life --age1 70 --age2 65 --payout 4.0"
+make run ARGS="factor --scenario term-certain --years 10 --rate 5.2"
+```
+
+| Scenario | Inputs | What it answers |
+|---|---|---|
+| `life-estate` | `--age`, `--rate` | life estate (income interest) and remainder factors for one life (always sum to 1) - Table S |
+| `annuity` | `--age`, `--rate`, `--frequency`, `--timing` | annuity factor for 1/yr adjusted for payment frequency (J = beginning, K = end) - Tables S, J, K |
+| `unitrust` | `--age`, `--payout`, `--frequency`, `--months` | one-life CRUT remainder factor with the adjusted payout rate (nearest 0.2 step, Rev. Proc. 89-21) - Tables F, U(1) |
+| `unitrust-two-life` | `--age1`, `--age2`, `--payout`, `--frequency`, `--months` | two-life CRUT remainder factor (ages are ordered automatically) - Tables F, U(2) |
+| `annuity-trust-two-life` | `--age1`, `--age2`, `--rate` | two-life annuity trust remainder factor - Table R(2) |
+| `term-certain` | `--years`, `--rate` | annuity, income interest and remainder for a term of years - Table B |
+| `term-unitrust` | `--years`, `--payout` | unitrust remainder postponed for a term - Table D |
+| `mortality` | `--age` | lx survivors and survival probability for the census year of the series |
+
+Every scenario is an exact lookup on the published grid - no interpolation. An
+input off the grid (e.g. `--rate 5.3`) fails with the actual published grid in
+the error message, so script output is never a guess.
+
+### The factor web UI
+
+`make web` serves the same scenarios as an interactive UI at
+http://localhost:5000 (read-only; the same `DPA_BaseDataDir` rules apply):
+
+* scenario picker grouped by category (single life, charitable trusts, terms,
+  reference), with per-scenario input forms driven by the catalog,
+* result cards with the primary remainder factor highlighted, plus a table
+  with the exact table citations,
+* a factor-vs-age chart with an optional overlay of all three series
+  (90CM vs 2000CM vs 2010CM in one chart), gradient area fill and a
+  hover crosshair with per-series values,
+* light / dark / system color themes (the system mode follows the OS setting
+  live; the choice is remembered per browser; charts recolor on switch).
+
+The UI is a static page (no framework, no CDN) backed by a small JSON API:
+
+| Endpoint | What it returns |
+|---|---|
+| `GET /api/scenarios` | scenario catalog (inputs, defaults, citations) |
+| `GET /api/series` | available series |
+| `POST /api/calc` | one scenario computation (`{"scenario", "series", "inputs"}`) |
+| `POST /api/sweep/age` | factor-vs-age curves (`{"scenario", "series", "inputs", "compare"}`) |
+| `GET /api/mortality?year=2010` | lx curve for one census year |
+
+The factor command and web UI read everything directly from the committed
+`JSONFiles/` (including the root tables), so `JsonToXml.py` is not needed for
+them - only the C# workflows below read the XML export format.
 
 The root tables (B, D, F, J, K, MortalityTable) are loaded from the XML export
 format in `XMLFiles/`, which is a **generated artifact and not committed**:

@@ -107,6 +107,36 @@ public static class FilesHelper
         return Path.Combine(directory, $"{baseFilename}-processed.json");
     }
 
+    /// <summary>
+    /// Same as <see cref="GenerateFilename(TableType, DocumentType, string)"/>,
+    /// but with an explicit data directory instead of <see cref="AppHelper.BaseDataDir"/>.
+    /// </summary>
+    public static string GenerateFilename(TableType tableType, DocumentType documentType, string series, string baseDir)
+    {
+        var name = GetFilenameByTableType(tableType);
+        if (!string.IsNullOrEmpty(series))
+        {
+            name = name.Replace("-90CM", $"-{series}")
+                .Replace("-2010CM", $"-{series}");
+        }
+        var directory = string.IsNullOrEmpty(series) ? baseDir : Path.Combine(baseDir, series);
+        return Path.Combine(directory, $"{name}.{GetFileExtension(documentType)}");
+    }
+
+    /// <summary>
+    /// Same as <see cref="GeneratePartFilename(string, string)"/>,
+    /// but with an explicit data directory instead of <see cref="AppHelper.BaseDataDir"/>.
+    /// </summary>
+    public static string GeneratePartFilename(string baseFilename, string series, string baseDir)
+    {
+        if (!string.IsNullOrEmpty(series))
+        {
+            baseFilename = baseFilename.Replace("-90CM", $"-{series}");
+        }
+        var directory = string.IsNullOrEmpty(series) ? baseDir : Path.Combine(baseDir, series);
+        return Path.Combine(directory, $"{baseFilename}-processed.json");
+    }
+
     // Tables stored as JSON arrays (converted from official IRS spreadsheets / PDFs via Python);
     // all others are XML-based (SQL Server export format).
     private static readonly HashSet<TableType> XmlBasedTables =

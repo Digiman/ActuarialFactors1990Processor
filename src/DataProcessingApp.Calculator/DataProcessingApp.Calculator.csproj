@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>DataProcessingApp.Calculator</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataProcessingApp.Core\DataProcessingApp.Core.csproj" />
+    <ProjectReference Include="..\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj" />
+  </ItemGroup>
+
+</Project>
