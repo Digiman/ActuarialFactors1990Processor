@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>DataProcessingApp.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{24214e72-4e91-46b9-bf33-17c570a5c1db}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>DataProcessingApp.Database</RootNamespace>
+    <AssemblyName>DataProcessingApp.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo" />
+    <Folder Include="dbo\Tables" />
+    <Folder Include="Publish Profiles" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Dev" />
+    <Folder Include="dbo\Stored Procedures" />
+    <Folder Include="dbo\Stored Procedures\tblMortality" />
+    <Folder Include="dbo\Stored Procedures\tblB" />
+    <Folder Include="dbo\Stored Procedures\tblC" />
+    <Folder Include="dbo\Stored Procedures\tblD" />
+    <Folder Include="dbo\Stored Procedures\tblF" />
+    <Folder Include="dbo\Stored Procedures\tblH" />
+    <Folder Include="dbo\Stored Procedures\tblJ" />
+    <Folder Include="dbo\Stored Procedures\tblK" />
+    <Folder Include="dbo\Stored Procedures\tblR2" />
+    <Folder Include="dbo\Stored Procedures\tblS" />
+    <Folder Include="dbo\Stored Procedures\tblU1" />
+    <Folder Include="dbo\Stored Procedures\tblU2" />
+    <Folder Include="dbo\Stored Procedures\tblZ" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\tblC.sql" />
+    <Build Include="dbo\Tables\tblH.sql" />
+    <Build Include="dbo\Tables\tblR2.sql" />
+    <Build Include="dbo\Tables\tblS.sql" />
+    <Build Include="dbo\Tables\tblU1.sql" />
+    <Build Include="dbo\Tables\tblU2.sql" />
+    <Build Include="dbo\Tables\tblMortality.sql" />
+    <Build Include="dbo\Tables\tblB.sql" />
+    <Build Include="dbo\Tables\tblD.sql" />
+    <Build Include="dbo\Tables\tblF.sql" />
+    <Build Include="dbo\Tables\tblJ.sql" />
+    <Build Include="dbo\Tables\tblK.sql" />
+    <Build Include="dbo\Tables\tblZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1980.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1990.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom2000.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueAnnuityFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueIncomeFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetPresentValueRemainderFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblB\GetAllFromTableB.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetRemainderFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetRFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetDFactorFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblC\GetAllFromTableC.sql" />
+    <Build Include="dbo\Stored Procedures\tblF\GetAdjustmentFactorFromTableF.sql" />
+    <Build Include="dbo\Stored Procedures\tblD\GetRemainderInterestFromTableD.sql" />
+    <Build Include="dbo\Stored Procedures\tblJ\GetAdjustmentFactorFromTableJ.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetDFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetNFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetMFactorFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblH\GetAllFromTableH.sql" />
+    <Build Include="dbo\Stored Procedures\tblR2\GetFactorFromTableR2.sql" />
+    <Build Include="dbo\Stored Procedures\tblK\GetAdjustmentFactorFromTableK.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueAnnuityFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueLifeEstateFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetPresentValueRemainderFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblS\GetAllFromTableS.sql" />
+    <Build Include="dbo\Stored Procedures\tblU1\GetRemainderFactorFromTableU1.sql" />
+    <Build Include="dbo\Stored Procedures\tblU2\GetRemainderFactorFromTableU2.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetDFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetNFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetMFactorFromTableZ.sql" />
+    <Build Include="dbo\Stored Procedures\tblZ\GetAllFromTableZ.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Publish Profiles\Local-Home.publish.xml" />
+    <None Include="Scripts\Dev\Select all data.sql" />
+    <None Include="Scripts\Dev\Delete all data.sql" />
+  </ItemGroup>
+</Project>

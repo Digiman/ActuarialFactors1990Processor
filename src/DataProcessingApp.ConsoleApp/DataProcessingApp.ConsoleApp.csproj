@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>DataProcessingApp.ConsoleApp</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataProcessingApp.Core\DataProcessingApp.Core.csproj" />
+    <ProjectReference Include="..\DataProcessingApp.Data\DataProcessingApp.Data.csproj" />
+    <ProjectReference Include="..\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj" />
+  </ItemGroup>
+
+</Project>
