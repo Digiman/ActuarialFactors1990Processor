@@ -37,7 +37,11 @@ Docs/                         research notes, improvement plan
 * Python 3 with the packages from `src/PythonDataApp/requirements.txt`
   (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS, `pdfplumber` for the
   90CM PDF extraction)
-* SQL Server + SSDT only if you want the database features (the `db/` project builds in Visual Studio on Windows)
+* Docker (e.g. OrbStack/Docker Desktop), only if you want to run the SQL Server
+  integration tests locally (CI runs them always)
+* SQL Server + SSDT only if you want the database features with your own
+  instance (the `db/` project builds in Visual Studio on Windows; the
+  integration tests deploy the same schema scripts automatically)
 
 ## Building and testing
 
@@ -49,6 +53,26 @@ python3 -m venv .venv && . .venv/bin/activate      # or use Anaconda
 pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.txt
 python -m pytest tests/python
 ```
+
+### SQL Server integration tests
+
+The database path (schema deployment, `SqlBulkCopy`, stored procedures) is
+covered by tests tagged `Category=Integration`
+(`tests/DataProcessingApp.Tests/Database/`). They deploy the schema from the
+`db/` SSDT project files into a real SQL Server and are skipped automatically
+when no server is reachable.
+
+```bash
+docker compose up -d --wait sqlserver                          # SQL Server 2022 container
+dotnet test tests/DataProcessingApp.Tests --filter Category=Integration
+docker compose down                                            # when done
+```
+
+The connection string defaults to the compose credentials
+(`sa` / `YourStrong!Passw0rd`, override the password with the
+`MSSQL_SA_PASSWORD` environment variable before `docker compose up`) and can be
+overridden with `DPA_TEST_CONNECTION_STRING`. CI runs these tests in a
+dedicated `database` job.
 
 ## How to use the console app
 

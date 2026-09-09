@@ -69,8 +69,15 @@ one branch / PR / session. Nothing here is committed to any release.
       committed files. The one PDF defect found (age 58 printed as "68" in the
       mortality table) is a documented, enforced correction — see the data
       quality notes in the Readme. CI reruns the extraction in the data-drift job.
-- [ ] **Docker SQL Server in CI.** Real integration test for `SqlBulkCopy` +
+- [x] **Docker SQL Server in CI.** Real integration test for `SqlBulkCopy` +
       stored procedures; the database path is currently untested.
+      Done (September 2026): `docker-compose.yml` runs SQL Server 2022 locally
+      and in CI (dedicated `database` job); the integration tests
+      (`tests/DataProcessingApp.Tests/Database/`, `Category=Integration`)
+      deploy the schema from the `db/` project SQL files into the container and
+      verify bulk-insert idempotency, transactional rollback on failure, and
+      the stored procedures including `GetLxFrom2010`. Tests skip automatically
+      when no SQL Server is reachable.
 - [ ] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
       generate XML in CI from JSON (and stop committing it) or drop XML if
       nothing downstream requires it.
