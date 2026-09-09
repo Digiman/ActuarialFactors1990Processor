@@ -5,6 +5,9 @@
 #   to read the official IRS XLSX files.
 # - ConvertRootTablesToJson.py uses xlrd to read the official IRS XLS
 #   files (Table D and Table F).
+# - Extract90CMFromPdf.py is pinned: its word-extraction behaviour must stay
+#   reproducible across environments.
 numpy
 openpyxl
 xlrd
+pdfplumber==0.11.10

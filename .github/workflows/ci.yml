@@ -48,6 +48,8 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r src/PythonDataApp/requirements.txt
+      - name: Re-extract 90CM PDFs
+        run: python src/PythonDataApp/Extract90CMFromPdf.py
       - name: Rerun converters
         run: |
           python src/PythonDataApp/Process90CMTables.py
@@ -59,9 +61,9 @@ jobs:
         run: python src/PythonDataApp/VerifyManifest.py
       - name: Fail on drift from committed JSONFiles/XMLFiles
         run: |
-          git diff --exit-code -- JSONFiles XMLFiles
-          test -z "$(git status --porcelain JSONFiles XMLFiles)" || {
-            echo "::error::Untracked generated files in JSONFiles/XMLFiles:"
-            git status --porcelain JSONFiles XMLFiles
+          git diff --exit-code -- JSONFiles XMLFiles src/PythonDataApp/DataFiles
+          test -z "$(git status --porcelain JSONFiles XMLFiles src/PythonDataApp/DataFiles)" || {
+            echo "::error::Untracked generated files in JSONFiles/XMLFiles or extracted CSVs:"
+            git status --porcelain JSONFiles XMLFiles src/PythonDataApp/DataFiles
             exit 1
           }
