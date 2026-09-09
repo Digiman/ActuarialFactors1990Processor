@@ -274,9 +274,15 @@ Three kinds of files live in the repository: **source** (from the IRS - never ed
 
 ### Source files (`DataFiles/`)
 
+Every source file is checksummed in `DataFiles/manifest.json` (SHA256, IRS URL
+and download date). `python src/PythonDataApp/VerifyManifest.py` re-verifies
+all checksums and fails on mismatch or unlisted files; CI runs it in the
+data-drift job. The exact IRS URLs in the manifest were verified byte-identical
+in September 2026 for all 13 official spreadsheets (root tables + 2010CM).
+
 | Group | Files | Format | Origin |
 |---|---|---|---|
-| 90CM series | `DataFiles/90CM/*.pdf` (16 files: TableS, TableC, TableH, TableR(2) full + p1..p5, TableU(1), TableU(2) full + p1..p5, MortalityTable-90CM) | PDF | Publications 1457/1458/1459 (7-1999), archived at `https://www.irs.gov/pub/irs-prior/p1457--1999.pdf` (+ `-1458-`, `-1459-`) |
+| 90CM series | `DataFiles/90CM/*.pdf` (17 files: TableS, TableC, TableH, TableR(2) full + p1..p5, TableU(1), TableU(2) full + p1..p5, MortalityTable-90CM) | PDF | Publications 1457/1458/1459 (7-1999), archived at `https://www.irs.gov/pub/irs-prior/p1457--1999.pdf` (`-1458-`, `-1459-`); per-table page extracts, publication per file recorded in the manifest (1457: S/H/R(2), 1458: Mortality/U(1)/U(2), 1459: C, per the PDF embedded titles) |
 | Root tables | `DataFiles/TableB.xlsx`, `TableD.xls`, `TableF.xls`, `TableJ.xlsx`, `TableK.xlsx` | XLSX / XLS | `https://www.irs.gov/retirement-plans/actuarial-tables` (not mortality based, one edition serves all series) |
 | 2010CM series | `DataFiles/2010CM/table-<name>-2010cm-final.xlsx` (8 files: s, h, c, z, r2, u1, u2, 2010cm mortality) | XLSX | `https://www.irs.gov/retirement-plans/actuarial-tables` |
 

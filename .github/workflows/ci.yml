@@ -54,6 +54,8 @@ jobs:
           python src/PythonDataApp/ConvertRootTablesToJson.py
           python src/PythonDataApp/Convert2010CMToJson.py
           python src/PythonDataApp/JsonToXml.py
+      - name: Verify source manifest
+        run: python src/PythonDataApp/VerifyManifest.py
       - name: Fail on drift from committed JSONFiles/XMLFiles
         run: |
           git diff --exit-code -- JSONFiles XMLFiles

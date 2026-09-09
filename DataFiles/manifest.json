@@ -1,0 +1,214 @@
+{
+  "files": [
+    {
+      "path": "2010CM/table-2010cm-final.xlsx",
+      "sha256": "51de7bde99fd2693994ac3ac3e894311048ed6009572679e9303d1a4d931e931",
+      "url": "https://www.irs.gov/pub/irs-tege/table-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-c-2010cm-final.xlsx",
+      "sha256": "79f2176f2f582a5b917437818e612e2eb321499924ab28b18909014c23f5a09f",
+      "url": "https://www.irs.gov/pub/irs-tege/table-c-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-h-2010cm-final.xlsx",
+      "sha256": "f53eb535b5d141b331034ae77759d96a204e4d6c1d9f393ba6cd7f4069518c5a",
+      "url": "https://www.irs.gov/pub/irs-tege/table-h-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-r2-2010cm-final.xlsx",
+      "sha256": "0f07ee72e4885ff6943dfe3db0db798d2127e548a86a196e8bb7a7d8569fec67",
+      "url": "https://www.irs.gov/pub/irs-tege/table-r2-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-s-2010cm-final.xlsx",
+      "sha256": "6c91617dbd5421bcd3bd4aaf92147cf6ce4bc9f398938e807b60a9ca008da555",
+      "url": "https://www.irs.gov/pub/irs-tege/table-s-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-u1-2010cm-final.xlsx",
+      "sha256": "4f9175c688ab80987c424807a1de5ed6ad68352399955be13e41ae9886dac934",
+      "url": "https://www.irs.gov/pub/irs-tege/table-u1-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-u2-2010cm-final.xlsx",
+      "sha256": "74ed3978fc0035376f188a4a391caabef7ec25be0aed7fe326dbb110b72d6c04",
+      "url": "https://www.irs.gov/pub/irs-tege/table-u2-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "2010CM/table-z-2010cm-final.xlsx",
+      "sha256": "933c4b6e8328d9c3fb0b4f9d9c16194100f71c9fc8adbbe57589370123379a7d",
+      "url": "https://www.irs.gov/pub/irs-tege/table-z-2010cm-final.xlsx",
+      "downloaded": "2026-09-06",
+      "note": "Official IRS spreadsheet (2010CM era, effective 2023-06); SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "90CM/MortalityTable-90CM.pdf",
+      "sha256": "d1c1c621e7bf47dd39f49719fdc1a4794105c50a473f3561e1bbbfd832a9fc2e",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableC-90CM.pdf",
+      "sha256": "a9cfa0534cf74e8987f2011c9d00f6a33e464064af4b4b286d99de6915aa6cfa",
+      "url": "https://www.irs.gov/pub/irs-prior/p1459--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1459--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableH-90CM.pdf",
+      "sha256": "d3ffccfbe7b0222a45b8e40cc8450e1a8211148ccca635bb8c999a6b64701eab",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-90CM.pdf",
+      "sha256": "75d9f8f75bb18864f66a36f28e2d0fb4d2252d6dbee6c2cc90b157dd72661f9a",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-p1-90CM.pdf",
+      "sha256": "223b52d93609088e866d2a866c5fec1c270f98a30371f2da72d0195322c160f4",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-p2-90CM.pdf",
+      "sha256": "fcf17adc63c6271502afaa4b65cd9820e8fe732e5edd332fddce496ae2e166f2",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-p3-90CM.pdf",
+      "sha256": "16370792354827222076b871df252a3d1e0adbe182e03ccbb6b77b9f5ca810e6",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-p4-90CM.pdf",
+      "sha256": "b1d3ba575d6642d9223abf71cd49ea955091ac33754c737d06df35df335c76f4",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableR(2)-p5-90CM.pdf",
+      "sha256": "4c04daa616c5152c44032dc7a9d891dce90dfe4a1090fd074ee0ce40ff8fd665",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableS-90CM.pdf",
+      "sha256": "7ce5c6b6f99172ce72cd3e1963ecfb6ea9c716234c977d5740c74f7161defe4d",
+      "url": "https://www.irs.gov/pub/irs-prior/p1457--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1457--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(1)-90CM.pdf",
+      "sha256": "600ab366464a68b0b1f9502647228a946d42f6c865df7aff45a32a3741a9ca02",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-90CM.pdf",
+      "sha256": "06b837c3f44025a719192326084c793aa629793feb096a0008b437bf94bc922f",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-p1-90CM.pdf",
+      "sha256": "9c978b42d59a8478d2abb5d560267e0f9467e3071351fd7a4c517e6842a4c08b",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-p2-90CM.pdf",
+      "sha256": "d40963648d6800dd2d8c3c1f7d064c6c673c13aa935449e63539584b0c6c6adb",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-p3-90CM.pdf",
+      "sha256": "5e89fb6875c310780346419ca6ddadd0bf8778184c9a72b94183c13cf8403eab",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-p4-90CM.pdf",
+      "sha256": "5f332f2f89b7fa24924b72ca51794a5453f106361a700fb7dd367e08be35856b",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "90CM/TableU(2)-p5-90CM.pdf",
+      "sha256": "a2f47a2aba0d64af4c0f138f75718254efe27eaff5729a858fd626896efa4277",
+      "url": "https://www.irs.gov/pub/irs-prior/p1458--1999.pdf",
+      "downloaded": "2026-09-06",
+      "note": "Per-table page extract from the publication PDF (Tabula step); exact original download date not recorded (2016-era), repo import 2026-09-06. Extracted from p1458--1999.pdf per the PDF embedded title."
+    },
+    {
+      "path": "TableB.xlsx",
+      "sha256": "134e2c54bff27de797970e6d4467f879eb4655033af228ea9eadf66c1d64e2c5",
+      "url": "https://www.irs.gov/pub/irs-tege/table-b-final.xlsx",
+      "downloaded": "2026-09-08",
+      "note": "Official IRS spreadsheet; SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "TableD.xls",
+      "sha256": "21a5f0648b383319febc625a19779d5f31f197be558459e679d5c7b3fe7f8aab",
+      "url": "https://www.irs.gov/pub/irs-tege/table-d.xls",
+      "downloaded": "2026-09-08",
+      "note": "Official IRS spreadsheet; SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "TableF.xls",
+      "sha256": "8cbc0a0e99e5776982e834083480c8673b456413a5352babaf6ca60ae3377c71",
+      "url": "https://www.irs.gov/pub/irs-tege/table-f.xls",
+      "downloaded": "2026-09-08",
+      "note": "Official IRS spreadsheet; SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "TableJ.xlsx",
+      "sha256": "e89ffe4e8c1d8f2187ab6796e9464785661d36daa586555ffe3dea7ad5fcca9a",
+      "url": "https://www.irs.gov/pub/irs-tege/table-j-final.xlsx",
+      "downloaded": "2026-09-08",
+      "note": "Official IRS spreadsheet; SHA256 verified against the IRS URL (2026-09)."
+    },
+    {
+      "path": "TableK.xlsx",
+      "sha256": "7988e4582e5c6271dd1f9a42a6ec9b99eed8a6184f6cb8b50fa0a7fd208bde73",
+      "url": "https://www.irs.gov/pub/irs-tege/table-k-final.xlsx",
+      "downloaded": "2026-09-08",
+      "note": "Official IRS spreadsheet; SHA256 verified against the IRS URL (2026-09)."
+    }
+  ]
+}
