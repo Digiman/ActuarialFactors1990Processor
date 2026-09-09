@@ -13,9 +13,11 @@ one branch / PR / session. Nothing here is committed to any release.
       truncate-per-table (or delete by MortalityTable year), wrap in a
       transaction, and report inserted-vs-loaded counts (record counts are
       already printed by `TableWorker.LogEnd`).
-- [ ] **Add `GetLxFrom2010` stored procedure.** `tblMortality` has
-      `GetLxFrom1980/1990/2000` but no 2010 variant although the 2010 lx data
-      is loaded (`db/DataProcessingApp.Database/dbo/Stored Procedures/tblMortality/`).
+- [ ] **Deploy `GetLxFrom2010`.** The stored procedure file exists
+      (`db/DataProcessingApp.Database/dbo/Stored Procedures/tblMortality/GetLxFrom2010.sql`)
+      but was not referenced by the SSDT project, so it never deployed; the
+      `.sqlproj` Build entry was added in September 2026 - redeploy the
+      database project to create it in existing databases.
 - [ ] **Data-invariant tests.** Encode the checks that caught the 2026 data
       bugs as automated tests: `J = K * (1+i)^(1/m)` identity, per-table
       row-count grids (100 rates x 110 ages etc.), no `" "` placeholder

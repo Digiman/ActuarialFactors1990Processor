@@ -95,6 +95,7 @@
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1980.sql" />
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom1990.sql" />
     <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom2000.sql" />
+    <Build Include="dbo\Stored Procedures\tblMortality\GetLxFrom2010.sql" />
     <Build Include="dbo\Stored Procedures\tblB\GetPresentValueAnnuityFromTableB.sql" />
     <Build Include="dbo\Stored Procedures\tblB\GetPresentValueIncomeFromTableB.sql" />
     <Build Include="dbo\Stored Procedures\tblB\GetPresentValueRemainderFromTableB.sql" />
