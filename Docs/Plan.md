@@ -56,10 +56,19 @@ one branch / PR / session. Nothing here is committed to any release.
 
 ## Phase 3 - bigger items
 
-- [ ] **Reproducible 90CM extraction.** The Tabula manual step is the last
+- [x] **Reproducible 90CM extraction.** The Tabula manual step is the last
       non-automated stage. Either commit the Tabula table templates/coords,
       replace with a scripted `pdfplumber` extractor, or declare the 90CM
       JSONs frozen artifacts with checksums (no re-extraction ever).
+      Done (September 2026): `Extract90CMFromPdf.py` (pinned `pdfplumber`,
+      pure Python, no Java) regenerates all 14 Tabula CSVs plus a new
+      `MortalityTable-90CM.csv` from `DataFiles/90CM/*.pdf`; every table is
+      verified value-by-value against the committed 2016 Tabula CSVs (Table 90CM
+      lx against `MortalityTable.json`) before anything is written, and the
+      90CM JSON output of `Process90CMTables.py` is byte-identical to the
+      committed files. The one PDF defect found (age 58 printed as "68" in the
+      mortality table) is a documented, enforced correction — see the data
+      quality notes in the Readme. CI reruns the extraction in the data-drift job.
 - [ ] **Docker SQL Server in CI.** Real integration test for `SqlBulkCopy` +
       stored procedures; the database path is currently untested.
 - [ ] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;

@@ -2,14 +2,15 @@
 
 Utilities that process actuarial factor data published by the IRS (Publications 1457/1458/1459):
 
-* the 90CM-series source tables were extracted from PDF files with [Tabula](http://tabula.technology/)
-  (one-time manual step); the 2010CM series and the root (non-mortality) tables are
+* the 90CM-series source tables are extracted from the PDF files with a scripted
+  `pdfplumber` extractor (`Extract90CMFromPdf.py`), verified value-by-value against the
+  2016 Tabula reference CSVs; the 2010CM series and the root (non-mortality) tables are
   converted directly from the official IRS XLSX/XLS spreadsheets;
 * Python scripts convert the extracted CSV/XLSX data to JSON;
 * the C# console application reads the JSON/XML files and can save data as
   JSON, text, Excel files, or bulk-insert it into SQL Server.
 
-**90CM: PDF -> Tabula (manual, one-time) -> CSV -> Python -> JSON; 2010CM and root tables: official XLSX/XLS -> Python -> JSON; then C# app -> Excel / text / SQL Server**
+**90CM: PDF -> Extract90CMFromPdf.py -> CSV -> Python -> JSON; 2010CM and root tables: official XLSX/XLS -> Python -> JSON; then C# app -> Excel / text / SQL Server**
 
 ## Repository layout
 
@@ -19,8 +20,8 @@ src/                          source code
   DataProcessingApp.Logic     generic table loaders/savers (JSON, XML, Excel, text)
   DataProcessingApp.Data      SQL Server bulk-insert repositories
   DataProcessingApp.ConsoleApp  console application (workflows)
-  PythonDataApp               Python scripts (CSV/XLSX -> JSON)
-    DataFiles/90CM/           extracted CSV files (Tabula output, 90CM series)
+  PythonDataApp               Python scripts (PDF extraction, CSV/XLSX -> JSON)
+    DataFiles/90CM/           extracted CSV files (90CM series, regenerable from the PDFs)
 tests/
   DataProcessingApp.Tests     xUnit tests for the C# pipeline
   python                      pytest tests for the Python scripts
@@ -34,7 +35,8 @@ Docs/                         research notes, improvement plan
 
 * .NET SDK 10.0 (`dotnet build`, `dotnet test`, `dotnet run`)
 * Python 3 with the packages from `src/PythonDataApp/requirements.txt`
-  (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS)
+  (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS, `pdfplumber` for the
+  90CM PDF extraction)
 * SQL Server + SSDT only if you want the database features (the `db/` project builds in Visual Studio on Windows)
 
 ## Building and testing
@@ -113,6 +115,8 @@ Every setting can be overridden with a `DPA_`-prefixed environment variable, e.g
 All scripts are run from the repository root and use repo-relative paths by default:
 
 ```bash
+python src/PythonDataApp/Extract90CMFromPdf.py              # 90CM PDF -> CSV (all tables, verifies first)
+python src/PythonDataApp/Extract90CMFromPdf.py --table S    # one table
 python src/PythonDataApp/Process90CMTables.py              # 90CM CSV -> JSON (all tables)
 python src/PythonDataApp/Process90CMTables.py --table S    # one table
 python src/PythonDataApp/Process90CMTables.py --numeric    # emit numbers instead of strings
@@ -122,6 +126,12 @@ python src/PythonDataApp/Convert2010CMToJson.py            # 2010CM XLSX -> JSON
 python src/PythonDataApp/ConvertRootTablesToJson.py        # root tables B/D/F/J/K: XLSX/XLS -> JSON
 python src/PythonDataApp/JsonToXml.py                      # root-table JSON -> SQL export XML
 ```
+
+`Extract90CMFromPdf.py` replaces the one-time manual [Tabula](http://tabula.technology/)
+extraction used in 2016: it reads `DataFiles/90CM/*.pdf` and regenerates the CSVs in
+`src/PythonDataApp/DataFiles/90CM/`, verifying every table value-by-value against the
+committed reference CSVs (and Table 90CM lx against `JSONFiles/MortalityTable.json`)
+before writing anything. Pass `--skip-verify` to bypass the check.
 
 ## Table details
 
@@ -291,13 +301,16 @@ verified byte-identical in September 2026 for all 21 official spreadsheets
 
 ### Extracted files (`src/PythonDataApp/DataFiles/90CM/`)
 
-One CSV per PDF page set, produced by the one-time manual [Tabula](http://tabula.technology/)
-extraction of the 90CM PDFs (the only non-automated step in the pipeline):
+One CSV per PDF page set, regenerated from `DataFiles/90CM/*.pdf` by
+`Extract90CMFromPdf.py` (originally produced by a one-time manual
+[Tabula](http://tabula.technology/) extraction in 2016; the committed files are
+kept as the verification reference):
 
 | Files | Feeds |
 |---|---|
 | `TableS-90CM.csv`, `TableC-90CM-2.csv`, `TableH-90CM.csv`, `TableU(1)-90CM-2.csv` | `Process90CMTables.py` |
 | `TableR(2)-p1..p5-90CM.csv`, `TableU(2)-p1..p5-90CM.csv` | `Process90CMTables.py` (per-part JSONs) |
+| `MortalityTable-90CM.csv` | provenance record for the Table 90CM lx values (verified against `JSONFiles/MortalityTable.json`) |
 
 ### Processed files (`JSONFiles/`, `XMLFiles/`)
 
@@ -354,6 +367,13 @@ Known issues in the data files, verified during the 2026 modernization:
    against the official XLSX; the C# app now loads the 2010CM series end to end.
    Table Z is also wired through the whole C# pipeline now (row type, `dbo.tblZ`
    schema, workflows); previously it existed only as a JSON file.
+8. **The archived `MortalityTable-90CM.pdf` misprints age 58 as "68"** (Table 90CM
+   block of ages 37-73, lx 87397). The lx value itself is correct — it sits smoothly
+   between the lx values of ages 57 (88214) and 59 (86506) — so the printed age digit
+   is the error. The committed `JSONFiles/MortalityTable.json` carries the corrected
+   age 58, and `Extract90CMFromPdf.py` applies this single documented correction
+   (`MORTALITY_AGE_MISPRINTS`) while re-extracting, failing if the printed value
+   ever differs from what the correction expects.
 
 ## Planned improvements
 
