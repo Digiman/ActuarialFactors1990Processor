@@ -20,19 +20,21 @@ src/                          source code
   DataProcessingApp.Data      SQL Server bulk-insert repositories
   DataProcessingApp.ConsoleApp  console application (workflows)
   PythonDataApp               Python scripts (CSV/XLSX -> JSON)
+    DataFiles/90CM/           extracted CSV files (Tabula output, 90CM series)
 tests/
   DataProcessingApp.Tests     xUnit tests for the C# pipeline
   python                      pytest tests for the Python scripts
 db/                           SSDT database project (tables, stored procedures)
 DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
 JSONFiles/, XMLFiles/         processed data files (per-series subfolders)
-Docs/                         research notes
+Docs/                         research notes, improvement plan
 ```
 
 ## Requirements
 
 * .NET SDK 10.0 (`dotnet build`, `dotnet test`, `dotnet run`)
-* Python 3 with the packages from `src/PythonDataApp/requirements.txt` (`numpy`, `openpyxl`)
+* Python 3 with the packages from `src/PythonDataApp/requirements.txt`
+  (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS)
 * SQL Server + SSDT only if you want the database features (the `db/` project builds in Visual Studio on Windows)
 
 ## Building and testing
@@ -46,10 +48,12 @@ pip install -r src/PythonDataApp/requirements.txt -r tests/python/requirements.t
 python -m pytest tests/python
 ```
 
-## Running the C# application
+## How to use the console app
 
 Configuration lives in `src/DataProcessingApp.ConsoleApp/appsettings.json`
-(`BaseDataDir`, `XmlDataDir`, connection strings).
+(`BaseDataDir`, `XmlDataDir`, connection strings). Note that the shipped
+defaults are relative to the *build output folder* (`bin/Debug/net10.0/...`),
+not to the repository root; when in doubt use the `DPA_` overrides below.
 
 The workflow is selected by a command line argument:
 
@@ -66,6 +70,19 @@ dotnet run --project src/DataProcessingApp.ConsoleApp -- <workflow>
 | `database`  | loads every table, all series, and bulk-inserts it into SQL Server  |
 | `all`       | load + json + text + excel                                          |
 
+An unknown argument prints the usage line and exits; the process reports
+`Processing <table> - done, <N> records.` per table while it runs.
+
+**Where the data comes from and goes:**
+
+| Workflow | Reads | Writes |
+|---|---|---|
+| `load` | series JSON from `BaseDataDir/<series>/`, root JSON/XML from `BaseDataDir` / `XmlDataDir` | nothing (smoke check) |
+| `json` | root tables (XML) | `BaseDataDir/Table*.json`, `MortalityTable.json` |
+| `text` | series + root tables | `BaseDataDir/<series>/*.txt` |
+| `excel` | series + root tables | `BaseDataDir/*.xlsx`, `BaseDataDir/<series>/*.xlsx` |
+| `database` | series + root tables | SQL Server tables (`dbo.tblS`, `dbo.tblB`, ...) |
+
 `BaseDataDir` should point at the folder with the processed JSON data in the repository
 layout: root-table files directly in it and the series files in `90CM/` / `2010CM/`
 subfolders. The XML-based root tables are read from `XmlDataDir` (falls back to
@@ -76,7 +93,8 @@ DPA_BaseDataDir=JSONFiles DPA_XmlDataDir=XMLFiles dotnet run --project src/DataP
 ```
 
 Every setting can be overridden with a `DPA_`-prefixed environment variable, e.g.
-`DPA_BaseDataDir=/path/to/json/files`.
+`DPA_BaseDataDir=/path/to/json/files`. The `database` workflow additionally needs the
+`DataProcessingAppDB` database deployed from the `db/` SSDT project.
 
 ## Python scripts
 
@@ -94,21 +112,184 @@ python src/PythonDataApp/JsonToXml.py                      # root-table JSON -> 
 
 ## Table details
 
-Processed tables (90CM series - in effect from 5/1/1999 to 4/30/2009; 2010CM series - effective 6/1/2023):
+The IRS actuarial tables come in editions ("series") named after the census mortality
+study they are based on. This repository processes:
 
-1. *Table C* - Factors for Reducing Assurances.
-2. *Table R(2)* - two-life remainder factors (split into 5 part files per series).
-3. *Table U(1)* - one-life unitrust factors.
-4. *Table U(2)* - two-life unitrust factors (split into 5 part files per series).
-5. *Table H* - Commutation Factors.
-6. *Table S* - Single Life Factors.
-7. *Table Z* - Unitrust Commutation Factors (2010CM only).
+| Series | Mortality basis | Valuation dates | Source format |
+|---|---|---|---|
+| 90CM | 1990 census | 5/1/1999 - 4/30/2009 | Pub 1457/1458/1459 (7-1999) PDFs |
+| 2010CM | 2010 census | 6/1/2023 onwards | official IRS XLSX spreadsheets |
 
-Root tables (not tied to a series): *Table B, D, F, J, K* and the multi-year *MortalityTable*.
+(The 2000CM era, 5/1/2009 - 5/31/2023, is not processed yet; see `Docs/Plan.md`.)
 
-Row fields per table are defined once in `src/DataProcessingApp.Core/DataObjects/Table*Row.cs`,
-including the exact SQL Server column names (`[DbColumn]`) and any load-time rounding (`[Round]`).
-Destination tables are mapped in `src/DataProcessingApp.Data/SqlTables.cs`.
+### Table reference
+
+Interest/payout grids: 2010CM and root tables use 0.2%-20.0% in 0.2 steps (100 rates);
+the 90CM grid is 2.2%-22.0% in 0.2 steps.
+
+| Table | Purpose (IRS wording) | Series | Rows | Destination |
+|---|---|---|---|---|
+| S | single-life annuity, life estate and remainder factors | 90CM, 2010CM | 11,000 | `dbo.tblS` |
+| H | commutation factors (Dx/Nx/Mx) | 90CM, 2010CM | 11,000 | `dbo.tblH` |
+| C | factors for reducing assurances (remainders in depreciable property) | 90CM, 2010CM | 11,000 | `dbo.tblC` |
+| U(1) | one-life unitrust remainder factors | 90CM, 2010CM | 11,000 | `dbo.tblU1` |
+| U(2) | two-life unitrust remainder factors | 90CM, 2010CM | 610,500 | `dbo.tblU2` |
+| R(2) | two-life remainder factors | 90CM, 2010CM | 610,500 | `dbo.tblR2` |
+| Z | unitrust commutation factors | 2010CM only | 11,000 | `dbo.tblZ` |
+| B | annuity, income and remainder interests for a term certain | all (not mortality based) | 6,000 | `dbo.tblB` |
+| D | unitrust remainder factors postponed for a term of years | all (not mortality based) | 2,000 | `dbo.tblD` |
+| F | unitrust adjusted payout rate factors | all (not mortality based) | 2,600 | `dbo.tblF` |
+| J | adjustment factors, annuities paid at the *beginning* of each interval | all (not mortality based) | 500 | `dbo.tblJ` |
+| K | adjustment factors, annuities paid at the *end* of each interval | all (not mortality based) | 500 | `dbo.tblK` |
+| MortalityTable | mortality table (lx) | 1980, 1990, 2000, 2010 | 444 | `dbo.tblMortality` |
+
+Row counts: one-life tables = 100 rates x 110 ages (0-109); two-life tables = 6,105 age
+pairs (0-109, Age2 <= Age1) x 100 rates, shipped as 5 part files; B = 100 rates x 60
+years; D = 100 payout rates x 20 years; F = 100 rates x 26 month bands; J/K = 100 rates
+x 5 payment frequencies; MortalityTable = 111 ages (0-110) per year.
+
+### Column reference
+
+Columns live in `src/DataProcessingApp.Core/DataObjects/Table*Row.cs` with their exact
+SQL Server names (`[DbColumn]`) and load-time rounding (`[Round]`); destination tables
+are mapped in `src/DataProcessingApp.Data/SqlTables.cs`. JSON keys are the same names
+in camelCase, with one legacy exception noted under Table S.
+
+**Table S** (`dbo.tblS`) - single-life factors:
+
+| Column | Type | Meaning |
+|---|---|---|
+| MortalityTable | int | census year of the series (1990 / 2010) |
+| InterestRate | float, % | §7520 interest rate |
+| Age | int | 0-109 |
+| pvAnnuity | float | present value of a life annuity of 1 per year |
+| pvLifeEstate | float | life estate factor |
+| pvRemainderInterest | float | remainder factor |
+
+> JSON files spell the last key `pvReminderInterest` (legacy typo kept for
+> compatibility); the SQL column is correctly named `pvRemainderInterest`.
+
+**Tables H and Z** (`dbo.tblH`, `dbo.tblZ`) - commutation factors (Z = unitrust variant):
+
+| Column | Type | Meaning |
+|---|---|---|
+| MortalityTable | int | census year of the series |
+| InterestRate | float, % | §7520 interest rate (unitrust payout rate for Z) |
+| Age | int | 0-109 |
+| dFactor | float | Dx = lx * v^x (discounted survivors) |
+| nFactor | float | Nx = sum of Dj from age x to the end of the table |
+| mFactor | float | Mx = sum of Dl * (death probability) from age x |
+
+**Table C** (`dbo.tblC`) - factors for reducing assurances:
+
+| Column | Type | Meaning |
+|---|---|---|
+| MortalityTable | int | census year of the series |
+| Rate | float, % | interest rate |
+| Age | int | 0-109 |
+| remainderFactor | float | remainder interest factor |
+| rFactor | float | R factor (deferred remainder component) |
+| dFactor | float | D factor |
+
+**Table U(1)** (`dbo.tblU1`) - one-life unitrust remainder factors:
+
+| Column | Type | Meaning |
+|---|---|---|
+| MortalityTable | int | census year of the series |
+| Age | int | 0-109 |
+| AdjustedPayoutRate | float, % | unitrust payout rate adjusted for frequency |
+| remainderFactor | float | remainder factor |
+
+**Tables U(2) and R(2)** (`dbo.tblU2`, `dbo.tblR2`) - two-life remainder factors:
+
+| Column | Type | Meaning |
+|---|---|---|
+| MortalityTable | int | census year of the series |
+| Age1 | int | older life, 0-109 |
+| Age2 | int | younger life, 0-109, Age2 <= Age1 |
+| AdjustedPayoutRate | float, % | unitrust payout rate (U(2)) / interest rate (R(2)) |
+| remainderFactor | float | remainder factor for the two lives |
+
+**Table B** (`dbo.tblB`) - term certain factors:
+
+| Column | Type | Meaning |
+|---|---|---|
+| Years | float | term 1-60 years |
+| Rate | float, % | interest rate |
+| pvAnnuity | float | annuity factor for the term (end-of-year payments) |
+| pvIncomeInterest | float | income interest factor for the term |
+| pvRemainderInterest | float | remainder factor for the term |
+
+**Table D** (`dbo.tblD`) - term certain unitrust remainders:
+
+| Column | Type | Meaning |
+|---|---|---|
+| Years | int | term 1-20 years |
+| PayoutRate | float, % | unitrust payout rate |
+| remainderInterest | float | remainder factor for the term |
+
+**Table F** (`dbo.tblF`) - unitrust payout adjustment factors:
+
+| Column | Type | Meaning |
+|---|---|---|
+| InterestRate | float, % | interest rate |
+| Frequency | string | Annual / Semiannual / Quarterly / Monthly |
+| Months | int | months (0-12) from the annual valuation date to the first payout |
+| adjustmentFactor | float | factor for computing the adjusted payout rate |
+
+**Tables J and K** (`dbo.tblJ`, `dbo.tblK`) - annuity payment adjustment factors
+(J = paid at the *beginning* of each interval, K = paid at the *end*):
+
+| Column | Type | Meaning |
+|---|---|---|
+| InterestRate | float, % | interest rate |
+| Frequency | string | Annual / Semiannual / Quarterly / Monthly / Weekly |
+| adjustmentFactor | float | multiplies the annual annuity factor for this frequency |
+
+**MortalityTable** (`dbo.tblMortality`) - base mortality data:
+
+| Column | Type | Meaning |
+|---|---|---|
+| Year | int | census year (1980, 1990, 2000, 2010) |
+| Age | int | 0-110 |
+| lx | float | number of survivors at the age out of 100,000 born |
+
+## Data files
+
+Three kinds of files live in the repository: **source** (from the IRS - never edit),
+**extracted** (intermediate Tabula CSV output for the 90CM series) and **processed**
+(JSON/XML - always regenerable by the scripts above).
+
+### Source files (`DataFiles/`)
+
+| Group | Files | Format | Origin |
+|---|---|---|---|
+| 90CM series | `DataFiles/90CM/*.pdf` (16 files: TableS, TableC, TableH, TableR(2) full + p1..p5, TableU(1), TableU(2) full + p1..p5, MortalityTable-90CM) | PDF | Publications 1457/1458/1459 (7-1999), archived at `https://www.irs.gov/pub/irs-prior/p1457--1999.pdf` (+ `-1458-`, `-1459-`) |
+| Root tables | `DataFiles/TableB.xlsx`, `TableD.xls`, `TableF.xls`, `TableJ.xlsx`, `TableK.xlsx` | XLSX / XLS | `https://www.irs.gov/retirement-plans/actuarial-tables` (not mortality based, one edition serves all series) |
+| 2010CM series | `DataFiles/2010CM/table-<name>-2010cm-final.xlsx` (8 files: s, h, c, z, r2, u1, u2, 2010cm mortality) | XLSX | `https://www.irs.gov/retirement-plans/actuarial-tables` |
+
+### Extracted files (`src/PythonDataApp/DataFiles/90CM/`)
+
+One CSV per PDF page set, produced by the one-time manual [Tabula](http://tabula.technology/)
+extraction of the 90CM PDFs (the only non-automated step in the pipeline):
+
+| Files | Feeds |
+|---|---|
+| `TableS-90CM.csv`, `TableC-90CM-2.csv`, `TableH-90CM.csv`, `TableU(1)-90CM-2.csv` | `Process90CMTables.py` |
+| `TableR(2)-p1..p5-90CM.csv`, `TableU(2)-p1..p5-90CM.csv` | `Process90CMTables.py` (per-part JSONs) |
+
+### Processed files (`JSONFiles/`, `XMLFiles/`)
+
+| Location | Contents | Produced by |
+|---|---|---|
+| `JSONFiles/*.json` | root tables B, D, F, J, K + multi-year MortalityTable | `ConvertRootTablesToJson.py`; MortalityTable merged by `Convert2010CMToJson.py` |
+| `JSONFiles/90CM/*.json` | 90CM series (S, C, H, U(1), U(2)/R(2) p1..p5) | `Process90CMTables.py` |
+| `JSONFiles/2010CM/*.json` | 2010CM series (S, C, H, Z, U(1), U(2)/R(2) p1..p5) | `Convert2010CMToJson.py` |
+| `JSONFiles/<series>/TableR(2)-full.json`, `TableU(2)-full.json` | combined parts, created on demand | `CombineFiles.py` or the C# `CombineTableParts` step |
+| `XMLFiles/*.xml` | SQL Server bulk-insert export format for the root tables | `JsonToXml.py` |
+
+(JSON files in the 90CM series store ages/factors as strings; 2010CM and root files
+store numbers - see the data quality notes.)
 
 ## Data quality notes
 
@@ -151,6 +332,11 @@ Known issues in the data files, verified during the 2026 modernization:
    against the official XLSX; the C# app now loads the 2010CM series end to end.
    Table Z is also wired through the whole C# pipeline now (row type, `dbo.tblZ`
    schema, workflows); previously it existed only as a JSON file.
+
+## Planned improvements
+
+Ideas for the next rounds of work (pipeline hardening, CLI options, 2000CM support,
+reproducible 90CM extraction, DB integration tests) are tracked in `Docs/Plan.md`.
 
 ## Adding a new table or series
 
