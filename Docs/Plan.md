@@ -85,9 +85,15 @@ one branch / PR / session. Nothing here is committed to any release.
       the committed JSON; CI generates it before the C# `load` smoke test, and
       the data-drift job no longer checks it. The C# workflows keep reading the
       XML export format for root tables.
-- [ ] **Serializer migration (optional).** Replace Newtonsoft.Json with
+- [x] **Serializer migration (optional).** Replace Newtonsoft.Json with
       System.Text.Json across `SerializerHelper`/loaders; low value, do only
-      with other Core work.
+      with other Core work. Done (September 2026): JSON moved to
+      System.Text.Json (case-insensitive keys, numbers readable from strings
+      for the 90CM series); the XML paths are unchanged. All 555 tests pass and
+      the C# `json` workflow round-trips the committed root JSON files
+      value-identically; the only output difference is cosmetic (whole-number
+      doubles serialize as `1` instead of `1.0`), so the committed JSONs were
+      left untouched.
 
 ## Decisions / caveats to revisit
 
