@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.Calculato
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.WebApi", "src\DataProcessingApp.WebApi\DataProcessingApp.WebApi.csproj", "{619A42DC-DFE9-4F03-975D-83E0B5FA2A69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataProcessingApp.DataAccess", "src\DataProcessingApp.DataAccess\DataProcessingApp.DataAccess.csproj", "{5278058D-891C-4EBD-B102-D2450A199F36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,18 @@ Global
 		{619A42DC-DFE9-4F03-975D-83E0B5FA2A69}.Release|x64.Build.0 = Release|Any CPU
 		{619A42DC-DFE9-4F03-975D-83E0B5FA2A69}.Release|x86.ActiveCfg = Release|Any CPU
 		{619A42DC-DFE9-4F03-975D-83E0B5FA2A69}.Release|x86.Build.0 = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|x64.Build.0 = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Debug|x86.Build.0 = Debug|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|x64.ActiveCfg = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|x64.Build.0 = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|x86.ActiveCfg = Release|Any CPU
+		{5278058D-891C-4EBD-B102-D2450A199F36}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,5 +152,6 @@ Global
 		{F218887C-0EB7-4DCC-B03B-1EEAB9961DDE} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{211EC1BB-3B0C-429C-BF09-78D54E8312A7} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{619A42DC-DFE9-4F03-975D-83E0B5FA2A69} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{5278058D-891C-4EBD-B102-D2450A199F36} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal

@@ -15,7 +15,7 @@ namespace DataProcessingApp.Calculator;
 /// are assembled from their five part files. Thread-safe (the web app shares
 /// one instance).
 /// </summary>
-public sealed class FactorData
+public sealed class FactorData : FactorDataSource
 {
     private const string DefaultSeries = FilesHelper.Series2010CM;
 
@@ -82,6 +82,13 @@ public sealed class FactorData
     }
 
     public int CensusYear(string series)
+    {
+        ValidateSeries(series);
+        return CensusYearOf(series);
+    }
+
+    /// <summary>Census year behind a series, for other data sources.</summary>
+    public static int CensusYearOf(string series)
     {
         ValidateSeries(series);
         return CensusYears[series];

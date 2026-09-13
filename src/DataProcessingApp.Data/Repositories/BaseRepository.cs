@@ -20,6 +20,17 @@ public class BaseRepository
     /// </summary>
     protected void ReloadTableData(DataTable dataTable, string destinationTableName, int batchSize = 10000)
     {
+        ReloadTableData(dataTable, destinationTableName, null, 0, batchSize);
+    }
+
+    /// <summary>
+    /// Same as <see cref="ReloadTableData(DataTable, string, int)"/>, but the
+    /// clear step deletes only the rows whose MortalityTable column equals
+    /// clearYear: the series-backed tables share one destination table across
+    /// all series, so truncating per series would wipe the other series.
+    /// </summary>
+    protected void ReloadTableData(DataTable dataTable, string destinationTableName, string clearYearColumn, int clearYear, int batchSize = 10000)
+    {
         using (var connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
@@ -40,7 +51,14 @@ public class BaseRepository
                 {
                     // clear existing rows first; rolled back together with the
                     // insert if the bulk copy fails
-                    ClearTableData(transaction, destinationTableName);
+                    if (clearYearColumn == null)
+                    {
+                        ClearTableData(transaction, destinationTableName);
+                    }
+                    else
+                    {
+                        ClearTableData(transaction, destinationTableName, clearYearColumn, clearYear);
+                    }
 
                     // send table with data to database
                     bulkCopy.WriteToServer(dataTable);
@@ -59,6 +77,17 @@ public class BaseRepository
     {
         using (var command = new SqlCommand($"TRUNCATE TABLE {destinationTableName}", transaction.Connection, transaction))
         {
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private static void ClearTableData(SqlTransaction transaction, string destinationTableName, string clearYearColumn, int clearYear)
+    {
+        using (var command = new SqlCommand(
+            $"DELETE FROM {destinationTableName} WHERE [{clearYearColumn}] = @year",
+            transaction.Connection, transaction))
+        {
+            command.Parameters.AddWithValue("@year", clearYear);
             command.ExecuteNonQuery();
         }
     }
