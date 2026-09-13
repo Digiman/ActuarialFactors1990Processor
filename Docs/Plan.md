@@ -143,3 +143,39 @@ answer valuation questions with the IRS-published factors.
   committed 90CM files and needs a migration plan if ever done.
 - Table K's 50 rows below the 2.2% 90CM grid have unknown provenance (see
   data quality notes in the Readme); harmless but unexplained.
+
+## Phase 5 - EF Core data access + containers (planned September 2026)
+
+The plan below was agreed during the September 2026 design session (branch
+`feature/phase5-efcore-docker`). Decisions are recorded in
+`docs/adr/0001-ef-core-migrations-over-sqlproj.md`; terms in `CONTEXT.md`.
+
+Goal: the web app (UI + API in one container) reads every factor table from
+SQL Server via EF Core instead of the committed JSON files; the database is
+fully containerized, migrated and seeded through make targets; the schema is
+EF-owned.
+
+- [ ] **New package `DataProcessingApp.DataAccess`** with EF Core entities,
+      `DbContext`, a `DbFactorData` table loader (same row shapes + caching
+      as the file-based `FactorData`), and the EF `Migrations/` baseline.
+- [ ] **Calculator seam.** The `FactorData` surface used by the calculator
+      becomes an open interface; file-based and DB-based implementations
+      both satisfy it. Calculator behavior and its 22 JSON-based tests are
+      unchanged.
+- [ ] **WebApi reads the DB.** Same five endpoints, one-line data source
+      swap; minimal restructure keeps the single-`Program.cs` shape.
+- [ ] **Docker.** Multi-stage `Dockerfile` (sdk -> runtime) for the web
+      service; `docker compose` gains `web` (depends on a healthy
+      `sqlserver`); no data files in the image.
+- [ ] **Seeding via make.** Keep the console `database` workflow (idempotent
+      `SqlBulkCopy`) as the seeder; `db-schema` becomes "apply EF
+      migrations"; `db-fill` = db-up + migrations + XML generation + fill.
+- [ ] **Stored procedures are kept verbatim** under
+      `db/DataProcessingApp.Database/dbo/Stored Procedures/` as reference;
+      application code no longer calls them (the EF entities are the read
+      path). Table DDL files are removed (EF migrations own the schema).
+- [ ] **CI:** the `database` job applies EF migrations and runs the rewritten
+      EF round-trip integration tests; add a Docker image build smoke job.
+- [ ] **Tests:** SQL Server integration tests move from
+      stored-procedure assertions to EF entity round-trips plus a
+      seed-parity check (DB rows equal the committed JSON rows).
