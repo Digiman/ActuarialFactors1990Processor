@@ -45,29 +45,11 @@ db-up: ## Start the SQL Server 2022 container and wait until healthy
 db-down: ## Stop the SQL Server container
 	@docker compose down
 
-db-schema: db-up ## Deploy the schema from the db/ project files (drops existing objects first)
+db-schema: db-up ## Apply the EF Core migrations (creates the DataProcessingAppDB schema)
 	@docker exec dpa-sqlserver /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa \
 		-P "$(SA_PASSWORD)" \
 		-Q "IF DB_ID(N'DataProcessingAppDB') IS NULL CREATE DATABASE [DataProcessingAppDB]"
-	@for f in db/DataProcessingApp.Database/dbo/Tables/*.sql \
-	          "db/DataProcessingApp.Database/dbo/Stored Procedures"/*/*.sql; do \
-		o=$$(basename "$$f" .sql); \
-		if [ "$$(dirname "$$f")" = "db/DataProcessingApp.Database/dbo/Tables" ]; then \
-			docker exec dpa-sqlserver /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa \
-				-P "$(SA_PASSWORD)" -d DataProcessingAppDB \
-				-Q "DROP TABLE IF EXISTS dbo.[$$o]" || exit 1; \
-		else \
-			docker exec dpa-sqlserver /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa \
-				-P "$(SA_PASSWORD)" -d DataProcessingAppDB \
-				-Q "DROP PROCEDURE IF EXISTS dbo.[$$o]" || exit 1; \
-		fi; \
-	done
-	@for f in db/DataProcessingApp.Database/dbo/Tables/*.sql \
-	          "db/DataProcessingApp.Database/dbo/Stored Procedures"/*/*.sql; do \
-		echo "  $$f"; \
-		sed $$'1s/^\xEF\xBB\xBF//' "$$f" | docker exec -i dpa-sqlserver /opt/mssql-tools18/bin/sqlcmd \
-			-C -S localhost -U sa -P "$(SA_PASSWORD)" -d DataProcessingAppDB -b || exit 1; \
-	done
+	$(DPA_ENV) $(DOTNET) ef database update --project src/DataProcessingApp.DataAccess
 
 db-fill: db-schema data-xml ## Fill the database from all sources via the C# database workflow
 	$(DPA_ENV) $(DOTNET) run --project src/DataProcessingApp.ConsoleApp -- database
@@ -90,8 +72,11 @@ data-verify: ## Verify the source data files against DataFiles/manifest.json
 run: data-xml ## Run a console app workflow. ARGS: "load", "database", "excel --dry-run", "factor --scenario life-estate --age 65 --rate 5.2" ...
 	$(DPA_ENV) $(DOTNET) run --project src/DataProcessingApp.ConsoleApp -- $(ARGS)
 
-web: ## Start the factor web UI (http://localhost:5000)
-	DPA_BaseDataDir=$(CURDIR)/JSONFiles $(DOTNET) run --project src/DataProcessingApp.WebApi
+web: db-fill ## Start the factor web UI (http://localhost:5000) against the filled database
+	DPA_ConnectionStrings__Local="$(CONN)" $(DOTNET) run --project src/DataProcessingApp.WebApi
+
+up: db-fill ## Build and start the whole app in containers (SQL Server + web UI)
+	@MSSQL_SA_PASSWORD="$(SA_PASSWORD)" docker compose up --build --detach --wait
 
 clean: ## Remove build outputs and Python caches
 	$(DOTNET) clean DataProcessingApp.sln

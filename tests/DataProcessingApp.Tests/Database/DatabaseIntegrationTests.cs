@@ -1,12 +1,13 @@
+using DataProcessingApp.Calculator;
 using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Core.Helpers;
-using DataProcessingApp.Data;
 using DataProcessingApp.Data.Repositories;
+using DataProcessingApp.DataAccess;
 using DataProcessingApp.Logic.Loaders;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using Xunit;
@@ -14,9 +15,9 @@ using Xunit;
 namespace DataProcessingApp.Tests.Database;
 
 /// <summary>
-/// End-to-end tests of the database path (SqlBulkCopy + stored procedures)
-/// against a real SQL Server deployed from the db/ project files. Tests are
-/// skipped when no SQL Server is reachable.
+/// End-to-end tests of the database path (SqlBulkCopy seeder + EF Core
+/// reads) against a real SQL Server migrated from DataProcessingApp.DataAccess.
+/// Tests are skipped when no SQL Server is reachable.
 /// </summary>
 [Collection("sqlserver")]
 public class DatabaseIntegrationTests
@@ -47,6 +48,25 @@ public class DatabaseIntegrationTests
 
     [SkippableFact]
     [Trait("Category", "Integration")]
+    public void SeriesBackedTable_BulkInsert_ClearsOnlyItsOwnCensusYear()
+    {
+        Skip.IfNot(_fixture.Available, _fixture.UnavailableReason);
+
+        var repository = new TableRepository<TableSRow>(_fixture.ConnectionString, TableType.TableS);
+        var year1990 = LoadTableSRows();
+        var year2000 = new TableLoader<TableSRow>().LoadFromJson(TableSJson(FilesHelper.Series2000CM));
+
+        repository.InsertTableData(year1990, 1990);
+        repository.InsertTableData(year2000, 2000);
+        Assert.Equal(22000, CountRows("[dbo].[tblS]"));
+
+        // reseeding one series must not wipe the other
+        repository.InsertTableData(year1990, 1990);
+        Assert.Equal(22000, CountRows("[dbo].[tblS]"));
+    }
+
+    [SkippableFact]
+    [Trait("Category", "Integration")]
     public void FailedBulkCopy_RollsBackAndKeepsPreviousData()
     {
         Skip.IfNot(_fixture.Available, _fixture.UnavailableReason);
@@ -69,46 +89,73 @@ public class DatabaseIntegrationTests
 
     [SkippableFact]
     [Trait("Category", "Integration")]
-    public void StoredProcedures_ReadBackBulkInsertedData()
+    public void EF_ReadsBackBulkInsertedData()
     {
         Skip.IfNot(_fixture.Available, _fixture.UnavailableReason);
 
         var rows = LoadTableSRows();
-        new TableRepository<TableSRow>(_fixture.ConnectionString, TableType.TableS).InsertTableData(rows);
+        new TableRepository<TableSRow>(_fixture.ConnectionString, TableType.TableS).InsertTableData(rows, 1990);
 
+        using var db = new ActuarialDbContext(_fixture.ConnectionString);
         var expected = rows.Single(row => row.Age == 60 && row.InterestRate == 2.2);
-        var pvAnnuity = ExecuteScalarProcedure("[dbo].[GetPresentValueAnnuityFromTableS]", parameter =>
-        {
-            parameter.Add("@Mortality", SqlDbType.Int).Value = 1990;
-            parameter.Add("@Age", SqlDbType.Int).Value = 60;
-            parameter.Add("@Rate", SqlDbType.Float).Value = 2.2;
-        });
-        Assert.Equal(expected.PvAnnuity, (double)pvAnnuity, 10);
+        var actual = db.Set<TableSRow>().AsNoTracking()
+            .Where(r => r.MortalityTable == 1990)
+            .Single(r => r.Age == 60 && r.InterestRate == 2.2);
+
+        Assert.Equal(expected.PvAnnuity, actual.PvAnnuity, 10);
+        Assert.Equal(expected.PvLifeEstate, actual.PvLifeEstate, 10);
+        Assert.Equal(expected.PvReminderInterest, actual.PvReminderInterest, 10);
     }
 
     [SkippableFact]
     [Trait("Category", "Integration")]
-    public void GetLxFrom2010_ReturnsMortalityTableValue()
+    public void DbFactorData_LoadsEverySeriesFromTheDatabase()
     {
         Skip.IfNot(_fixture.Available, _fixture.UnavailableReason);
 
-        var rows = new TableLoader<MortalityTableRow>().LoadFromJson(
+        foreach (var series in FactorData.Series)
+        {
+            var rows = new TableLoader<TableSRow>().LoadFromJson(TableSJson(series));
+            new TableRepository<TableSRow>(_fixture.ConnectionString, TableType.TableS)
+                .InsertTableData(rows, FactorData.CensusYearOf(series));
+        }
+
+        var mortality = new TableLoader<MortalityTableRow>().LoadFromJson(
             Path.Combine(_fixture.RepositoryRoot, "JSONFiles", "MortalityTable.json"));
         new TableRepository<MortalityTableRow>(_fixture.ConnectionString, TableType.MortalityTable)
-            .InsertTableData(rows);
+            .InsertTableData(mortality);
 
-        var expected = rows.Single(row => row.Year == 2010 && row.Age == 60).Lx;
-        var lx = ExecuteScalarProcedure("[dbo].[GetLxFrom2010]", parameter =>
+        var data = new DbFactorData(_fixture.ConnectionString);
+        foreach (var series in FactorData.Series)
         {
-            parameter.Add("@Age", SqlDbType.Int).Value = 60;
-        });
-        Assert.Equal(expected, (double)lx, 10);
+            var rows = data.TableS(series);
+            Assert.Equal(11000, rows.Count);
+            Assert.All(rows, r => Assert.Equal(FactorData.CensusYearOf(series), r.MortalityTable));
+        }
+
+        Assert.Equal(444, data.Mortality().Count);
+        Assert.DoesNotContain(data.TableS("90CM"), r => r.MortalityTable != 1990);
+    }
+
+    [SkippableFact]
+    [Trait("Category", "Integration")]
+    public void DbFactorData_SeriesValidationMatchesFileSource()
+    {
+        Skip.IfNot(_fixture.Available, _fixture.UnavailableReason);
+
+        var data = new DbFactorData(_fixture.ConnectionString);
+        Assert.Throws<ScenarioException>(() => data.TableS("1980CM"));
     }
 
     private List<TableSRow> LoadTableSRows()
     {
-        return new TableLoader<TableSRow>().LoadFromJson(Path.Combine(
-            _fixture.RepositoryRoot, "JSONFiles", "90CM", "TableS-90CM-processed.json"));
+        return new TableLoader<TableSRow>().LoadFromJson(
+            TableSJson(FilesHelper.Series90CM));
+    }
+
+    private string TableSJson(string series)
+    {
+        return Path.Combine(_fixture.RepositoryRoot, "JSONFiles", series, $"TableS-{series}-processed.json");
     }
 
     private int CountRows(string tableName)
@@ -120,19 +167,6 @@ public class DatabaseIntegrationTests
             {
                 command.CommandText = $"SELECT COUNT(*) FROM {tableName}";
                 return (int)command.ExecuteScalar();
-            }
-        }
-    }
-
-    private object ExecuteScalarProcedure(string procedureName, Action<SqlParameterCollection> addParameters)
-    {
-        using (var connection = new SqlConnection(_fixture.ConnectionString))
-        {
-            connection.Open();
-            using (var command = new SqlCommand(procedureName, connection) { CommandType = CommandType.StoredProcedure })
-            {
-                addParameters(command.Parameters);
-                return command.ExecuteScalar();
             }
         }
     }

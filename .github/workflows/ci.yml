@@ -53,12 +53,27 @@ jobs:
           dotnet-version: 10.0.x
       - name: Build
         run: dotnet build DataProcessingApp.sln
+      - name: Restore EF tooling
+        run: dotnet tool restore
+      - name: Verify migrations describe the current model
+        run: dotnet ef migrations has-pending-model-changes --project src/DataProcessingApp.DataAccess
       - name: Start SQL Server (docker compose)
         run: docker compose up --detach --wait sqlserver
+      - name: Apply EF migrations
+        run: dotnet ef database update --project src/DataProcessingApp.DataAccess
+        env:
+          DPA_ConnectionStrings__Local: "Server=localhost,1433;Database=DataProcessingAppDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=True"
       - name: Run database integration tests
         run: dotnet test tests/DataProcessingApp.Tests --no-build --filter Category=Integration
         env:
           DPA_TEST_CONNECTION_STRING: "Server=localhost,1433;Database=DataProcessingAppDB;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=True"
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the web image
+        run: docker build . --tag dpa-web
 
   data-drift:
     runs-on: ubuntu-latest
