@@ -1,3 +1,4 @@
+using DataProcessingApp.Calculator;
 using DataProcessingApp.Core.Helpers;
 using DataProcessingApp.Data.Repositories;
 using DataProcessingApp.Logic.Loaders;
@@ -133,8 +134,10 @@ public class TableWorker<TRow> where TRow : new()
     }
 
     /// <summary>
-    /// Loads table data and reloads it into the SQL Server destination table
-    /// (existing rows are cleared first, so reruns are idempotent).
+    /// Loads table data and reloads it into the SQL Server destination table.
+    /// Series-backed tables are cleared by their MortalityTable year first
+    /// (they share one table across series), rate-only tables are truncated,
+    /// so reruns are idempotent without wiping the other series.
     /// </summary>
     public void SaveToDatabase()
     {
@@ -143,8 +146,9 @@ public class TableWorker<TRow> where TRow : new()
         var timer = StartTiming();
         var rows = LoadTable(new TableLoader<TRow>());
 
+        var clearYear = String.IsNullOrEmpty(_series) ? (int?)null : FactorData.CensusYearOf(_series);
         var repository = new TableRepository<TRow>(AppHelper.DatabaseConnectionString, _tableType);
-        var inserted = repository.InsertTableData(rows);
+        var inserted = repository.InsertTableData(rows, clearYear);
 
         LogEnd(rows.Count, timer, inserted);
     }

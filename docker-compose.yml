@@ -14,3 +14,15 @@ services:
       timeout: 5s
       retries: 12
       start_period: 30s
+
+  web:
+    build: .
+    container_name: dpa-web
+    # host port 5001: 5000 on the host is macOS AirPlay Receiver
+    ports:
+      - "5001:5000"
+    environment:
+      DPA_ConnectionStrings__Local: "Server=sqlserver,1433;Database=DataProcessingAppDB;User Id=sa;Password=${MSSQL_SA_PASSWORD:-YourStrong!Passw0rd};TrustServerCertificate=True;Encrypt=True"
+    depends_on:
+      sqlserver:
+        condition: service_healthy

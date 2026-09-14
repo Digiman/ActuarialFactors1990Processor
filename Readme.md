@@ -21,16 +21,16 @@ Utilities that process actuarial factor data published by the IRS (Publications 
 src/                          source code
   DataProcessingApp.Core      row types, helpers, configuration
   DataProcessingApp.Logic     generic table loaders/savers (JSON, XML, Excel, text)
-  DataProcessingApp.Data      SQL Server bulk-insert repositories
+  DataProcessingApp.Data      SQL Server bulk-insert repositories (the seeder)
   DataProcessingApp.Calculator  scenario calculators (exact published-grid lookups)
+  DataProcessingApp.DataAccess  EF Core model, migrations and database-backed table access
   DataProcessingApp.ConsoleApp  console application (workflows + factor command)
-  DataProcessingApp.WebApi    factor web UI + JSON API (serves the calculator)
+  DataProcessingApp.WebApi    factor web UI + JSON API (serves the calculator, DB-backed)
   PythonDataApp               Python scripts (PDF extraction, CSV/XLSX -> JSON)
     DataFiles/90CM/           extracted CSV files (90CM series, regenerable from the PDFs)
 tests/
   DataProcessingApp.Tests     xUnit tests for the C# pipeline
   python                      pytest tests for the Python scripts
-db/                           SSDT database project (tables, stored procedures)
 DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
 JSONFiles/                    processed data files (per-series subfolders)
 XMLFiles/                     generated XML (root tables; not committed, run JsonToXml.py)
@@ -44,10 +44,10 @@ Docs/                         research notes, improvement plan
   (`numpy`, `openpyxl` for XLSX, `xlrd` for legacy XLS, `pdfplumber` for the
   90CM PDF extraction)
 * Docker (e.g. OrbStack/Docker Desktop), only if you want to run the SQL Server
-  integration tests locally (CI runs them always)
-* SQL Server + SSDT only if you want the database features with your own
-  instance (the `db/` project builds in Visual Studio on Windows; the
-  integration tests deploy the same schema scripts automatically)
+  integration tests locally (CI runs them always); also required for the
+  containerized web UI (`make up`)
+* SQL Server of your own only if you want the database features without
+  Docker (the EF Core migrations apply to any instance)
 
 ## Building and testing
 
@@ -69,13 +69,15 @@ python src/PythonDataApp/JsonToXml.py              # generate XMLFiles/ (needed 
 | Command | What it does |
 |---|---|
 | `make test` | fast tests: C# unit/data-invariant + Python |
-| `make test-integration` | SQL Server integration tests (starts the container first) |
-| `make db-fill` | start SQL Server, deploy the schema from `db/` and fill it with all data |
+| `make test-integration` | SQL Server integration tests (starts the container first, applies EF migrations) |
+| `make db-fill` | start SQL Server, apply the EF migrations and fill the database with all data |
+| `make db-schema` | apply the EF Core migrations (owned by `DataProcessingApp.DataAccess`) |
 | `make run ARGS="excel --series 90CM"` | run any console app workflow (see the table above) |
 | `make data-extract` | re-extract the 90CM CSVs from the PDFs (verifies first) |
 | `make data-json` / `make data-xml` | regenerate `JSONFiles/` / `XMLFiles/` |
 | `make db-up` / `make db-down` | start / stop the SQL Server container |
-| `make web` | start the factor web UI (http://localhost:5000) |
+| `make web` | start the factor web UI (http://localhost:5000), DB-backed |
+| `make up` | build and start the whole app in containers (SQL Server + web UI) |
 | `make format-check` / `make data-verify` | the CI checks: dotnet format, source manifest |
 
 Credentials default to the compose values and can be overridden per invocation:
@@ -85,13 +87,15 @@ underlying commands directly or WSL).
 
 ### SQL Server integration tests
 
-The database path (schema deployment, `SqlBulkCopy`, stored procedures) is
+The database path (EF migrations, `SqlBulkCopy` seeding, EF entity reads) is
 covered by tests tagged `Category=Integration`
-(`tests/DataProcessingApp.Tests/Database/`). They deploy the schema from the
-`db/` SSDT project files into a real SQL Server and are skipped automatically
-when no server is reachable.
+(`tests/DataProcessingApp.Tests/Database/`). They apply the migrations from
+`DataProcessingApp.DataAccess` to a real SQL Server (`dotnet tool restore`
+first for the EF CLI) and are skipped automatically when no server is
+reachable.
 
 ```bash
+dotnet tool restore                                              # the EF CLI (.config/dotnet-tools.json)
 docker compose up -d --wait sqlserver                          # SQL Server 2022 container
 dotnet test tests/DataProcessingApp.Tests --filter Category=Integration
 docker compose down                                            # when done
@@ -171,7 +175,8 @@ the error message, so script output is never a guess.
 ### The factor web UI
 
 `make web` serves the same scenarios as an interactive UI at
-http://localhost:5000 (read-only; the same `DPA_BaseDataDir` rules apply):
+http://localhost:5000 (read-only; it fills the database first, then reads
+every factor table from SQL Server via EF Core - no JSON files at runtime):
 
 * scenario picker grouped by category (single life, charitable trusts, terms,
   reference), with per-scenario input forms driven by the catalog,
@@ -183,6 +188,11 @@ http://localhost:5000 (read-only; the same `DPA_BaseDataDir` rules apply):
 * light / dark / system color themes (the system mode follows the OS setting
   live; the choice is remembered per browser; charts recolor on switch).
 
+Everything also runs fully in containers: `make up` fills the database first,
+then builds and starts the web UI next to SQL Server
+(`docker compose up --build`), serving the same UI and API at
+http://localhost:5001 (host port 5000 is macOS AirPlay Receiver).
+
 The UI is a static page (no framework, no CDN) backed by a small JSON API:
 
 | Endpoint | What it returns |
@@ -193,15 +203,14 @@ The UI is a static page (no framework, no CDN) backed by a small JSON API:
 | `POST /api/sweep/age` | factor-vs-age curves (`{"scenario", "series", "inputs", "compare"}`) |
 | `GET /api/mortality?year=2010` | lx curve for one census year |
 
-The factor command and web UI read everything directly from the committed
-`JSONFiles/` (including the root tables), so `JsonToXml.py` is not needed for
-them - only the C# workflows below read the XML export format.
-
-The root tables (B, D, F, J, K, MortalityTable) are loaded from the XML export
-format in `XMLFiles/`, which is a **generated artifact and not committed**:
-run `python src/PythonDataApp/JsonToXml.py` once (after `pip install`, before
-the C# workflows) to create it from the committed `JSONFiles/`. CI does the
-same before its smoke test.
+The web UI reads every factor table from the SQL Server database (EF Core,
+see `DataProcessingApp.DataAccess`); the console `factor` command reads the
+committed `JSONFiles/` directly. The root tables (B, D, F, J, K,
+MortalityTable) are loaded from the XML export format in `XMLFiles/` by the
+C# workflows (including the database seeder), which is a **generated
+artifact and not committed**: run `python src/PythonDataApp/JsonToXml.py`
+once (after `pip install`, before the C# workflows) to create it from the
+committed `JSONFiles/`. CI does the same before its smoke test.
 
 **Where the data comes from and goes:**
 
@@ -224,7 +233,8 @@ DPA_BaseDataDir=JSONFiles DPA_XmlDataDir=XMLFiles dotnet run --project src/DataP
 
 Every setting can be overridden with a `DPA_`-prefixed environment variable, e.g.
 `DPA_BaseDataDir=/path/to/json/files`. The `database` workflow additionally needs the
-`DataProcessingAppDB` database deployed from the `db/` SSDT project.
+`DataProcessingAppDB` database created by the EF Core migrations
+(`make db-fill` covers the whole flow).
 
 ## Python scripts
 
@@ -505,8 +515,9 @@ reproducible 90CM extraction, DB integration tests) are tracked in `Docs/Plan.md
    add the table type to `FilesHelper.TableType` and filename mapping in `FilesHelper.cs`,
    and the destination table in `SqlTables.cs`.
 2. For CSV-sourced tables add a config entry to `Process90CMTables.py` (`TABLES`).
-3. Add the table script to `db/` and bulk-insert support comes for free through
-   `TableRepository<TRow>`.
+3. Register the entity in `ActuarialDbContext` (`DataProcessingApp.DataAccess`) and
+   add an EF migration (`dotnet ef migrations add ...`); bulk-insert support during
+   seeding comes for free through `TableRepository<TRow>`.
 
 ---
 

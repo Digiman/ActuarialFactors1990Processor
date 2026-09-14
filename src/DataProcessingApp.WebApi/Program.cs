@@ -1,6 +1,6 @@
 using DataProcessingApp.Calculator;
-using DataProcessingApp.Core.DataObjects;
 using DataProcessingApp.Core.Helpers;
+using DataProcessingApp.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -15,7 +15,9 @@ namespace DataProcessingApp.WebApi;
 /// Read-only HTTP access to the actuarial scenarios: scenario metadata,
 /// single computations and age sweeps (the factor charts in the UI, with
 /// optional overlay of all series). All computations go through the shared
-/// ActuarialCalculator.
+/// ActuarialCalculator, reading the factor tables from the SQL Server
+/// database via EF Core (DbFactorData); the committed JSON files are not
+/// used at runtime.
 /// </summary>
 public static class Program
 {
@@ -26,7 +28,7 @@ public static class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        var data = new FactorData(AppHelper.BaseDataDir);
+        var data = new DbFactorData(AppHelper.DatabaseConnectionString);
         var calculator = new ActuarialCalculator(data);
 
         var app = builder.Build();

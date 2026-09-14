@@ -1,0 +1,10 @@
+.git
+**/bin
+**/obj
+JSONFiles
+DataFiles
+XMLFiles
+Docs
+tests
+src/PythonDataApp
+.pytest_cache

@@ -1,14 +1,16 @@
 using Microsoft.Data.SqlClient;
 using System;
+using System.Diagnostics;
 using System.IO;
 using Xunit;
 
 namespace DataProcessingApp.Tests.Database;
 
 /// <summary>
-/// Marks the SQL Server integration tests. The fixture deploys the schema from
-/// the db/ SSDT project files into a real SQL Server (docker compose or any
-/// other instance) and is shared by all tests in the collection.
+/// Marks the SQL Server integration tests. The fixture applies the EF Core
+/// migrations from DataProcessingApp.DataAccess to a real SQL Server (docker
+/// compose or any other instance) and is shared by all tests in the
+/// collection.
 /// </summary>
 [CollectionDefinition("sqlserver")]
 public class SqlServerCollection : ICollectionFixture<SqlServerFixture>
@@ -65,46 +67,40 @@ public class SqlServerFixture : IDisposable
         }
     }
 
+    /// <summary>
+    /// Applies the EF Core migrations (idempotent), the same way
+    /// `make db-schema` does. Requires `dotnet tool restore` to have run
+    /// (the dotnet-ef CLI comes from .config/dotnet-tools.json).
+    /// </summary>
     private void DeploySchema()
     {
-        var tableFiles = Directory.GetFiles(Path.Combine(RepositoryRoot, "db", "DataProcessingApp.Database", "dbo", "Tables"), "*.sql");
-        var procedureFiles = Directory.GetFiles(
-            Path.Combine(RepositoryRoot, "db", "DataProcessingApp.Database", "dbo", "Stored Procedures"),
-            "*.sql", SearchOption.AllDirectories);
-
-        using (var connection = new SqlConnection(ConnectionString))
+        var startInfo = new ProcessStartInfo
         {
-            connection.Open();
+            FileName = "dotnet",
+            WorkingDirectory = RepositoryRoot,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true
+        };
+        startInfo.ArgumentList.Add("ef");
+        startInfo.ArgumentList.Add("database");
+        startInfo.ArgumentList.Add("update");
+        startInfo.ArgumentList.Add("--project");
+        startInfo.ArgumentList.Add("src/DataProcessingApp.DataAccess/DataProcessingApp.DataAccess.csproj");
+        startInfo.ArgumentList.Add("--connection");
+        startInfo.ArgumentList.Add(ConnectionString);
 
-            // drop first, so reruns are idempotent; the tables have no foreign keys
-            foreach (var file in tableFiles)
-            {
-                Execute(connection, $"DROP TABLE IF EXISTS dbo.{ObjectName(file)}");
-            }
-            foreach (var file in procedureFiles)
-            {
-                Execute(connection, $"DROP PROCEDURE IF EXISTS dbo.{ObjectName(file)}");
-            }
+        using (var process = Process.Start(startInfo))
+        {
+            var output = process.StandardOutput.ReadToEnd();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
 
-            foreach (var file in tableFiles)
+            if (process.ExitCode != 0)
             {
-                Execute(connection, ReadStatement(file));
-            }
-            foreach (var file in procedureFiles)
-            {
-                Execute(connection, ReadStatement(file));
+                throw new InvalidOperationException(
+                    "EF migrations failed: " + error + output);
             }
         }
-    }
-
-    private static string ObjectName(string sqlFile)
-    {
-        return Path.GetFileNameWithoutExtension(sqlFile);
-    }
-
-    private static string ReadStatement(string sqlFile)
-    {
-        return File.ReadAllText(sqlFile).TrimStart('\uFEFF');
     }
 
     private static void Execute(SqlConnection connection, string statement)
@@ -117,13 +113,14 @@ public class SqlServerFixture : IDisposable
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory != null && !Directory.Exists(Path.Combine(directory.FullName, "db", "DataProcessingApp.Database")))
+        while (directory != null &&
+               !File.Exists(Path.Combine(directory.FullName, "src", "DataProcessingApp.DataAccess", "DataProcessingApp.DataAccess.csproj")))
         {
             directory = directory.Parent;
         }
         if (directory == null)
         {
-            throw new DirectoryNotFoundException("Repository root with db/DataProcessingApp.Database not found.");
+            throw new DirectoryNotFoundException("Repository root with src/DataProcessingApp.DataAccess not found.");
         }
         return directory.FullName;
     }

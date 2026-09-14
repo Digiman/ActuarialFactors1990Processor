@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\src\DataProcessingApp.Calculator\DataProcessingApp.Calculator.csproj" />
     <ProjectReference Include="..\..\src\DataProcessingApp.Core\DataProcessingApp.Core.csproj" />
     <ProjectReference Include="..\..\src\DataProcessingApp.Data\DataProcessingApp.Data.csproj" />
+    <ProjectReference Include="..\..\src\DataProcessingApp.DataAccess\DataProcessingApp.DataAccess.csproj" />
     <ProjectReference Include="..\..\src\DataProcessingApp.Logic\DataProcessingApp.Logic.csproj" />
   </ItemGroup>
 

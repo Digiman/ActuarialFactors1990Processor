@@ -14,7 +14,7 @@ namespace DataProcessingApp.Calculator;
 /// </summary>
 public sealed class ActuarialCalculator
 {
-    private readonly FactorData _data;
+    private readonly FactorDataSource _data;
 
     /// <summary>Published Table F month ranges per payment frequency.</summary>
     private static readonly Dictionary<string, int> PayoutFrequencyMonths = new()
@@ -25,7 +25,7 @@ public sealed class ActuarialCalculator
         { "Monthly", 1 }
     };
 
-    public ActuarialCalculator(FactorData data)
+    public ActuarialCalculator(FactorDataSource data)
     {
         _data = data;
     }
