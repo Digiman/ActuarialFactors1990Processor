@@ -31,7 +31,6 @@ src/                          source code
 tests/
   DataProcessingApp.Tests     xUnit tests for the C# pipeline
   python                      pytest tests for the Python scripts
-db/                           archived stored procedures only (schema lives in the EF migrations)
 DataFiles/                    source data (90CM PDFs, root-table and 2010CM spreadsheets)
 JSONFiles/                    processed data files (per-series subfolders)
 XMLFiles/                     generated XML (root tables; not committed, run JsonToXml.py)
@@ -516,8 +515,9 @@ reproducible 90CM extraction, DB integration tests) are tracked in `Docs/Plan.md
    add the table type to `FilesHelper.TableType` and filename mapping in `FilesHelper.cs`,
    and the destination table in `SqlTables.cs`.
 2. For CSV-sourced tables add a config entry to `Process90CMTables.py` (`TABLES`).
-3. Add the table script to `db/` and bulk-insert support comes for free through
-   `TableRepository<TRow>`.
+3. Register the entity in `ActuarialDbContext` (`DataProcessingApp.DataAccess`) and
+   add an EF migration (`dotnet ef migrations add ...`); bulk-insert support during
+   seeding comes for free through `TableRepository<TRow>`.
 
 ---
 

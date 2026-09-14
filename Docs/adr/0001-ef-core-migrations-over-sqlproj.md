@@ -5,8 +5,10 @@ SQLProj files, deployed by a make target shell loop, with every read path
 going through hand-written stored procedures. As of Phase 5, the schema is
 created and evolved only through EF Core migrations in
 `DataProcessingApp.DataAccess`, and application reads use EF entity queries.
-The stored procedure files stay in the repo verbatim as a reference archive
-but nothing calls them; the table DDL files were removed with the SQLProj.
+The SQLProj, its table DDL and the stored procedures were removed entirely:
+EF Core covers schema management and reads, and none of the procedures was
+called anymore after the migration (the archive briefly kept around proved
+unnecessary and was dropped again; `git history` retains the files).
 
 We chose this because the stored procedures never covered all 13 tables the
 calculator needs (no `GetAll` for D/F/J/K/U1/U2/R2), EF Core tooling

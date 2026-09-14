@@ -7,6 +7,4 @@ XMLFiles
 Docs
 tests
 src/PythonDataApp
-db
-*_Tests
 .pytest_cache

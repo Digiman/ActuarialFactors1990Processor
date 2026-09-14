@@ -15,11 +15,14 @@ Nothing here is committed to any release.
       truncate-per-table (or delete by MortalityTable year), wrap in a
       transaction, and report inserted-vs-loaded counts (record counts are
       already printed by `TableWorker.LogEnd`).
-- [ ] **Deploy `GetLxFrom2010`.** The stored procedure file exists
+- [x] **Deploy `GetLxFrom2010`.** ~~The stored procedure file exists
       (`db/DataProcessingApp.Database/dbo/Stored Procedures/tblMortality/GetLxFrom2010.sql`)
       but was not referenced by the SSDT project, so it never deployed; the
       `.sqlproj` Build entry was added in September 2026 - redeploy the
-      database project to create it in existing databases.
+      database project to create it in existing databases.~~ Obsolete since
+      Phase 5: the whole `db/` project (including all stored procedures) was
+      removed; read access is EF Core entity queries and seeding is the
+      console `database` workflow.
 - [x] **Data-invariant tests.** Encode the checks that caught the 2026 data
       bugs as automated tests: `J = K * (1+i)^(1/m)` identity, per-table
       row-count grids (100 rates x 110 ages etc.), no `" "` placeholder
@@ -80,6 +83,8 @@ Nothing here is committed to any release.
       verify bulk-insert idempotency, transactional rollback on failure, and
       the stored procedures including `GetLxFrom2010`. Tests skip automatically
       when no SQL Server is reachable.
+      *Superseded by Phase 5: the fixture applies the EF migrations and the
+      procedure tests became EF entity round-trips.*
 - [x] **XML as generated artifact.** `XMLFiles/` duplicates `JSONFiles/`;
       generate XML in CI from JSON (and stop committing it) or drop XML if
       nothing downstream requires it. Done (September 2026): `XMLFiles/` is
@@ -170,10 +175,12 @@ EF-owned.
 ^- [x] **Seeding via make.** Keep the console `database` workflow (idempotent
       `SqlBulkCopy`) as the seeder; `db-schema` becomes "apply EF
       migrations"; `db-fill` = db-up + migrations + XML generation + fill.
-^- [x] **Stored procedures are kept verbatim** under
-      `db/DataProcessingApp.Database/dbo/Stored Procedures/` as reference;
-      application code no longer calls them (the EF entities are the read
-      path). Table DDL files are removed (EF migrations own the schema).
+^- [x] **The `db/` SQL project is removed entirely.** The stored procedures
+      were initially kept verbatim as a reference archive after EF took over
+      schema and reads, then dropped again in September 2026 because nothing
+      deployed or called them (the archive duplicated history git already
+      has). EF Core covers schema management and all data access; seeding
+      stays the console `database` workflow.
 ^- [x] **CI:** the `database` job applies EF migrations and runs the rewritten
       EF round-trip integration tests; add a Docker image build smoke job.
 ^- [x] **Tests:** SQL Server integration tests move from
